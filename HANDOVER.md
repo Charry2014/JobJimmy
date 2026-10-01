@@ -8,6 +8,20 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## License and attribution — 2026-10-01
+
+Added a standard MIT `LICENSE` under the collective JobJimmy contributors name,
+plus `THIRD_PARTY_NOTICES.md` covering separately installed software and service
+providers. Updated README, dependencies and release readiness. Embedded CV
+artwork is explicitly excluded from the MIT grant: SVG metadata suggests Office
+stock assets, and raster provenance remains unverified. Resolve permissions or
+replace those assets before considering the template cleared for redistribution.
+No template binary or private data changed.
+
+Validation: default and `--all` privacy screens, diff whitespace and local
+Markdown link checks passed. Upstream license sources were reviewed. No runtime
+code changed; no rendering or full publication/history audit was performed.
+
 ## Knowledge base is model-safe when clean — 2026-10-01
 
 `redact_md.py` gained a `check` subcommand (backed by a `scan_reasons` helper)

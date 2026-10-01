@@ -22,10 +22,13 @@ references remain available without being the first thing a newcomer must read.
 
 ## Before publishing
 
-- [ ] Choose a project licence and add `LICENSE`. There is currently no
-  project-level licence file; no licence has been chosen on the owner's behalf.
-  Verify redistribution rights for included templates, images, fonts and vendored
-  plugin files separately.
+- [x] Add the project [MIT license](../LICENSE) and
+  [dependency/provider acknowledgements](../THIRD_PARTY_NOTICES.md).
+- [ ] Resolve the embedded CV template artwork provenance and redistribution
+  rights. The artwork is excluded from the MIT grant; SVG metadata suggests
+  Office stock assets, while raster sources remain unverified. Confirm permission
+  or replace them before claiming the template is cleared for redistribution.
+  Verify font embedding rights and any dependencies bundled in future releases.
 - [ ] Audit public Git history, filenames, branches, messages and binary assets
   for personal data, not just the current working tree. Do not publish a whole
   workspace archive or include the private repository.

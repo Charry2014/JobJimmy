@@ -8,6 +8,10 @@ Python, uv and Obsidian; OpenRouter and Jev are opt-in. JobJimmy has no hosted
 service, installer or background job, and the privacy screen, redaction and CV
 rendering run locally without network access.
 
+License and provider credits are recorded in
+[Third-party acknowledgements](../THIRD_PARTY_NOTICES.md), including PyMuPDF’s
+AGPL/commercial terms and the CV template artwork exclusion.
+
 ## Software
 
 | Tool | Used for | Required? |

@@ -265,9 +265,13 @@ out of them.
 - [Agentic roadmap](Documentation/Agentic-Roadmap.md)
 - [Release readiness](Documentation/Release-Readiness.md)
 
-Check release readiness before publishing a fork. The supplied project status
-notes that there is currently no project-level `LICENSE` file; resolve licensing
-before presenting it as ready for open-source reuse.
+## License and acknowledgements
+
+JobJimmy’s original code, documentation and Markdown templates use the
+[MIT License](LICENSE). See [third-party acknowledgements](THIRD_PARTY_NOTICES.md)
+for dependency licenses, provider credits and the embedded CV artwork exclusion.
+The CV template artwork still needs provenance and redistribution review; check
+[release readiness](Documentation/Release-Readiness.md) before publishing a fork.
 
 ---
 
