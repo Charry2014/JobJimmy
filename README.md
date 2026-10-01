@@ -1,129 +1,276 @@
 # JobJimmy
 
-A small, experimental job-search workspace: keep track of applications in
-Obsidian, build a reusable record of your experience, and use an AI assistant to
-prepare evidence-backed CVs, cover letters and interview notes.
+### Give your applications some leverage.
 
-Your notes are ordinary Markdown. Documents are assembled locally with Python
-and LibreOffice. Your real job-search data lives in a separate private Git
-repository inside `JobSearch/`; the public project contains the reusable tools.
+**They skim. You shouldn't slog.**
 
-**Status: early-stage hobby project.** Application tracking and document tooling
-exist, but setup still involves files and terminal commands. There is no hosted
-service, application-submission bot or one-click installer.
+Find a promising job. Decode the advert. Rewrite your CV. Wrestle with a cover
+letter. Submit. Repeat. Somewhere in there, remember which company you applied
+to and what you told them.
 
-## Start here
+JobJimmy is your AI job application sidekick: a helpful little butler with a
+metaphorical crowbar. It helps you decide which roles deserve your time, put
+your relevant experience forward, and keep the whole process organised.
+
+**Already tailoring every application? Get your evenings back. Sending the same
+CV everywhere? Give employers a clearer reason to consider you.**
+
+## Before you spend an afternoon, check the fit
+
+A shiny job title isn't enough to justify three hours of application work.
+Ask Jimmy to compare the actual requirements with your experience first.
+
+The aim is an honest assessment you can inspect:
+
+- **Strong matches:** requirements you can support with specific evidence.
+- **Transferable experience:** relevant work that needs explaining, rather than
+  pretending you've done exactly the same thing.
+- **Real gaps:** missing experience or constraints that could make the role a
+  poor use of your time.
+- **Unknowns:** questions worth answering before you commit to an application.
+
+Then decide: apply, investigate, or move on. Spend your effort where you have
+a credible case, and stop polishing applications with obvious deal-breakers.
+
+Jimmy doesn't know who else applied or what the hiring manager will decide.
+A fit assessment is a reasoned comparison, not your probability of getting
+hired. Optional numerical checks are advisory and their live scoring quality
+has not yet been validated.
+
+## What Jimmy takes off your plate
+
+| The usual chore | Jimmy's helping hand |
+| --- | --- |
+| "Do I actually fit this job?" | Compare the advert with your evidence, identify gaps, and help you decide whether to proceed. |
+| "Which version of my CV should I use?" | Choose a baseline and draft a version that puts relevant experience first. |
+| "How do I write this without sounding like a corporate chatbot?" | Draft an evidence-backed cover letter for you to review and make your own. |
+| "What was that good example I used last time?" | Build a reusable career knowledge base of achievements, examples, and corrections. |
+| "Did I apply there already?" | Keep applications, companies, recruiters, contacts, and activity history together. |
+| "The interview is tomorrow." | Work with your assistant on research, practice answers, and preparation notes. |
+| "Now they want it in German." | Use the supplied English-to-German CV translation workflow. |
+
+**Better tailoring means selecting and explaining your real experience.**
+Unsupported claims and missing information should stay visible. Jimmy can help
+you make your case; you review the wording and submit the application yourself.
+
+## Your first application, with Jimmy
+
+### 1. Give Jimmy something true to work with
+
+Start with your existing CV and a record of your experience: roles, achievements,
+projects, skills, and concrete examples. You can expand this over time.
+
+Your [career knowledge base](Documentation/Knowledge-Base.md) gives the assistant
+material to reuse instead of making you explain your entire working life for
+every advert. Correct a weak claim, add a better example, or record a new
+achievement so future drafts can draw on it.
+
+### 2. Bring a job advert—and ask for honesty
+
+For example, take any job posting on LinkedIn:
+
+1. Open the posting and select the **…** menu.
+2. Choose **Share**, then **Copy link**.
+3. Paste the link into your AI assistant and ask it to run the
+   [create-application skill](.kilo/skills/create-application/SKILL.md).
+
+Try:
+
+> Run the create-application skill for this LinkedIn job: [paste link here].
+> Assess it against my experience. Show the strongest
+> matches, transferable evidence, important gaps, and unanswered questions.
+> Help me decide whether it's worth applying before we draft anything.
+
+From there, the skill handles the import and assessment automatically, creating
+linked records for the role, employer, advert, and recruiter where applicable.
+You review the result and decide whether to proceed. If LinkedIn blocks access
+to the listing, paste the advert text instead so Jimmy can carry on.
+
+### 3. Make the relevant experience easy to find
+
+If the role looks worthwhile:
+
+> Propose the best CV baseline, tailor it to this role, and draft a concise
+> cover letter. Use specific evidence from my knowledge base. Flag anything
+> you need me to confirm.
+
+Review the wording, then use the local document tools to assemble and inspect
+the result. The [documents guide](Documentation/Documents.md) covers layouts,
+rendering, and translation. You remain the editor: check the facts, tone, and
+final PDF before sending it.
+
+### 4. Submit, record, and keep moving
+
+Submit the application yourself. Record the date, documents sent, contacts,
+and what happened next. Use the dashboard to see where things stand.
+
+When an interview arrives, keep preparation and debrief notes with the
+application. When a rejection arrives, record any useful feedback and move on.
+At least you won't also be wondering which CV you sent.
+
+## Get started
+
+### Free tools. Some assembly required.
+
+You can use JobJimmy with **free and open-source tools**, including
+**Visual Studio Code with Kilo Code as your AI interface**, Git, Python, uv,
+and LibreOffice. Obsidian is an optional, free-to-use interface for the notes
+and dashboard, but isn't open source; a Markdown editor works too. The tools
+can be free even though external AI usage still costs money.
+
+And yes: **sorry about the rather engineering-like user experience.** Jimmy
+currently wears a tool belt more often than a dinner jacket. Expect Markdown
+files, configuration, and a few terminal commands rather than a polished
+point-and-click app. The guides will help you get set up; making this easier
+is part of the project's direction.
+
+**Start with tracking and your knowledge base. Add document automation when
+you're ready.**
 
 1. [Set up your workspace](Documentation/Getting-Started.md): tools, private
-   storage, Obsidian and the first checks.
-2. [Build your career knowledge base](Documentation/Knowledge-Base.md): give
-   the assistant reliable facts and teach it from new information.
-3. [Work with applications](Documentation/Applications.md): add a job, assess
-   fit, track contacts, record submissions and follow up.
-4. [Prepare CVs and cover letters](Documentation/Documents.md): choose a layout,
-   draft, review, render and optionally translate.
-5. [Prepare for interviews and offers](Documentation/Interviews-and-Offers.md):
-   research, practise, debrief and plan a negotiation.
+   storage, Obsidian, and the first checks.
+2. [Build your career knowledge base](Documentation/Knowledge-Base.md).
+3. [Add and manage applications](Documentation/Applications.md).
+4. [Prepare CVs and cover letters](Documentation/Documents.md).
+5. [Prepare for interviews and offers](Documentation/Interviews-and-Offers.md).
 
-Start with tracking. You can add document automation and translation later.
+**Current status: early-stage hobby project.** Tracking and document tooling
+exist. Setup involves files and terminal commands; there is no hosted service,
+one-click installer, or automatic application submission.
 
-## What you need
+## Privacy: Jimmy can keep a secret
 
-| Tool | Used for | Required? |
-| --- | --- | --- |
-| Obsidian | Read and edit the vault | Recommended interface; any Markdown editor can edit the notes |
-| Dataview | Dashboard and activity tables in Obsidian | For the live tables |
-| Git | Keep public tools and private records in separate repositories | For the documented setup and privacy gate |
-| Python 3.11+ | Document scripts and privacy checks | For automation; development checks currently run on Python 3.12 |
-| uv | Runs the Python tools with no in-tree venv | For automation |
-| LibreOffice Writer | Personalise ODT layouts and export PDFs locally | For document work |
-| A filesystem-capable AI assistant | Research, drafting and guided record updates | Optional for manual tracking; needed for agent-assisted workflows |
-| OpenRouter account and API key | The supplied English-to-German translation script | Optional; a separate account from Jev, unrelated to your assistant's subscription |
-| TypeSafe account and API key | The advisory Jev fit and document checks | Optional; a separate key from OpenRouter |
-| PyMuPDF | Automated PDF layout and comparison checks | Optional; visual review is still needed |
+Your career history is personal. A lot of work has gone into keeping the
+original private data on your own systems while still letting external AI
+models help with the application process.
 
-Installation links, platform notes and commands are in
-[Getting started](Documentation/Getting-Started.md). The complete list of
-software, accounts, environment variables and network endpoints is in
-[External dependencies](Documentation/Dependencies.md).
+JobJimmy uses a **reversible anonymisation layer** before sending data through
+its protected workflows to external models. Identifying details are replaced
+locally with stand-ins; the local mapping lets the workflow restore those
+details afterwards. The model gets the material it needs to work on your
+application without needing the original identities. Your real details go
+back into the finished documents locally.
 
-## A typical application
+**Jimmy needs your story. The external model doesn't need your name.**
 
-> Add this job advert, assess it against my experience, and propose which CV
-> baseline to use. Keep unsupported claims and missing information explicit.
+This is a practical privacy measure, not a promise of perfect anonymity.
+Distinctive projects or combinations of career details may still identify
+someone, and anonymisation can miss information. A separate assistant or tool
+with direct access to your files can also send data outside this protected
+route. Keep the mapping private, check what you're sharing, and use the
+documented workflow. See [Privacy](PRIVACY.md) for the details.
 
-The assistant uses the [create-application skill](.kilo/skills/create-application/SKILL.md)
-to create linked records for the role, employer, advert and recruiter where
-applicable. You review its assessment, then ask for a CV and cover-letter draft.
-After wording review, you render and inspect the documents. You submit the
-application yourself and record what happened.
+## Costs: a little AI, a lot less admin
 
-Skills are **agent-agnostic** and live in `.kilo/skills/`. The folder name does
-not require a particular agent. If your assistant does not discover the skill,
-ask it to read that file explicitly. It should follow [AGENTS.md](AGENTS.md)
-and [PROCEDURES.md](PROCEDURES.md) when changing records.
+AI isn't free, but an application shouldn't need a coffee-sized AI budget.
+Using **OpenRouter's AutoRouter with the defaults**, the project's estimate is
+**about 10 cents per average application**.
 
-## What works today
+Treat that as a useful ballpark, rather than a fixed price. Longer inputs,
+extra revisions, different models, and provider pricing changes can alter the
+bill. Separate assistant subscriptions and optional services such as TypeSafe
+may add their own costs.
+
+The idea is simple: spend a little on the repetitive work, and keep your time
+for deciding where to apply, checking the result, and preparing for the
+conversation that matters.
+
+## What's under the butler's jacket?
+
+Ordinary Markdown notes, an Obsidian workspace, a filesystem-capable AI
+assistant, and local Python/LibreOffice document tools. Your job-search records
+live in a separate private Git repository inside `JobSearch/`.
+
+| Tool | What you need it for |
+| --- | --- |
+| Obsidian | Recommended workspace; another Markdown editor also works. |
+| Dataview | Live dashboard and activity tables in Obsidian. |
+| Git | The documented setup, separate public/private repositories, and privacy gate. |
+| Python 3.11+ and uv | Automation scripts and privacy checks; development checks currently use Python 3.12. |
+| LibreOffice Writer | Personalise ODT layouts and export PDFs locally. |
+| A filesystem-capable AI assistant | Guided research, assessment, drafting, and record updates; VS Code with Kilo Code is one free, open-source setup. Manual tracking works without an assistant. |
+| OpenRouter account and API key | AI calls through OpenRouter, including AutoRouter; also used by the optional English-to-German translation script. |
+| TypeSafe account and API key | Optional advisory Jev fit and document checks. |
+| PyMuPDF | Optional automated PDF layout/comparison checks; still inspect documents visually. |
+
+OpenRouter and TypeSafe use separate accounts and keys; neither is included
+with your assistant subscription. See [Getting started](Documentation/Getting-Started.md)
+for installation and [External dependencies](Documentation/Dependencies.md)
+for accounts, environment variables, and network endpoints.
+
+Skills live in `.kilo/skills/`, but are **agent-agnostic**. If your assistant
+doesn't discover a skill, ask it to read the file explicitly. It should follow
+[AGENTS.md](AGENTS.md) and [PROCEDURES.md](PROCEDURES.md) when changing records.
+
+## What works today—and what still needs building
 
 | Capability | Current state |
 | --- | --- |
-| Applications, companies, recruiter contacts and activity history | Markdown templates and Dataview views |
-| Import and assess a job advert | One implemented agent skill; access to listings can fail |
-| Career knowledge and learning from corrections | Private notes maintained with the assistant; no required memory service |
-| Tailored CVs | Draft/review workflow; two local rendering approaches |
-| Cover letters | Markdown drafting and local identity insertion; ODT rendering requires your own compatible template |
-| Translation | OpenRouter script for block-marked CVs, currently English to German |
-| Interview preparation and negotiation | Guided conversations and activity notes; dedicated skills are proposed, not installed |
-| Jev fit and document checks | Advisory CLI scaffold with editable requests, anonymous input checks, separate match scores and confidence; needs a TypeSafe key and domain tuning |
-| Email/calendar integration, automatic reminders, Notion sync | Not implemented as project workflows |
+| Application, company, recruiter, and activity tracking | Markdown templates and Dataview views. |
+| Job advert import and fit assessment | Implemented agent skill; listing access can fail. |
+| Career knowledge and learning from corrections | Private notes maintained with your assistant; no required memory service. |
+| Tailored CVs | Draft/review workflow with two local rendering approaches. |
+| Cover letters | Markdown drafting and local identity insertion; ODT rendering needs your own compatible template. |
+| Translation | OpenRouter script for block-marked CVs, currently English to German. |
+| Interview and negotiation support | Guided conversations and activity notes; dedicated skills are proposed, not installed. |
+| Jev fit and document checks | Advisory CLI scaffold; requires a TypeSafe key and domain tuning. Scoring quality is not yet validated. |
+| Email/calendar integration, automatic reminders, Notion sync | Not implemented as project workflows. |
 
-The blank `CV/Templates/CV Template.ott` is included. Personal CV baselines,
-identity files and a ready-to-use cover-letter ODT are **not included**.
-The [documents guide](Documentation/Documents.md) explains the implications.
+A blank `CV/Templates/CV Template.ott` is included. Your personal CV baselines,
+identity files, and a ready-to-use cover-letter ODT are not supplied; follow
+the [documents guide](Documentation/Documents.md) to prepare them.
 
-[Jev checks](Documentation/Jev-Checks.md) run after the existing fit/gap analysis
-and on each final Markdown CV and cover letter independently. The requests and
-rubrics are editable; live scoring quality has not yet been validated.
+[Jev checks](Documentation/Jev-Checks.md) supplement the existing fit/gap analysis
+and check each final Markdown CV and cover letter independently. Their requests
+and rubrics are editable, with anonymous input checks and separate match and
+confidence scores. Treat them as a second opinion, not a hiring verdict.
 
-## Your files stay separate
+## Your career history belongs in your private workspace
+
+Keep reusable project tools public and personal job-search data private:
 
 ```text
-jobjimmy/                       public tools, guides and source templates
+jobjimmy/                       public tools, guides, and source templates
 ├── Documentation/
-├── Templates/                  canonical note templates (copied into the vault)
-├── CV/                         CV tooling, references and templates
+├── Templates/                  canonical note templates
+├── CV/                         document tooling and templates
 ├── .kilo/skills/
-└── JobSearch/                  the Obsidian vault; independent private Git repo
-    ├── .obsidian/              vault configuration, plugins and snippets
+└── JobSearch/                  Obsidian vault; independent private Git repo
+    ├── .obsidian/              vault configuration, plugins, and UI state
     ├── Dashboard.md
     ├── Applications/
     ├── Companies/
     ├── Recruiters/             including Directory.md
     ├── Knowledge/
-    ├── Templates/              note templates and your CV baselines
+    ├── Templates/              personal note templates and CV baselines
     └── Outputs/
 ```
 
-Never enter personal details into public templates. Make personal copies under
-`JobSearch/`, and open `JobSearch/` as the Obsidian vault so private notes and
-the dashboard stay together. Git exclusion does not stop an AI assistant, a sync
-service or a filesystem archive from reading those files. Check the privacy of
-the actual model/tool route before sharing private text. See [Privacy](PRIVACY.md).
+Open `JobSearch/` as your Obsidian vault. Put personal copies of templates there;
+never enter personal details into public templates.
 
-The vault, including its Obsidian configuration and UI state, lives entirely
-inside the private `JobSearch/` tree, so workspace-state files no longer expose
-private note paths in the public project. The
-[setup guide](Documentation/Getting-Started.md) explains what to check before
-use and publication.
+Keep the anonymisation mapping and original personal records in your private
+workspace too. Git exclusion prevents accidental inclusion in the public
+repository; it doesn't prevent an assistant, sync service, or filesystem
+archive from reading the files. See [Privacy](PRIVACY.md) and the
+[setup guide](Documentation/Getting-Started.md).
 
-## Troubleshooting and contributing
+## Help Jimmy get better
 
-- [External dependencies](Documentation/Dependencies.md)
+Useful improvements, clearer guides, and bug reports are welcome. Use synthetic
+examples in public issues—keep real CVs, private logs, and application records
+out of them.
+
 - [Troubleshooting](Documentation/Troubleshooting.md)
+- [External dependencies](Documentation/Dependencies.md)
 - [CV technical reference](CV/README.md)
 - [Agentic roadmap](Documentation/Agentic-Roadmap.md)
 - [Release readiness](Documentation/Release-Readiness.md)
 
-Use synthetic data when reporting bugs. Never attach real CVs, private logs or
-application records to public issues. Check the release-readiness list before
-publishing a fork; this checkout currently has no project-level `LICENSE` file.
+Check release readiness before publishing a fork. The supplied project status
+notes that there is currently no project-level `LICENSE` file; resolve licensing
+before presenting it as ready for open-source reuse.
+
+---
+
+**JobJimmy. Give your applications some leverage.**
