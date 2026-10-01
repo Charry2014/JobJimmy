@@ -2,18 +2,16 @@
 
 ### Give your applications some leverage.
 
-**They skim. You shouldn't slog.**
+**The job application process in a nutshell - Hours of work, skimmed then binned.**
 
-Find a promising job. Decode the advert. Rewrite your CV. Wrestle with a cover
-letter. Submit. Repeat. Somewhere in there, remember which company you applied
-to and what you told them.
+Find a promising job... Decode the advert... Rewrite your CV... Wrestle with a cover letter... Invest emotional energy... Imagine yourself in that job... Submit... Repeat... 
 
-JobJimmy is your AI job application sidekick: a helpful little butler with a
-metaphorical crowbar. It helps you decide which roles deserve your time, put
-your relevant experience forward, and keep the whole process organised.
+Somehow remember which company you applied to and what you told them.
 
-**Already tailoring every application? Get your evenings back. Sending the same
-CV everywhere? Give employers a clearer reason to consider you.**
+JobJimmy is your AI job application assistant: a butler with a metaphorical crowbar to help force that glass door open. Keep those links in order, and all joined up. It helps you decide which roles deserve your time, put your relevant experience forward, and keep the whole process organised.
+
+* Already tailoring every application? Get your evenings back. 
+* Sending the same CV everywhere? Give employers a clearer reason to consider you.
 
 ## Before you spend an afternoon, check the fit
 
