@@ -2,7 +2,7 @@
 
 [Home](../README.md) · [Roadmap](Agentic-Roadmap.md)
 
-AppMan is suitable to present as an experimental hobby project, provided the
+JobJimmy is suitable to present as an experimental hobby project, provided the
 release describes its limits honestly. This page is a checklist, not a claim that
 a publication audit or cross-platform test has been completed.
 

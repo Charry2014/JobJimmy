@@ -1,20 +1,20 @@
-# AppMan-JobSearch — private job-search repository
+# JobJimmy-JobSearch — private job-search repository
 
 This repository holds **all user-specific job-search data**: application
 records, company research, recruiter contacts, optional private career evidence,
 personal CV templates and generated documents. It is **not** part of the public
-AppMan repository. It is mounted at `JobSearch/` inside the AppMan workspace and
-is also the **Obsidian vault**; AppMan ignores this whole tree.
+JobJimmy repository. It is mounted at `JobSearch/` inside the JobJimmy workspace and
+is also the **Obsidian vault**; JobJimmy ignores this whole tree.
 
-## Using this repository with AppMan
+## Using this repository with JobJimmy
 
 1. Place (or clone) this repository so its contents sit at
-   `<AppMan workspace>/JobSearch/`. Its remote repository may have any name;
+   `<JobJimmy workspace>/JobSearch/`. Its remote repository may have any name;
    the local directory must be `JobSearch`.
 2. Open **this repository** (`JobSearch/`) as the Obsidian vault. The vault
    configuration, dashboard and views live here, so the notes and tables render
-   together without this repository becoming part of AppMan.
-3. Commit and push **this repository separately** from AppMan. AppMan's Git
+   together without this repository becoming part of JobJimmy.
+3. Commit and push **this repository separately** from JobJimmy. JobJimmy's Git
    status does not report changes made here — always check both:
 
 ```sh
@@ -67,5 +67,5 @@ JobSearch/                    # Open this directory as the Obsidian vault
   model.
 
 For onboarding, follow `Documentation/Getting-Started.md` and
-`Documentation/Knowledge-Base.md` in the outer AppMan project. Create
+`Documentation/Knowledge-Base.md` in the outer JobJimmy project. Create
 `Knowledge/Sources/` during setup; no personal knowledge is prefilled.

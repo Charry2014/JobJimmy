@@ -134,7 +134,7 @@ class CliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             subprocess.run(["git", "init", "-q", str(root)], check=True)
-            (root / "README.md").write_text("# AppMan\n", encoding="utf-8")
+            (root / "README.md").write_text("# JobJimmy\n", encoding="utf-8")
             subprocess.run(["git", "-C", str(root), "add", "README.md"], check=True)
             buffer = io.StringIO()
             with redirect_stdout(buffer):
@@ -147,7 +147,7 @@ class CliTests(unittest.TestCase):
             root = Path(tmp)
             subprocess.run(["git", "init", "-q", str(root)], check=True)
             (root / "README.md").write_text(
-                "# AppMan\n\nContact alex.fictional@somewhere.test now.\n",
+                "# JobJimmy\n\nContact alex.fictional@somewhere.test now.\n",
                 encoding="utf-8",
             )
             subprocess.run(["git", "-C", str(root), "add", "README.md"], check=True)

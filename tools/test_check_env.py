@@ -50,7 +50,7 @@ class CheckEnvTests(unittest.TestCase):
 
     def test_missing_private_tree_is_reported(self) -> None:
         result = ce.check(
-            root=Path("/nonexistent-appman-root"),
+            root=Path("/nonexistent-jobjimmy-root"),
             environ={},
             which=lambda name: "/bin/" + name,
         )

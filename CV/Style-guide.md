@@ -110,7 +110,7 @@ follows text review.
    including all bullets.
 4. Run `CV/Scripts/check_layout.py` on the PDF to flag misplaced section headings,
    overflow and excessive bottom space. It requires PyMuPDF; run it with
-   `APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...` so PyMuPDF
+   `JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...` so PyMuPDF
    is provided per command and never installed into the checkout.
 5. Inspect all pages for density, balance, line breaks and legibility. The
    automatic check cannot judge repetition or whether a page feels crammed, and

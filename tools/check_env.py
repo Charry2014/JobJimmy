@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the AppMan environment: Python, external tools, private tree and API keys.
+"""Verify the JobJimmy environment: Python, external tools, private tree and API keys.
 
 Secret values are never read into output: API keys and model identifiers are
 reported only as set or missing. Exit status is non-zero only when an
@@ -64,7 +64,7 @@ def check(root=None, environ=None, which=shutil.which, version_info=None) -> dic
 
 
 def render_text(result: dict) -> str:
-    lines = ["AppMan environment check"]
+    lines = ["JobJimmy environment check"]
     python = result["python"]
     lines.append(
         "  python       {:<8} {} (needs >= {})".format(

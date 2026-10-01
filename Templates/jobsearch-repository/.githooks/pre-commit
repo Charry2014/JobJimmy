@@ -9,8 +9,8 @@ set -eu
 root=$(git rev-parse --show-toplevel)
 cd "$root"
 
-# Resolve the check script and policy through the parent AppMan checkout.
-# Skip silently when the vault is not mounted inside AppMan.
+# Resolve the check script and policy through the parent JobJimmy checkout.
+# Skip silently when the vault is not mounted inside JobJimmy.
 script="$root/../CV/Scripts/redact_md.py"
 policy="$root/Templates/redaction-policy.json"
 [ -f "$script" ] && [ -f "$policy" ] || exit 0

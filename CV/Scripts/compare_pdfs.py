@@ -10,7 +10,7 @@ import sys
 try:
     import pymupdf as fitz
 except ImportError:
-    raise SystemExit('PDF comparison needs PyMuPDF; run with APPMAN_PY_WITH="pymupdf" tools/py, '
+    raise SystemExit('PDF comparison needs PyMuPDF; run with JOBJIMMY_PY_WITH="pymupdf" tools/py, '
                      'or uv run --no-project --with pymupdf python. ODT extraction/rendering uses '
                      'only the standard library. Do not create an in-tree .venv.')
 

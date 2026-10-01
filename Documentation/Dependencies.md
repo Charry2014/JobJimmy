@@ -4,7 +4,7 @@
 
 Everything the project needs from outside this repository: software, accounts,
 API keys, environment variables and network endpoints. Track-only use needs Git,
-Python, uv and Obsidian; OpenRouter and Jev are opt-in. AppMan has no hosted
+Python, uv and Obsidian; OpenRouter and Jev are opt-in. JobJimmy has no hosted
 service, installer or background job, and the privacy screen, redaction and CV
 rendering run locally without network access.
 
@@ -28,7 +28,7 @@ Notes:
 - No Python package manifest and no virtual environment exist here. Never run
   `uv venv`, `uv sync`, `uv add` or `uv pip install`: an in-tree `.venv` breaks
   the deep privacy gate. Request optional packages per command instead, for
-  example `APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`.
+  example `JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`.
 - `soffice` must be on `PATH`, or present at the macOS path
   `/Applications/LibreOffice.app/Contents/MacOS/soffice`; otherwise export PDFs
   manually from Writer.
@@ -60,7 +60,7 @@ or a non-echoing prompt and keep it out of shell history.
 | `OPENROUTER_MODEL` | `CV/Scripts/translate.py` | For translation | Model identifier, `<provider>/<model-id>`; override per run with `--model` |
 | `OPENROUTER_TRANSLATION_GUIDANCE` | `CV/Scripts/translate.py` | Optional | Default guidance profile; overrides `CV/Translation/german.json`, overridden by `--guidance` |
 | `TYPESAFE_API_KEY` | `CV/Scripts/jev_check.py` | For live Jev (`--send`) | Bearer credential for the TypeSafe endpoint |
-| `APPMAN_PY_WITH` | `tools/py` | Optional | Space-separated packages to add as uv `--with` flags for one command (for example `pymupdf`, `certifi`) |
+| `JOBJIMMY_PY_WITH` | `tools/py` | Optional | Space-separated packages to add as uv `--with` flags for one command (for example `pymupdf`, `certifi`) |
 
 The Jev model is configured in `CV/Jev/requests.json`, not in the environment.
 Offline Jev previews (no `--send`) need no key and make no network call.

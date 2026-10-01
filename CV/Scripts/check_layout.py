@@ -19,7 +19,7 @@ import sys
 try:
     import pymupdf as pdf
 except ImportError:
-    raise SystemExit('Layout checks need PyMuPDF; run with APPMAN_PY_WITH="pymupdf" tools/py, '
+    raise SystemExit('Layout checks need PyMuPDF; run with JOBJIMMY_PY_WITH="pymupdf" tools/py, '
                      'or uv run --no-project --with pymupdf python. Do not create an in-tree .venv.')
 
 DEFAULT_CONFIG = Path(__file__).resolve().parents[1] / 'Templates/layout-pages.json'

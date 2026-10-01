@@ -33,10 +33,10 @@ article was read or rewritten.
 ## External dependencies reference — 2026-10-01
 
 Added `Documentation/Dependencies.md`, a canonical list of the software, accounts,
-API keys, environment variables, network endpoints and private input files AppMan
+API keys, environment variables, network endpoints and private input files JobJimmy
 needs. It distinguishes the separate OpenRouter (`OPENROUTER_API_KEY`/`OPENROUTER_MODEL`/
 `OPENROUTER_TRANSLATION_GUIDANCE`) and TypeSafe (`TYPESAFE_API_KEY`) credentials,
-records `APPMAN_PY_WITH`, and notes the two external endpoints. Linked from the
+records `JOBJIMMY_PY_WITH`, and notes the two external endpoints. Linked from the
 README requirements table/footer and Getting-Started step 1, and corrected the
 README so the Jev/TypeSafe key is listed separately from OpenRouter.
 
@@ -45,10 +45,10 @@ clean. Documentation only; no scripts or private records changed.
 
 ## No in-tree venv: uv ephemeral runner — 2026-10-01
 
-Removed the fixed sibling virtual environment (`../appman-venv`) convention,
+Removed the fixed sibling virtual environment (`../jobjimmy-venv`) convention,
 which was not worktree-safe and was easy for agents to bypass with `uv venv`.
 Added `tools/py`, a thin wrapper for `uv run --no-project python` that resolves
-the checkout root and forwards optional dependencies from `APPMAN_PY_WITH` as uv
+the checkout root and forwards optional dependencies from `JOBJIMMY_PY_WITH` as uv
 `--with` flags. The project now has no virtual environment at all; uv's cache
 lives outside the checkout, so the deep privacy screen stays clean in every
 clone and Agent Manager worktree. Documented the rule (never `uv venv`,
@@ -60,7 +60,7 @@ the per-command runner.
 
 Validation: `tools/py` ran standard-library and PyMuPDF (`--with`) commands with
 no `.venv` created in the checkout; the changed-file privacy screen passed and
-`git diff --check` was clean. The obsolete `/Users/name/work/projects/appman-venv`
+`git diff --check` was clean. The obsolete `/Users/name/work/projects/jobjimmy-venv`
 directory outside the repo was left in place. No live document rendering ran;
 the global Kilo `AGENTS.md` still contains the generic "create a venv" rule and
 is only overridden project-side.
@@ -97,7 +97,7 @@ records changed; no live Kilo session or cross-model behaviour was tested.
 ## Vault relocated into the private repository — 2026-09-30
 
 The Obsidian vault base is now the private `JobSearch/` checkout, not the
-public AppMan root. Moved `.obsidian/`, `Dashboard.md`,
+public JobJimmy root. Moved `.obsidian/`, `Dashboard.md`,
 `Recruiters/Directory.md` and the note templates into `JobSearch/`; rewrote the
 private vault's wikilinks and Dataview `FROM` paths to vault-relative form (no
 `JobSearch/` prefix); repointed personal CV-baseline links to

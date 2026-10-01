@@ -135,7 +135,7 @@ questions require appropriate current sources and professional review where need
 | --- | --- | --- |
 | Gmail or Outlook Email | Selected recruitment threads and confirmations | Verify actual scopes; draft first; sending separately authorised |
 | Google or Outlook Calendar | Interview dates and preparation context | Match the existing account; constrain retrieval and writes |
-| Local AppMan MCP | Typed get_application, find_evidence and record_event tools | Path confinement, schema checks, minimal responses; local MCP is not local inference |
+| Local JobJimmy MCP | Typed get_application, find_evidence and record_event tools | Path confinement, schema checks, minimal responses; local MCP is not local inference |
 | Local Presidio | Supplement deterministic detection and tokenisation | Local recognizers; measure misses; no guarantee of anonymity |
 | GitHub | Public engine issues and synthetic CI | Avoid unrelated/private repository access |
 | Local transcription | Permitted recordings or dictated debriefs | Recording consent, local processing and retention agreed first |

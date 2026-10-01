@@ -1,4 +1,4 @@
-# Shared AppMan instructions
+# Shared JobJimmy instructions
 
 For every Kilo mode and model family, read the project-root `AGENTS.md` and follow
 its task routing. Skills are agent-agnostic under `.kilo/skills/`; read their
@@ -21,5 +21,5 @@ This project has no in-tree Python virtual environment, overriding the global
 third-party metadata and interpreter symlinks to the deep privacy audit and
 blocks public commits. Run scripts with `tools/py <script> [args]` (a wrapper for
 `uv run --no-project python`), adding optional dependencies with
-`APPMAN_PY_WITH="pymupdf certifi"`. See the "Python tooling" section of the
+`JOBJIMMY_PY_WITH="pymupdf certifi"`. See the "Python tooling" section of the
 project `AGENTS.md`.

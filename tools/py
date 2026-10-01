@@ -1,5 +1,5 @@
 #!/bin/sh
-# AppMan Python runner.
+# JobJimmy Python runner.
 #
 # This project has no package manifest and must never contain a .venv: the deep
 # privacy audit (tools/privacy_screen.py --all) scans ignored files, so an
@@ -16,11 +16,11 @@
 #
 # Most scripts, including the privacy screen and redact_md.py, need only the
 # standard library. Optional third-party dependencies are requested per command
-# through the space-separated APPMAN_PY_WITH variable, which becomes uv `--with`
+# through the space-separated JOBJIMMY_PY_WITH variable, which becomes uv `--with`
 # flags and is never installed into the checkout:
 #
-#   APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/cv.pdf
-#   APPMAN_PY_WITH="certifi" tools/py CV/Scripts/translate.py ...
+#   JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/cv.pdf
+#   JOBJIMMY_PY_WITH="certifi" tools/py CV/Scripts/translate.py ...
 #
 # The equivalent without this helper:
 #
@@ -39,7 +39,7 @@ root=$(git rev-parse --show-toplevel 2>/dev/null) ||
 cd "$root"
 
 set -- python "$@"
-for pkg in ${APPMAN_PY_WITH:-}; do
+for pkg in ${JOBJIMMY_PY_WITH:-}; do
     set -- --with "$pkg" "$@"
 done
 

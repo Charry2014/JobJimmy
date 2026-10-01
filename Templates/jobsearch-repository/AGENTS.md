@@ -1,23 +1,23 @@
-# AppMan-JobSearch: agent guide
+# JobJimmy-JobSearch: agent guide
 
 This repository contains **private job-search data** — real application notes,
 activity history, company and recruiter records, CV source documents and
-generated documents. It is mounted inside the AppMan workspace at `JobSearch/`,
+generated documents. It is mounted inside the JobJimmy workspace at `JobSearch/`,
 is an independent Git repository, and is the **Obsidian vault**: nothing here is
-ever committed to the public AppMan repository, and AppMan's `.gitignore`
+ever committed to the public JobJimmy repository, and JobJimmy's `.gitignore`
 excludes this whole tree.
 
 ## Workflow
 
-Follow the AppMan workflow documents for how to carry out vault actions:
+Follow the JobJimmy workflow documents for how to carry out vault actions:
 
-- the root `AGENTS.md` and `PROCEDURES.md` of the AppMan workspace (durable
+- the root `AGENTS.md` and `PROCEDURES.md` of the JobJimmy workspace (durable
   rules and central runbooks for submissions, follow-ups, document additions,
   interview actions and research);
 - this repository's own `AGENTS.md`, which takes precedence for the privacy
   rules below.
 
-Templates (`Templates/` in the AppMan workspace and this vault), the dashboards
+Templates (`Templates/` in the JobJimmy workspace and this vault), the dashboards
 (`Dashboard.md`, `Recruiters/Directory.md`) and the runbooks are authoritative.
 Existing application notes are examples, not specifications; do not model a new
 note on another application's file.
@@ -98,4 +98,4 @@ repository and carry no `JobSearch/` prefix, for example
   filesystem archive — Git exclusion is a repository boundary, not an access
   control.
 - `.gitignore` likewise does not decide what may be sent to an external model;
-  the AppMan privacy documentation (`PRIVACY.md`) governs that.
+  the JobJimmy privacy documentation (`PRIVACY.md`) governs that.

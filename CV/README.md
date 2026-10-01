@@ -151,7 +151,7 @@ carrying `-proposed`, `-preview`, `-review` or `-test` are ignored by Git and
 should be regenerated rather than committed. Personal baseline renders and reports belong under `JobSearch/Outputs/Baselines/`.
 Public `CV/Rendered/` and `CV/Validation/` may contain only non-personal
 documentation; public templates and references must be genuinely blank or synthetic.
-Commands run from the AppMan project root and need Python 3; extraction and
+Commands run from the JobJimmy project root and need Python 3; extraction and
 rendering use no third-party libraries. Existing output files are replaced, so
 use a new filename for versions you want to retain. The renderer refuses to
 overwrite its template.
@@ -517,7 +517,7 @@ soffice --headless --convert-to pdf --outdir JobSearch/Outputs/Baselines '/path/
 Compare PDFs with `CV/Scripts/compare_pdfs.py` (optional PyMuPDF dependency):
 
 ```sh
-APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/compare_pdfs.py JobSearch/Outputs/Baselines/original.pdf JobSearch/Outputs/Baselines/recreated.pdf --report JobSearch/Outputs/Baselines/comparison.json
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/compare_pdfs.py JobSearch/Outputs/Baselines/original.pdf JobSearch/Outputs/Baselines/recreated.pdf --report JobSearch/Outputs/Baselines/comparison.json
 ```
 
 The script checks page count, page size, extracted text and rendered
@@ -528,7 +528,7 @@ same environment.
 Layout preflight for tuned PDFs (separate from baseline fidelity comparison):
 
 ```sh
-APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/tailored.pdf --report JobSearch/Outputs/tailored-layout.json
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/tailored.pdf --report JobSearch/Outputs/tailored-layout.json
 ```
 
 More than five estimated blank body-text lines on any page is an underfill

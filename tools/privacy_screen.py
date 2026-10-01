@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Privacy screening gate for the public AppMan repository.
+"""Privacy screening gate for the public JobJimmy repository.
 
 Screens changes in the outer (public) project repository for personal data.
 Personal data may exist only inside the private JobSearch/ tree; anything this
@@ -319,7 +319,7 @@ def report(findings: list[Finding], identifiers_count: int, private_present: boo
 
 
 def main(argv: list[str] | None = None, root: Path | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Privacy screen for the public AppMan repository.")
+    parser = argparse.ArgumentParser(description="Privacy screen for the public JobJimmy repository.")
     parser.add_argument("--all", action="store_true", help="screen every tracked and untracked file, not just changes")
     parser.add_argument("paths", nargs="*", help="explicit file paths to screen (used without --all/--changed scan)")
     args = parser.parse_args(argv)

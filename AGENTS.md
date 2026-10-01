@@ -1,4 +1,4 @@
-# AppMan job-search engine: agent guide
+# JobJimmy job-search engine: agent guide
 
 ## Vault actions
 
@@ -46,13 +46,13 @@ unrelated edits, personal assessments and attachments.
 
 ## Repository boundary
 
-This checkout is the public AppMan project: the reusable engine, scripts and
+This checkout is the public JobJimmy project: the reusable engine, scripts and
 documentation. The Obsidian vault and all user-specific job-search data live in
 an **independent private Git repository** mounted at `JobSearch/`, which the
 outer `.gitignore` excludes completely (anchored `/JobSearch/`; not a submodule,
 and no `.gitmodules`).
 
-**Privacy rule (absolute, no exceptions):** this checkout is the public AppMan
+**Privacy rule (absolute, no exceptions):** this checkout is the public JobJimmy
 project and will be made open-source. Personal data of any kind must never be
 added to it — not to files, filenames, commit messages, branch names, PR
 titles or descriptions, agent instructions, templates or test fixtures. All
@@ -117,7 +117,7 @@ Optional third-party dependencies (`pymupdf` for PDF layout/comparison checks,
 into the checkout:
 
 ```sh
-APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/cv.pdf
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/cv.pdf
 ```
 
 The equivalent without the helper is `uv run --no-project [--with PKG ...]

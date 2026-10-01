@@ -99,7 +99,7 @@ Edit the authoritative places, keeping one meaning everywhere:
   `Templates/jobsearch-repository/.githooks/pre-commit` that checks only the
   staged `Knowledge/**/*.md` files against the reviewed policy (located via the
   vault's `Templates/redaction-policy.json`, script resolved through the parent
-  AppMan checkout). Document activation with
+  JobJimmy checkout). Document activation with
   `git config --local core.hooksPath .githooks`. It exits 0 when the policy or
   the parent script is absent, so an unmounted public checkout still works.
   Confirm the private vault's existing pre-commit hook before enabling.

@@ -245,7 +245,7 @@ Do not invent content or shrink text indiscriminately to meet a space target.
 
 The public layout JSON is synthetic example configuration, not a personal layout oracle.
 If the private profile is absent, report automatic allocation checks as unavailable.
-Run `CV/Scripts/check_layout.py --config JobSearch/Templates/layout-pages.json` on the final PDF (PyMuPDF required; run it as `APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`), then inspect
+Run `CV/Scripts/check_layout.py --config JobSearch/Templates/layout-pages.json` on the final PDF (PyMuPDF required; run it as `JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`), then inspect
 all pages for overflow, density, repetition and readability. Its bottom-space
 measurement is approximate and its section checks do not prove every bullet is on
 the right page. Recorded fidelity baselines may themselves have whitespace

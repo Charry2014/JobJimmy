@@ -1,4 +1,4 @@
-# AppMan
+# JobJimmy
 
 A small, experimental job-search workspace: keep track of applications in
 Obsidian, build a reusable record of your experience, and use an AI assistant to
@@ -88,7 +88,7 @@ rubrics are editable; live scoring quality has not yet been validated.
 ## Your files stay separate
 
 ```text
-appman/                         public tools, guides and source templates
+jobjimmy/                       public tools, guides and source templates
 ├── Documentation/
 ├── Templates/                  canonical note templates (copied into the vault)
 ├── CV/                         CV tooling, references and templates

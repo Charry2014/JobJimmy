@@ -7,7 +7,7 @@ Paths in this reference are relative to the public project root unless explicitl
 ### Applications
 
 Application folders always live directly under the vault's `Applications/`
-folder (`JobSearch/Applications/` in the AppMan workspace): the folder for an
+folder (`JobSearch/Applications/` in the JobJimmy workspace): the folder for an
 application is `JobSearch/Applications/<application-slug>/` and its note
 `JobSearch/Applications/<application-slug>/<application-slug>.md`. When asked
 to create, update or work with an application, resolve this path from the

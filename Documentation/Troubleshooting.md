@@ -21,8 +21,8 @@
 | `soffice` not found | Open the ODT in Writer and export manually, or configure the executable on PATH; see platform notes in the documents guide |
 | `.venv` missing or `test -d .venv` fails | Expected: this project has no venv. Run Python with `tools/py` or `uv run --no-project`; see [Getting started](Getting-Started.md) |
 | Deep privacy audit flags `.venv` | Remove the stray `.venv`; never create one here. Run Python with `tools/py`/`uv run --no-project`; ignored third-party files and interpreter symlinks are still scanned |
-| `uv venv`, `uv sync` or `uv pip install` wants to create `.venv` | Do not run them here; request packages per command with `APPMAN_PY_WITH="pkg" tools/py ...` or `uv run --no-project --with pkg python ...` |
-| `pymupdf` missing | Request it per command: `APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`; basic ODT operations do not require it |
+| `uv venv`, `uv sync` or `uv pip install` wants to create `.venv` | Do not run them here; request packages per command with `JOBJIMMY_PY_WITH="pkg" tools/py ...` or `uv run --no-project --with pkg python ...` |
+| `pymupdf` missing | Request it per command: `JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`; basic ODT operations do not require it |
 | Layout checker flags example employers | Create a private layout configuration matching your own CV and pass `--config` |
 | Translation requires a policy | Supply `--privacy-policy` with a reviewed private configuration; model selection alone is insufficient |
 | Translation rejects keep-block IDs | The policy does not match this baseline; inspect the source block IDs locally and correct the policy |

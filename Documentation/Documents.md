@@ -8,7 +8,7 @@ to manufacture a new career narrative from the advert.
 
 You need Python for the scripts and LibreOffice Writer for layouts/PDFs.
 OpenRouter is optional and only used by the supplied translation script.
-All commands below run from the AppMan root. Keep personal inputs and outputs
+All commands below run from the JobJimmy root. Keep personal inputs and outputs
 under `JobSearch/`.
 
 ## Choose a document approach
@@ -21,7 +21,7 @@ under `JobSearch/`.
 
 These are different input formats. Do not pass a block-marked reference to the
 personal-master populator, or a body-only draft to the block renderer.
-No personal baselines are distributed with AppMan. The current import skill uses
+No personal baselines are distributed with JobJimmy. The current import skill uses
 `Manager` and `VP-CTO` as baseline names, not as documents supplied by the project.
 Every user must supply their own ODT CV source with the basic layout and
 substantive content they require, then extract the matching Markdown and ODT
@@ -205,7 +205,7 @@ The public `layout-pages.json` contains synthetic employer headings. Copy it to
 allocation privately before using automatic checks:
 
 ```sh
-APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py \
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py \
   JobSearch/Outputs/cv-preview.pdf \
   --config JobSearch/Templates/layout-pages.json \
   --report JobSearch/Outputs/cv-layout.json

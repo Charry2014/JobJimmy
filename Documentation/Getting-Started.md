@@ -22,7 +22,7 @@ credentials — is in [External dependencies](Dependencies.md).
 This guide uses macOS/Linux shell commands. On Windows, use Git Bash for the
 Git/file commands, and replace `python3` with your Python launcher as needed.
 Windows installation and automatic PDF export have not been validated here;
-Writer's **Export as PDF** is the fallback. Run commands from the AppMan root
+Writer's **Export as PDF** is the fallback. Run commands from the JobJimmy root
 unless a step says otherwise.
 
 This project has **no Python package manifest and no virtual environment**. Do
@@ -45,7 +45,7 @@ certifi for translation TLS per command; they are never installed into the
 checkout:
 
 ```sh
-APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/cv.pdf
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/cv.pdf
 ```
 
 The equivalent without the helper is `uv run --no-project [--with PKG ...]
@@ -54,14 +54,14 @@ python <script> [args]`. On Windows, run `tools/py` from Git Bash, or use that
 personal material in one. Never disable TLS verification to fix a certificate
 error.
 
-## 2. Get AppMan
+## 2. Get JobJimmy
 
 Use the repository's **Code → Clone** URL. Replace `REPOSITORY_URL` below with
 that URL; it is a placeholder, not an actual project address.
 
 ```sh
-git clone REPOSITORY_URL appman
-cd appman
+git clone REPOSITORY_URL jobjimmy
+cd jobjimmy
 ```
 
 No separate environment setup is needed: the Python tools run through uv's
@@ -114,7 +114,7 @@ Version control is not a substitute for a backup you have tested restoring.
 ## 4. Open Obsidian
 
 1. Choose **Open folder as vault**, and select `JobSearch/` (the private
-   repository), not the public `appman/` root.
+   repository), not the public `jobjimmy/` root.
 2. In Settings → Core plugins, enable **Templates**.
 3. Set the template folder to `Templates` in the Templates settings.
 4. Enable the **Dataview** community plugin through Obsidian's community plugin
@@ -138,7 +138,7 @@ workspace; close Obsidian before a release audit.
 
 Tracking works without an AI assistant. For assisted work, choose one that can
 read/write local files and run the Python tools; browsing is useful for research.
-No particular assistant, paid plan or memory plugin is required by AppMan.
+No particular assistant, paid plan or memory plugin is required by JobJimmy.
 
 Read [Privacy](../PRIVACY.md) before granting access. A locally running editor can
 still send file contents to a hosted model. An OpenRouter privacy setting does
@@ -184,7 +184,7 @@ account and policy setup is covered in the documents guide, at the point you nee
 
 ## Kilo Code: shared instructions across models
 
-Open the public AppMan folder as the Kilo workspace; open `JobSearch/` separately
+Open the public JobJimmy folder as the Kilo workspace; open `JobSearch/` separately
 as the Obsidian vault. The project `kilo.jsonc` loads `.kilo/rules/project.md`,
 which routes every mode/model to `AGENTS.md`. Skills remain agent-agnostic in
 `.kilo/skills/`; if a client does not discover them, explicitly ask it to read the
