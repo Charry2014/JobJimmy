@@ -1,0 +1,35 @@
+# LibreOffice document lock files created while editing ODTs.
+.~lock.*#
+
+# Operating-system and editor noise.
+.DS_Store
+Thumbs.db
+
+# Obsidian session state: machine-specific, not part of the record.
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# CV workflow intermediates: reports, comparison JSON and preview/test renders
+# are regenerated on demand. Source Markdown, drafts and final ODT/PDF stay
+# tracked (application CV folders live at Applications/<slug>/CV/).
+**/CV/*-blocks-report.json
+**/CV/*-layout.json
+**/CV/*-comparison.json
+**/CV/*-proposed.*
+**/CV/*-preview.*
+**/CV/*-review.*
+**/CV/*-test.*
+
+# Python bytecode from the CV tooling.
+__pycache__/
+*.pyc
+
+# Optional private areas: only finished documents are committed deliberately.
+Outputs/*-proposed.*
+Outputs/*-preview.*
+Outputs/*-review.*
+Outputs/*-test.*
+# Reversible-redaction intermediates: regenerable, and the maps hold the exact
+# private identifiers. Ignore them rather than committing duplicates.
+Outputs/**/*-safe.md
+Outputs/**/*-map.json

@@ -1,0 +1,5 @@
+#!/bin/sh
+# Gate the public index and current workspace; never stage or modify files.
+set -eu
+cd "$(git rev-parse --show-toplevel)"
+exec python3 -B tools/privacy_screen.py --all

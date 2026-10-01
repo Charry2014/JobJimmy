@@ -1,0 +1,23 @@
+#!/bin/sh
+# Optional private-vault gate: validate staged knowledge-base articles against
+# the outer project's reviewed redaction policy. Curated Knowledge/ notes may be
+# sent to a remote model only when they hold none of the policy's redact_values.
+# This is a local convenience, not a substitute for content review, and it can
+# be bypassed. Activate with: git config --local core.hooksPath .githooks
+set -eu
+
+root=$(git rev-parse --show-toplevel)
+cd "$root"
+
+# Resolve the check script and policy through the parent AppMan checkout.
+# Skip silently when the vault is not mounted inside AppMan.
+script="$root/../CV/Scripts/redact_md.py"
+policy="$root/Templates/redaction-policy.json"
+[ -f "$script" ] && [ -f "$policy" ] || exit 0
+
+# Check only the knowledge Markdown staged in this commit.
+files=$(git diff --cached --name-only --diff-filter=ACM -- \
+    'Knowledge/*.md' 'Knowledge/**/*.md')
+[ -n "$files" ] || exit 0
+
+exec python3 -B "$script" check "$policy" $files

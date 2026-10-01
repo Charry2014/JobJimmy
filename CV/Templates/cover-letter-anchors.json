@@ -1,0 +1,15 @@
+{
+  "comment": "Anchor configuration for CV/Scripts/cover_letter.py, derived from the supplied cover-letter document template. paragraph_count is the number of paragraphs in the template's office:text. Each anchor lists the zero-based index of its first paragraph, how many paragraphs the section occupies, and the visible placeholder text found at that position. body_spacer_index is the zero-based index of the blank paragraph inserted between body paragraphs, or null when the template has no spacer. Regenerate this file whenever the template structure changes.",
+  "paragraph_count": 23,
+  "body_spacer_index": 16,
+  "anchors": {
+    "Sender": {"index": 0, "count": 3, "text": "Your Name"},
+    "Date": {"index": 4, "count": 1, "text": "[DD.MM.YYYY]"},
+    "Recipient": {"index": 5, "count": 1, "text": "[To address - Hiring Manager]"},
+    "Subject": {"count": 1, "index": 9, "text": "Re. Job Application - [Job title]"},
+    "Salutation": {"count": 1, "index": 13, "text": "Dear [Hiring Manager or name if known],"},
+    "Body": {"count": 1, "index": 15, "text": "[Body]"},
+    "Closing": {"count": 1, "index": 18, "text": "Best regards,"},
+    "Signature": {"count": 3, "index": 20, "text": "Your Name"}
+  }
+}

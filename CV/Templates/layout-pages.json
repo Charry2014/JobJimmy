@@ -1,0 +1,8 @@
+{
+  "comment": "Page allocation verified by CV/Scripts/check_layout.py. For each page, list the section and employer headings that must appear on that page and nowhere else, in the order they occur. Update this file when adopting a new CV document template.",
+  "pages": {
+    "1": ["PROFILE", "EXPERTISE & ACHIEVEMENTS"],
+    "2": ["WORK EXPERIENCE", "Example Company A GmbH", "Example Company B GmbH"],
+    "3": ["Example Company C GmbH", "Example Company D GmbH", "EDUCATION", "LANGUAGES", "SPORTS & HOBBIES"]
+  }
+}

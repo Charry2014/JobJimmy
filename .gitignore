@@ -1,0 +1,36 @@
+# Generated CV documents; retain any accompanying Markdown documentation.
+/CV/Rendered/*
+!/CV/Rendered/*.md
+!/CV/Rendered/.gitkeep
+
+# LibreOffice document lock files created while editing ODTs.
+.~lock.*#
+
+# Generated PDF comparisons and machine-readable validation reports.
+/CV/Validation/*
+!/CV/Validation/*.md
+!/CV/Validation/.gitkeep
+
+# Independent private repository containing real job-search data.
+# JobSearch/ is a separate Git repository mounted at this path; the outer
+# repository must never track anything beneath it (see README, "Repository
+# layout").
+/JobSearch/
+
+# The Obsidian vault, including its per-machine UI state, now lives inside the
+# private JobSearch/ tree. The public project is tooling and documentation only
+# and must not track a top-level vault (see AGENTS.md). The starter vault config
+# under Templates/jobsearch-repository/.obsidian/ stays tracked.
+/.obsidian/
+
+# Keep CV/References, CV/Templates, CV/Scripts and other source files tracked.
+
+# Python caches (still subject to privacy audit).
+__pycache__/
+*.pyc
+
+# Safety net only. This project must never hold an in-tree virtual environment:
+# the deep privacy audit scans ignored files, so installed third-party metadata
+# and interpreter symlinks in .venv block public commits. Run Python with
+# tools/py or `uv run --no-project` instead of `uv venv`/`uv sync`/`uv pip install`.
+/.venv/

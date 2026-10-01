@@ -1,0 +1,9 @@
+/* Dashboard.md (cssclasses: dashboard-table): widen the Next Action column */
+.dashboard-table table th:nth-child(8),
+.dashboard-table table td:nth-child(8) {
+  min-width: 12rem;
+}
+
+.dashboard-table table th:nth-child(8) {
+  white-space: nowrap;
+}

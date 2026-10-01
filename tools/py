@@ -1,0 +1,46 @@
+#!/bin/sh
+# AppMan Python runner.
+#
+# This project has no package manifest and must never contain a .venv: the deep
+# privacy audit (tools/privacy_screen.py --all) scans ignored files, so an
+# in-tree virtual environment exposes installed third-party metadata and
+# interpreter symlinks and blocks public commits. Do not run `uv venv`,
+# `uv sync`, `uv add` or `uv pip install` in this checkout.
+#
+# Everything runs through uv's ephemeral, cached environment instead, which
+# lives outside the checkout and behaves the same in every clone and Agent
+# Manager worktree:
+#
+#   tools/py tools/privacy_screen.py --all
+#   tools/py CV/Scripts/cover_letter.py check-identity JobSearch/Templates/letter-identity.json
+#
+# Most scripts, including the privacy screen and redact_md.py, need only the
+# standard library. Optional third-party dependencies are requested per command
+# through the space-separated APPMAN_PY_WITH variable, which becomes uv `--with`
+# flags and is never installed into the checkout:
+#
+#   APPMAN_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/cv.pdf
+#   APPMAN_PY_WITH="certifi" tools/py CV/Scripts/translate.py ...
+#
+# The equivalent without this helper:
+#
+#   uv run --no-project [--with PKG ...] python <script> [args]
+set -eu
+
+command -v uv >/dev/null 2>&1 || {
+    echo "tools/py: uv is required; see https://docs.astral.sh/uv/getting-started/installation/" >&2
+    exit 127
+}
+
+# Resolve the checkout root so repository-relative inputs work from any worktree.
+# Fall back to this script's parent directory for a Git-less ZIP checkout.
+root=$(git rev-parse --show-toplevel 2>/dev/null) ||
+    root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+
+set -- python "$@"
+for pkg in ${APPMAN_PY_WITH:-}; do
+    set -- --with "$pkg" "$@"
+done
+
+exec uv run --no-project "$@"

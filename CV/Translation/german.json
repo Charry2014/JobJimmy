@@ -1,0 +1,58 @@
+{
+  "style_instructions": [
+    "Write idiomatic, polished German for a senior technology CV.",
+    "Prefer concise active phrasing and established German professional usage over literal word-for-word translation.",
+    "Retain English industry terms when they are more natural or precise in German technology hiring contexts.",
+    "Use implied first person without personal pronouns in profile and achievement text.",
+    "Preserve factual scope, tense, dates, numbers, ownership and certainty; never strengthen a claim during translation.",
+    "Technical terms: choose a natural sounding translation that reflects the common use of English terminology, rather than a more linguistically correct approach"
+  ],
+  "glossary": {
+    "embedded software": "Embedded-Software",
+    "embedded systems": "Embedded Systems",
+    "software engineering": "Softwareentwicklung",
+    "engineering leadership": "Engineering Leadership",
+    "engineering team": "Entwicklungsteam",
+    "engineering teams": "Entwicklungsteams",
+    "connected products": "Connected Produkte",
+    "software architecture": "Softwarearchitektur",
+    "software quality": "Softwarequalität",
+    "delivery performance": "Umsetzungsleistung",
+    "development workflow": "Entwicklungsworkflow",
+    "development workflows": "Entwicklungsworkflows",
+    "field failures": "Feldausfälle",
+    "sustaining engineering": "Sustaining Engineering",
+    "quality assurance": "Qualitätssicherung",
+    "product lifecycle": "Product Lifecycle",
+    "enterprise environments": "etablierten Unternehmen"
+  },
+  "preserve_terms": [
+    "AIoT",
+    "AI-Assisted",
+    "AI-enabled",
+    "AI",
+    "Backend",
+    "Cloud",
+    "CI/CD",
+    "C/C++",
+    "Edge AI",
+    "Firmware",
+    "HW/SW",
+    "Mobile",
+    "Python",
+    "Rust",
+    "Start-up",
+    "Scale-up",
+    "True Wireless"
+  ],
+  "avoid_terms": [
+    "Lieferleistung as a literal translation of delivery performance",
+    "Lieferung as a literal translation of engineering delivery",
+    "Software-Ingenieur when Softwareentwickler or Softwareentwicklung is more natural",
+    "literal English calques that sound unnatural in a German CV"
+  ],
+  "notes": [
+    "This file is a living project glossary. Edit it when a translation needs a preferred term or a recurring correction.",
+    "The guidance is sent to the configured OpenRouter model with each translation request."
+  ]
+}
