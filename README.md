@@ -116,6 +116,17 @@ and LibreOffice. Obsidian is an optional, free-to-use interface for the notes
 and dashboard, but isn't open source; a Markdown editor works too. The tools
 can be free even though external AI usage still costs money.
 
+**The primary interface is Kilo Code in Visual Studio Code.** Use it like any
+other AI agent: describe the task, let it work with the project files and tools,
+and review the result. JobJimmy supplies the job-search instructions, templates
+and local automation. Other capable agents—including Claude Code, Codex and
+Cursor desktop/editor or CLI interfaces—can use the same workspace. See
+[interface setup and alternatives](Documentation/Getting-Started.md#kilo-code-in-visual-studio-code-primary-interface)
+for setup, capabilities and billing differences. With Claude or Codex's own
+billing, Jev checks need their own credentials and billing: choose OpenRouter or
+TypeSafe directly. OpenRouter is recommended for access to other AI models too;
+it is an individual choice. The bundled Jev script currently uses OpenRouter.
+
 And yes: **sorry about the rather engineering-like user experience.** Jimmy
 currently wears a tool belt more often than a dinner jacket. Expect Markdown
 files, configuration, and a few terminal commands rather than a polished

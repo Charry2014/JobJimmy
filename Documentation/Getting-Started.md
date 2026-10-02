@@ -190,7 +190,44 @@ For AI-assisted applications, translation or Jev checks, complete
 work without an AI account. Configure your assistant to use OpenRouter separately;
 exporting a key does not automatically change its selected provider.
 
-## Kilo Code: shared instructions across models
+## Kilo Code in Visual Studio Code: primary interface
+
+JobJimmy is a workspace for an AI agent: you ask for a task in chat, the agent
+reads the relevant instructions, edits notes and runs local tools, and you review
+the result. Kilo Code in Visual Studio Code is the primary documented interface.
+Obsidian is the companion view for your notes and dashboard, not the AI runtime.
+
+1. Install [Visual Studio Code](https://code.visualstudio.com/) and open its
+   Extensions view. Find **Kilo Code** and follow the current
+   [Kilo installation instructions](https://kilo.ai/docs/getting-started/installing)
+   for the recommended release channel.
+2. Use **File → Open Folder** to open the public JobJimmy project root, containing
+   `AGENTS.md`, `kilo.jsonc` and the attached private `JobSearch/` directory.
+3. Complete [OpenRouter setup](OpenRouter-Setup.md). In Kilo's settings, open
+   **Providers**, select **OpenRouter**, enter the application OpenRouter key in
+   its credential field, and choose a model suitable for file and tool use.
+   Use the direct OpenRouter provider to keep paid AI calls on the one account.
+   See [Kilo provider configuration](https://kilo.ai/docs/getting-started/setup-authentication).
+4. Load the script environment variables as described in the OpenRouter guide,
+   including `OPENROUTER_JEV_API_KEY`. Kilo's stored provider credential does not
+   automatically export script variables, and a terminal export does not configure
+   Kilo's provider. Run `python3 tools/check_env.py` in the environment used for tools;
+   it reports presence without revealing keys.
+5. Open Kilo's chat panel and start with the instruction in step 5 above. Ask it to
+   read the public instructions and explain the workspace boundary first. For an
+   initial check, ask it to run `tools/check_env.py` without reading private records.
+6. Give it an ordinary task, such as “Help me build my knowledge base” or “Run
+   `.kilo/skills/create-application/SKILL.md` for this advert.” Review proposed text,
+   file changes and tool actions as you would with any other AI agent. Keep
+   permission prompts enabled while learning the workflow; blanket access is not
+   a setup requirement.
+
+Keep private files out of automatic chat attachments and context selection.
+The agent must follow `PRIVACY.md` before reading private records into hosted
+context. The scripts' anonymisation controls do not filter everything an editor
+or agent can read independently.
+
+### Shared instructions across models
 
 Open the public JobJimmy folder as the Kilo workspace; open `JobSearch/` separately
 as the Obsidian vault. The project `kilo.jsonc` loads `.kilo/rules/project.md`,
@@ -208,3 +245,53 @@ This wiring follows Kilo's [project rule configuration](https://kilo.ai/docs/cus
 It requires a client supporting `kilo.jsonc` instructions; older clients should
 be upgraded or explicitly directed to `AGENTS.md`. Runtime loading and model
 behaviour must be checked in the installed client, not inferred from file existence.
+
+
+## Other desktop, editor and CLI agents
+
+The same workspace can be used with another agent that can read and edit local
+files, execute the documented commands and follow project instructions. Browsing
+helps with research. No JobJimmy-specific chat service or model-specific copy of
+the skills is required. A plain chat window without filesystem/terminal tools
+can help draft text, but cannot carry out the complete local workflow by itself.
+
+| Interface | How to use this workspace |
+| --- | --- |
+| [Kilo CLI](https://kilo.ai/docs/getting-started/installing) | Start in the project root and configure its OpenRouter provider. A terminal alternative to the VS Code interface. |
+| [Claude Code](https://code.claude.com/docs/en/overview) | Use its terminal, editor or desktop coding interface with the local project folder. Explicitly load the JobJimmy instructions and relevant skill. |
+| [Codex](https://developers.openai.com/codex/quickstart) | Open the local project in its app or IDE interface, or start its CLI from the root. Give it the same instructions and task. |
+| [Cursor Agent](https://cursor.com/docs/agent/overview) and [CLI](https://cursor.com/docs/cli/overview) | Open the project folder in Cursor or start its terminal agent there; use agent tools for files and commands. |
+| Other desktop agents | Enable an appropriate local workspace/filesystem and terminal integration, then check the capabilities and privacy route before using private inputs. |
+
+These are alternative interfaces, not a claim that every product/version has
+been validated with JobJimmy. Installation, authentication, available tools and
+permissions vary; use the linked vendor instructions. Their own subscriptions,
+API billing and data policies may apply. **The one-OpenRouter-account design is
+preserved only when the agent's paid model calls also route through OpenRouter.**
+If you use Claude or Codex through its own account, that account pays for the
+main agent; it does **not** cover Jev checks. For Jev, you can choose an OpenRouter
+account or an account directly with TypeSafe. Either route has its own credentials
+and billing, separate from Claude or Codex. OpenRouter is the recommended route
+here because the same account also lets you try other AI models, but the provider
+choice is yours.
+
+The bundled Jev CLI currently implements the OpenRouter route using
+`OPENROUTER_JEV_API_KEY`. Direct TypeSafe access requires a client/integration
+configured for TypeSafe's endpoint and credentials; do not put a direct TypeSafe
+key into the OpenRouter variable. See the [TypeSafe API documentation](https://docs.typesafe.ai/api).
+Translation through the supplied script also uses OpenRouter via `OPENROUTER_API_KEY`.
+
+Setting JobJimmy's script keys does not reroute an agent's own chat. Kilo with the
+OpenRouter provider is the primary setup for that design; other billing routes
+are optional departures, not additional JobJimmy requirements.
+
+For any alternative, open the project root and explicitly ask it to read
+`AGENTS.md`, `PRIVACY.md`, `PROCEDURES.md` and the selected `.kilo/skills/.../SKILL.md`.
+Do not assume it discovers Kilo configuration automatically. Keep canonical skills
+in place instead of copying them into vendor-specific folders. Confirm file edits,
+terminal access and environment inheritance with public or synthetic inputs first.
+A cloud checkout without the private vault cannot run dependent private workflows;
+do not upload the vault just to make an alternative interface work.
+
+Vendor documentation checked 2026-10-02; no interactive installation or
+cross-client workflow validation was performed for this guide.

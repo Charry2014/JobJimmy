@@ -9,6 +9,17 @@ uses two keys so you can control their spending and privacy settings independent
 Using one key for both is also supported. Tracking and local document assembly
 need no AI account. No separate TypeSafe account is required for Jev.
 
+If you choose Claude or Codex with its own billing for the main agent, Jev needs
+separate credentials and billing. You can obtain these through OpenRouter or
+[TypeSafe directly](https://docs.typesafe.ai/api). OpenRouter is recommended here
+because it also offers access to other AI models, but either provider choice is
+valid. Claude/Codex subscriptions do not include these Jev calls.
+
+This guide and the bundled Jev CLI implement the OpenRouter option. Set
+`OPENROUTER_JEV_API_KEY` to an OpenRouter-issued key. A direct TypeSafe key needs
+a client configured for TypeSafe's endpoint; the bundled CLI does not currently
+offer that route. The single-account setup remains Kilo with OpenRouter.
+
 ## 1. Create the account and add credit
 
 Sign up at [OpenRouter](https://openrouter.ai/), then open your account's credits
@@ -108,7 +119,8 @@ model selection. [OpenRouter System One integration](https://openrouter.ai/docs/
 
 Start scripts from this terminal. Existing IDE processes do not gain newly
 exported variables: restart the IDE from the configured environment or use its
-secure environment/secret configuration. Configure the assistant's OpenRouter
+secure environment/secret configuration. Follow the [Kilo setup](Getting-Started.md#kilo-code-in-visual-studio-code-primary-interface)
+for the primary interface. Configure the assistant's OpenRouter
 provider explicitly; it may use its own credential store rather than these
 variables. Check that it uses the application key. JobJimmy cannot change the
 assistant's provider automatically.

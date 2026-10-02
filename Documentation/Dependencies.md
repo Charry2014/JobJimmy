@@ -24,7 +24,7 @@ AGPL/commercial terms and the CV template artwork exclusion.
 | [Obsidian](https://obsidian.md/download) | Opening and editing the `JobSearch/` vault | Recommended; any Markdown editor can edit notes |
 | Obsidian **Dataview** community plugin | Dashboard and activity tables | For the live tables |
 | [LibreOffice](https://www.libreoffice.org/download/) Writer (`soffice`) | Personalising ODT layouts and exporting PDFs | For document work |
-| A file/terminal-capable AI assistant (for example Kilo Code) | Research, drafting and guided record updates | Optional; not needed for manual tracking |
+| Visual Studio Code with Kilo Code (primary), or another file/terminal-capable AI agent | Research, drafting and guided record updates; see [interface setup](Getting-Started.md#kilo-code-in-visual-studio-code-primary-interface) | Optional; not needed for manual tracking |
 | PyMuPDF | Automated PDF layout and comparison checks | Optional, requested per command |
 | certifi | TLS trust for the translation script if the system store is unavailable | Optional, requested per command |
 
@@ -57,6 +57,15 @@ privacy controls within the same account. Reusing one key in both
 places is supported; no TypeSafe account or key is required. Follow
 [OpenRouter setup](OpenRouter-Setup.md) for account creation, guardrails and safe
 environment loading. Never commit keys or paste them into chat or command arguments.
+
+### Optional direct TypeSafe route
+
+When using a separately billed agent such as Claude or Codex, Jev can be purchased
+through OpenRouter or [TypeSafe directly](https://docs.typesafe.ai/api). OpenRouter
+is recommended for the additional model choices, not required by Jev itself.
+Direct TypeSafe access uses a TypeSafe account and key with a suitably configured
+client. The bundled `jev_check.py` currently supports OpenRouter only; a direct
+TypeSafe key is not interchangeable with `OPENROUTER_JEV_API_KEY`.
 
 ## Environment variables
 
