@@ -26,7 +26,6 @@ git -C JobSearch status
 ```text
 JobSearch/                    # Open this directory as the Obsidian vault
 ├── .obsidian/                # Vault configuration, plugins and snippets
-├── .githooks/                # Optional local pre-commit knowledge check
 ├── AGENTS.md                 # Copied from Templates/jobsearch-repository
 ├── README.md
 ├── .gitignore
@@ -60,11 +59,9 @@ JobSearch/                    # Open this directory as the Obsidian vault
 - Generated documents and final ODT/PDF files are tracked deliberately, one
   commit at a time; reports, intermediate renders and editor state are ignored —
   see `.gitignore`.
-- `.githooks/pre-commit` is an optional local gate that validates staged
-  `Knowledge/**` articles against the outer project's reviewed redaction policy.
-  Activate it with `git config --local core.hooksPath .githooks`; it is a
-  convenience, not a substitute for reviewing content before sending it to a
-  model.
+- Curated `Knowledge/**` articles are private content: redact each with the
+  outer project's `redact_md.py prepare` workflow before sending any to a model.
+  A passing local scan is a safety check only, not proof of anonymity.
 
 For onboarding, follow `Documentation/Getting-Started.md` and
 `Documentation/Knowledge-Base.md` in the outer JobJimmy project. Create

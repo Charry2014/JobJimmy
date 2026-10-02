@@ -49,19 +49,18 @@ never printed).
 ## Step 1 — Knowledge base readiness check
 
 The personal knowledge base lives in `JobSearch/Knowledge/`. The curated
-articles are model-safe: they are kept free of the reviewed redaction policy's
-`redact_values`, so they may be read and sent to a hosted agent directly once
-the local clean check passes — do not force them through the reversible
-redaction workflow, and never read original adverts (redact those first). Run
-the clean check after every knowledge edit and treat a failure as "fix the
-article", not "send it":
-
-```sh
-tools/py CV/Scripts/redact_md.py check JobSearch/Templates/redaction-policy.json JobSearch/Knowledge
-```
+articles are private content, not model-safe: they hold the candidate's name,
+contacts and real employer names, and the reviewed `redact_values` is not
+exhaustive. Before a hosted agent reads any article or the original advert,
+prepare reversible redacted copies with `CV/Scripts/redact_md.py prepare` under
+`PRIVACY.md#remote-drafting-reversible-markdown-tags`; read only the checked
+safe copies. Do not read raw adverts or articles into model context; redact the
+advert first. `redact_md.py check` is a local safety scanner only; a pass is not
+proof of anonymity and does not authorise remote use.
 
 Check the model and tool route against `PRIVACY.md` before returning safe
-context to a hosted agent. Read `Overview.md` and `Evidence-and-sources.md` first. Check that
+context to a hosted agent. Read the safe copies of `Overview.md` and
+`Evidence-and-sources.md` first. Check that
 `Experience.md`, `Gaps-and-mitigations.md`, `Role-fit.md`, `CV-positioning.md`,
 `Reasoning-profile.md` and `Writing-guide.md` exist; retrieve only the sections
 needed for the role, expanding the search before declaring an evidence gap.
@@ -306,10 +305,9 @@ preferences emerging in this task — dated entries with source, scope and
 outcome; new or revised gap assessments go into
 `JobSearch/Knowledge/Gaps-and-mitigations.md`. Job requirements, generated
 prose and proposals are not evidence of capability; no artificial update when
-nothing new was learned. After any knowledge edit, run the clean check
-(`tools/py CV/Scripts/redact_md.py check
-JobSearch/Templates/redaction-policy.json JobSearch/Knowledge`) and report the
-result; the edited articles may then be used with a remote model.
+nothing new was learned. Edited articles are still private content: redact them
+with `redact_md.py prepare` before any remote read and send only the checked
+safe copy.
 
 Memory: retain application facts in application/activity notes and reusable
 personal evidence in the knowledge base. Do not duplicate them in global agent

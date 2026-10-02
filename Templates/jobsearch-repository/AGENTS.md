@@ -67,20 +67,18 @@ repository and carry no `JobSearch/` prefix, for example
 ## What agents must not read or expose directly
 
 - For **every** phase, a hosted agent reads only locally prepared, checked
-  Markdown. The curated knowledge-base articles under `Knowledge/**` are the
-  exception: they are kept free of the reviewed redaction policy's
-  `redact_values`, so once the local clean check passes they may be read and
-  sent to a remote model directly — do not force them through the redaction
-  workflow. Run the check after every knowledge edit and treat a failure as
-  "fix the article", not "send it":
-  `tools/py CV/Scripts/redact_md.py check JobSearch/Templates/redaction-policy.json JobSearch/Knowledge`
-  An optional `.githooks/pre-commit` (see README) runs the same check on staged
-  knowledge files. Do not read raw adverts, company/recruiter records, identity
-  JSON, application paths, final documents or private Git diffs into model
-  context; private filenames and tool output may identify people too. Use
-  `PRIVACY.md`'s reviewed-policy `redact_md.py` workflow before any other
-  private read. If the policy has not been locally reviewed, stop rather than
-  treating a seeded identity list as complete.
+  Markdown. Curated knowledge-base articles under `Knowledge/**` are private
+  content too: they hold the candidate's name, contacts and real employer
+  names, and the reviewed `redact_values` cannot discover an unlisted first
+  name, employer or location. Redact each article with `redact_md.py prepare`
+  before any remote read and send only the checked safe copy. `redact_md.py
+  check` is a local safety scanner only; a pass is not proof of anonymity and
+  does not authorise remote use. Do not read raw adverts, company/recruiter
+  records, identity JSON, application paths, final documents or private Git
+  diffs into model context; private filenames and tool output may identify
+  people too. Use `PRIVACY.md`'s reviewed-policy `redact_md.py` workflow before
+  any private read. If the policy has not been locally reviewed, stop rather
+  than treating a seeded identity list as complete.
 - Completed submission PDFs and final documents are the user's outputs; link
   them, do not restate their personal contents in new notes.
 - Any local master ODT/personal template files kept alongside this repository.

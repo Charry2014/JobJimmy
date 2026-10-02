@@ -5,10 +5,10 @@ The reviewed private JSON policy contains
 {"reviewed": true, "redact_values": ["literal identifier", ...]}.
 Never pass the policy, mapping or restored output to a remote model.
 
-The `check` command fails closed when a document already contains a listed
-identifier, a reserved privacy token or an unlisted contact pattern. It reports
-only generic status, never the matched value, and is the review mechanism for
-the curated knowledge base (see PRIVACY.md).
+The `check` command is a local safety scanner: it reports a listed identifier,
+a reserved privacy token or an unlisted contact pattern, prints only generic
+status and never the matched value. A pass is not proof of anonymity and does
+not authorise remote use; review content and the private policy first.
 """
 import argparse
 from collections import Counter
@@ -119,7 +119,7 @@ def main():
     prepare.add_argument("policy", type=Path)
     prepare.add_argument("safe", type=Path)
     prepare.add_argument("mapping", type=Path)
-    check = commands.add_parser("check", help="Fail if a document holds a listed identifier, token or contact pattern")
+    check = commands.add_parser("check", help="Local scanner: report a listed identifier, token or contact pattern")
     check.add_argument("policy", type=Path)
     check.add_argument("paths", type=Path, nargs="+")
     finish = commands.add_parser("restore", help="Restore tokens in a model response locally")

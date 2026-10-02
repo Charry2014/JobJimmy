@@ -61,25 +61,23 @@ receives them. A local script may inspect them only if it returns generic
 status or a checked redacted copy. Do not use raw `read`, `grep`, `glob`,
 `git status` or terminal output that prints private values/paths as a workaround.
 
-### Knowledge-base articles are model-safe when clean
+### Knowledge-base articles are private content
 
-Curated articles under `JobSearch/Knowledge/**` are the exception. They are
-maintained to hold none of the reviewed policy's `redact_values`, so once the
-local clean check passes they may be read and sent to a remote model directly,
-without the reversible-redaction workflow. Run it after every knowledge edit:
+Curated articles under `JobSearch/Knowledge/**` are private content like every
+other note. They do contain the candidate's name, contacts and real employer
+names, and the reviewed policy's `redact_values` is not exhaustive: it cannot
+discover a first name, employer or location that the reviewer did not list.
+Never send a knowledge article to a remote model as-is. Before any remote read,
+prepare a reversible redacted copy with the workflow below and send only the
+checked safe copy.
 
-```sh
-tools/py CV/Scripts/redact_md.py check JobSearch/Templates/redaction-policy.json JobSearch/Knowledge
-```
-
-The check fails closed on any listed identifier, reserved privacy token or
-unlisted contact pattern, and prints only generic status (never the matched
-value). Matching is literal and case-sensitive, and a pass is not proof of
-anonymity. The unchanged `Sources/` snapshots are scanned too; they often
-contain identifiers, and those must be redacted with the workflow below before
-any remote use. Every other category — adverts, application and activity notes,
-company and recruiter records, identity JSON, CV baselines and generated
-documents — still requires the reversible-redaction workflow.
+`redact_md.py check` remains a local safety scanner: it reports a listed
+identifier, a reserved privacy token or an unlisted contact pattern and prints
+only generic status (never the matched value). Matching is literal and
+case-sensitive; a pass is not proof of anonymity and does not authorise remote
+use. Every category — adverts, application and activity notes, knowledge
+articles, company and recruiter records, identity JSON, CV baselines and
+generated documents — requires the reversible-redaction workflow.
 
 For document drafting, the user accepts the residual re-identification risk of
 employment history once explicit identifiers are redacted. Do not block drafting

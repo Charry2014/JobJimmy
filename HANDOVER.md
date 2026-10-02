@@ -8,6 +8,32 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Knowledge model-safety exception retired — 2026-10-02
+
+A local scan (`redact_md.py check JobSearch/Knowledge`) exposed that the curated
+knowledge articles were never model-safe: the reviewed policy lists only the
+full name and a few strings, while the articles also use the candidate's first
+name (166 occurrences across 11 files) and real employer names the policy cannot
+discover. Passing the check therefore produced a false "safe" result.
+
+Retired the `JobSearch/Knowledge/**` exception: curated knowledge now follows the
+same reversible `redact_md.py prepare`/`restore` workflow as every other private
+source before any remote read. `redact_md.py check` is reframed as a local safety
+scanner — a pass is not proof of anonymity and does not authorise remote use. No
+private article or policy was rewritten.
+
+`tools/privacy_screen.py` now also derives the candidate-name identifier from the
+private `Templates/letter-identity.json`, so the public screen no longer depends
+on knowledge `subject:` frontmatter. Removed the optional private-vault knowledge
+pre-commit hook from the scaffold and updated PRIVACY.md, root AGENTS.md,
+`.kilo/rules/project.md`, the document/import/knowledge-base references, and both
+vault AGENTS.md copies.
+
+Validation: tools suite 32 tests passed; CV suite 120 tests passed (25 skipped
+for absent templates); default and `--all` privacy screens clean (48 identifiers
+screened); `git diff --check` clean. Private articles were scanned locally for
+counts only; no article content or policy value was read into model context.
+
 ## .env fallback for required keys and paths — 2026-10-02
 
 Added `CV/Scripts/env_file.py`, a standard-library loader that reads an optional
@@ -64,7 +90,12 @@ Validation: default and `--all` privacy screens, diff whitespace and local
 Markdown link checks passed. Upstream license sources were reviewed. No runtime
 code changed; no rendering or full publication/history audit was performed.
 
-## Knowledge base is model-safe when clean — 2026-10-01
+## Knowledge base is model-safe when clean — 2026-10-01 (superseded 2026-10-02)
+
+> Superseded: the reviewed policy was incomplete — the articles also held the
+> candidate's first name and real employer names — so the exception was retired
+> and knowledge now uses the reversible redaction workflow. See the 2026-10-02
+> entry.
 
 `redact_md.py` gained a `check` subcommand (backed by a `scan_reasons` helper)
 that fails closed when a document already contains a listed `redact_values`

@@ -1,5 +1,11 @@
 # Plan: knowledge base is model-safe when clean, with an on-edit check
 
+> **Superseded 2026-10-02.** The premise was wrong: the curated articles also
+> contain the candidate's first name and real employer names that the reviewed
+> policy cannot discover, so a passing scan was never a proof of anonymity. The
+> exception was retired; knowledge now uses the reversible redaction workflow
+> (see PRIVACY.md and HANDOVER.md 2026-10-02). Kept as historical context.
+
 ## Goal
 
 Agents currently treat *all* of `JobSearch/Knowledge/` as raw private text that

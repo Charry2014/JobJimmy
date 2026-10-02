@@ -260,18 +260,15 @@ identifiers in every document and context sent. The user accepts residual
 identity inference from redacted career history; do not block solely on that
 risk. Restore locally after model work. Never show the mapping or restored text
 to a remote model. See `PRIVACY.md#remote-drafting-reversible-markdown-tags`.
-Curated knowledge-base articles (`JobSearch/Knowledge/**`) are the exception:
-they are kept free of the reviewed `redact_values`, so they may be read and sent
-to a remote model once the local clean check passes. Run it after every
-knowledge edit and treat a failure as "fix the article", never "send it":
-
-```sh
-tools/py CV/Scripts/redact_md.py check JobSearch/Templates/redaction-policy.json JobSearch/Knowledge
-```
-
-This allowance covers only `JobSearch/Knowledge/**`. Adverts, application and
+Curated knowledge-base articles (`JobSearch/Knowledge/**`) are private content
+like every other note, not an exception: they contain the candidate's name,
+contacts and real employer names, and the reviewed `redact_values` cannot
+discover an unlisted first name, employer or location. Redact each article with
+the reversible workflow before any remote read and send only the checked safe
+copy. `redact_md.py check` is a local safety scanner only; a pass is not proof
+of anonymity and does not authorise remote use. Adverts, application and
 activity notes, employer and recruiter records, identity JSON, CV baselines and
-generated documents keep the redaction workflow.
+generated documents follow the same redaction workflow.
 Read `JobSearch/AGENTS.md` before private work. Personal masters, identity JSON and
 complete documents stay local; do not bulk-read the private tree for engine work.
 

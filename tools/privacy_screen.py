@@ -22,6 +22,7 @@ Exit codes: 0 = clean, 1 = violations found, 2 = could not run the screen.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -102,6 +103,19 @@ def derive_identifiers(private_root: Path) -> list[tuple[str, str]]:
         for note in knowledge.glob("*.md"):
             for value in _frontmatter_values(note.read_text(encoding="utf-8", errors="replace"), ("subject",)):
                 add("candidate-name", value)
+
+    # The identity JSON is the authoritative local name source and is never sent
+    # remotely. Deriving the candidate name here keeps the screen working even
+    # when knowledge notes do not carry a subject: field.
+    identity = private_root / "Templates" / "letter-identity.json"
+    if identity.is_file():
+        try:
+            fields = json.loads(identity.read_text(encoding="utf-8", errors="replace"))
+        except (OSError, ValueError):
+            fields = {}
+        signature = fields.get("Signature") if isinstance(fields, dict) else None
+        if isinstance(signature, list) and signature and isinstance(signature[0], str):
+            add("candidate-name", signature[0])
 
     companies = private_root / "Companies"
     if companies.is_dir():

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 import subprocess
 import sys
 import tempfile
@@ -127,6 +128,21 @@ class DerivationTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             identifiers = ps.derive_identifiers(Path(tmp) / "JobSearch")
             self.assertEqual(identifiers, [])
+
+    def test_derive_candidate_name_from_identity_json(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            templates = root / "JobSearch" / "Templates"
+            templates.mkdir(parents=True)
+            (templates / "letter-identity.json").write_text(
+                json.dumps({
+                    "Sender": ["Alex Fictional", "Example Street 1", "00000 Exampleville"],
+                    "Signature": ["Alex Fictional", "+00 555-0100", "alex@example.com"],
+                }),
+                encoding="utf-8",
+            )
+            identifiers = ps.derive_identifiers(root / "JobSearch")
+            self.assertIn(("candidate-name", "Alex Fictional"), identifiers)
 
 
 class CliTests(unittest.TestCase):

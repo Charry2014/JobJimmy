@@ -87,14 +87,10 @@ Request focused retrieval for each task. The assistant does not need your entire
 history to answer a question about one project. See [Privacy](../PRIVACY.md)
 for model, memory and tool-transfer boundaries.
 
-The curated notes are prepared for assistant use: they are kept free of the
-identifiers listed in your private redaction policy, so they can be sent to a
-remote model once the local clean check passes. Run it after each edit:
-
-```sh
-tools/py CV/Scripts/redact_md.py check JobSearch/Templates/redaction-policy.json JobSearch/Knowledge
-```
-
-A failure means an identifier slipped in; remove or generalise it before using
-the note remotely. The unchanged snapshots under `Sources/` are not cleaned
-automatically and stay local unless redacted.
+The curated notes are private content, not model-safe: they hold your name,
+contacts and real employer names, and the identifiers listed in your private
+redaction policy are not exhaustive. Before a remote model reads any note,
+prepare a reversible redacted copy with the workflow in [Privacy](../PRIVACY.md)
+and send only the checked safe copy. `redact_md.py check` is a local safety
+scanner only; a pass is not proof of anonymity and does not authorise remote
+use. The unchanged snapshots under `Sources/` stay local unless redacted too.

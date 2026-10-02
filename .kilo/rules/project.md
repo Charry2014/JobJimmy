@@ -8,12 +8,12 @@ Run commands from the public project root; `JobSearch/` is the separate private
 Obsidian vault. Switching models does not establish approval for a new data route.
 In every phase, private raw notes, filenames and tool output must stay out of
 a hosted model: run local redaction first and use only checked safe Markdown.
-Curated `JobSearch/Knowledge/**` articles are the exception — once
-`tools/py CV/Scripts/redact_md.py check` passes they may be sent directly; run
-it after every knowledge edit and fix the article on failure, do not send it.
-Never read private identity JSON, document binaries or private Git diffs into
-the model. A user message already containing identifiers cannot be redacted
-here; report that limitation rather than claiming an automatic boundary.
+Curated `JobSearch/Knowledge/**` articles are private content too: redact them
+with the reversible workflow before any remote read. `redact_md.py check` is a
+local safety scanner; a pass is not proof of anonymity and does not authorise
+remote use. Never read private identity JSON, document binaries or private Git
+diffs into the model. A user message already containing identifiers cannot be
+redacted here; report that limitation rather than claiming an automatic boundary.
 
 This project has no in-tree Python virtual environment, overriding the global
 "create a venv if it does not exist" rule. Never run `uv venv`, `uv sync`,
