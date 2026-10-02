@@ -8,6 +8,26 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## .env fallback for required keys and paths — 2026-10-02
+
+Added `CV/Scripts/env_file.py`, a standard-library loader that reads an optional
+`.env` at the repository root when a required variable is unset. Existing
+environment values always win, so shell exports and IDE/secret-manager
+environments keep precedence; parsing supports comments, blank lines, optional
+`export`, single/double quotes with escapes, and inline `#` comments. Wired into
+`CV/Scripts/translate.py` and `CV/Scripts/jev_check.py` at CLI start, and into
+`tools/check_env.py` so its key report matches what the scripts see; `check_env`
+reuses the loader rather than duplicating it. `.env` is now ignored
+(anchored `/.env`) and a tracked `.env.example` documents the format without
+secrets. OpenRouter setup, Dependencies, CV README and the code all state that
+`.env` is a fallback only and never overrides a real export.
+
+Validation: 8 new `test_env_file.py` tests passed; full CV suite 120 tests passed
+(25 skipped for absent templates); tools suite 31 tests passed; a synthetic
+`.env` was read end-to-end by `tools/check_env.py` and then removed; default and
+`--all` privacy screens were clean. `.env` files carry secrets, not personal
+data, so the deep screen is unaffected; no real key was read, written or logged.
+
 ## OpenRouter setup and Jev routing — 2026-10-02
 
 Supersedes the account/key setup in the earlier dependency and Jev entries below.

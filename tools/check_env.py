@@ -16,6 +16,13 @@ import shutil
 import sys
 from pathlib import Path
 
+# The shared .env fallback lives with the CV scripts; reuse it rather than
+# duplicating the parser so key reporting matches what the scripts actually see.
+_SCRIPTS = Path(__file__).resolve().parents[1] / "CV" / "Scripts"
+if str(_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(_SCRIPTS))
+from env_file import load_env_file  # noqa: E402
+
 MIN_PYTHON = (3, 11)
 SOFFICE_FALLBACK = Path("/Applications/LibreOffice.app/Contents/MacOS/soffice")
 
@@ -98,6 +105,7 @@ def main(argv=None) -> int:
     parser.add_argument("--json", action="store_true", help="emit structured JSON")
     args = parser.parse_args(argv)
 
+    load_env_file()
     result = check(root=args.root)
     if args.json:
         print(json.dumps(result, indent=2, sort_keys=True))

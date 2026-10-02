@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import env_file
 from output_paths import check_output
 import re
 import ssl
@@ -310,6 +311,7 @@ def translate(source, output, api_key, model, force=False, guidance=None, policy
 
 
 def main(argv=None):
+    env_file.load_env_file()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
     parser.add_argument("-o", "--output", type=Path)

@@ -12,6 +12,7 @@ import re
 import urllib.error
 import urllib.request
 
+import env_file
 from output_paths import check_output
 from redact_md import CONTACT, policy_values
 
@@ -197,6 +198,7 @@ def write_new(path, content):
 
 
 def main(argv=None):
+    env_file.load_env_file()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("kind", choices=["fit", "cv", "cover-letter"])
     parser.add_argument("--job", type=Path, required=True, help="Anonymous job-description Markdown")

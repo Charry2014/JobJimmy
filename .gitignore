@@ -25,6 +25,11 @@
 
 # Keep CV/References, CV/Templates, CV/Scripts and other source files tracked.
 
+# Local environment fallback for required keys and paths (see .env.example).
+# The scripts read values only when the same variable is unset in the shell.
+# Real values stay out of Git; commit the format via the tracked .env.example.
+/.env
+
 # Python caches (still subject to privacy audit).
 __pycache__/
 *.pyc
