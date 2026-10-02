@@ -23,7 +23,7 @@ class CheckEnvTests(unittest.TestCase):
     def test_all_required_present_is_ok(self) -> None:
         result = self.check(version_info=(3, 12, 0))
         self.assertTrue(result["ok"])
-        self.assertEqual(result["missing_keys"], ["OPENROUTER_API_KEY", "OPENROUTER_MODEL", "TYPESAFE_API_KEY"])
+        self.assertEqual(result["missing_keys"], ["OPENROUTER_API_KEY", "OPENROUTER_MODEL", "OPENROUTER_JEV_API_KEY"])
 
     def test_missing_uv_fails(self) -> None:
         result = ce.check(
@@ -38,12 +38,12 @@ class CheckEnvTests(unittest.TestCase):
         self.assertFalse(result["python"]["ok"])
 
     def test_keys_report_set_flag_only(self) -> None:
-        result = self.check(environ={"TYPESAFE_API_KEY": SECRET})
-        self.assertTrue(result["keys"]["TYPESAFE_API_KEY"]["set"])
-        self.assertNotIn("TYPESAFE_API_KEY", result["missing_keys"])
+        result = self.check(environ={"OPENROUTER_JEV_API_KEY": SECRET})
+        self.assertTrue(result["keys"]["OPENROUTER_JEV_API_KEY"]["set"])
+        self.assertNotIn("OPENROUTER_JEV_API_KEY", result["missing_keys"])
 
     def test_secret_value_never_rendered(self) -> None:
-        result = self.check(environ={"TYPESAFE_API_KEY": SECRET})
+        result = self.check(environ={"OPENROUTER_JEV_API_KEY": SECRET})
         text = ce.render_text(result)
         self.assertNotIn(SECRET, text)
         self.assertNotIn(SECRET, json.dumps(result))

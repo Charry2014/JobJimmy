@@ -38,9 +38,10 @@ for the notices in their distributions.
 - **OpenRouter** provides model routing and the optional translation endpoint.
   Use is governed by [OpenRouter's terms](https://openrouter.ai/terms) and any
   applicable downstream model/provider terms.
-- **TypeSafe AI** provides the optional Jev evaluation service. Access is subject
-  to the terms agreed with [TypeSafe](https://typesafe.ai/); no model weights or
-  service license are included in JobJimmy.
+- **TypeSafe AI** provides the optional Jev evaluation service. It is accessed through
+  [OpenRouter’s Jev integration](https://openrouter.ai/docs/guides/community/jev)
+  with an OpenRouter key and billing; no separate TypeSafe account is required.
+  Applicable provider terms still apply; no model weights are included.
 - **GitHub**, or another Git host you choose, provides optional repository hosting
   under that host's own terms. No hosting account is included.
 

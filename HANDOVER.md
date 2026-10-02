@@ -8,6 +8,28 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## OpenRouter setup and Jev routing — 2026-10-02
+
+Supersedes the account/key setup in the earlier dependency and Jev entries below.
+One OpenRouter account serves application functions and Jev. Separate keys are
+loaded as `OPENROUTER_API_KEY` and `OPENROUTER_JEV_API_KEY`; assigning the same
+value to both is supported. Jev uses OpenRouter's compatible System One endpoint
+and no longer reads `TYPESAFE_API_KEY`. No silent application-key fallback is used.
+The request rubric and response validation remain unchanged.
+
+Added `Documentation/OpenRouter-Setup.md` for signup, credit, suggested trial
+budgets, guardrails, hidden environment prompts, shared-key setup and verification.
+Getting Started sets the scene, Dependencies remains the full inventory, and
+README, Jev, troubleshooting, privacy and attribution references are aligned.
+The assistant still needs its own provider configuration. No actual keys or
+account settings were read or changed.
+
+Validation: 13 Jev tests and 6 environment-check tests passed, including dedicated
+and shared OpenRouter credentials, missing-key isolation and secret-safe failures.
+Local Markdown links, diff whitespace, and both default and `--all` privacy screens
+passed. Upstream OpenRouter integration/settings documentation was checked; no
+live API request, billing test or account guardrail audit was performed.
+
 ## License and attribution — 2026-10-01
 
 Added a standard MIT `LICENSE` under the collective JobJimmy contributors name,

@@ -3,8 +3,9 @@
 [Home](../README.md) · [Setup](Getting-Started.md) · [Documents](Documents.md) · [Jev checks](Jev-Checks.md)
 
 Everything the project needs from outside this repository: software, accounts,
-API keys, environment variables and network endpoints. Track-only use needs Git,
-Python, uv and Obsidian; OpenRouter and Jev are opt-in. JobJimmy has no hosted
+API keys, environment variables and network endpoints. The documented tracking
+setup uses Git, Python and uv, with Obsidian recommended; OpenRouter and Jev are
+opt-in. JobJimmy has no hosted
 service, installer or background job, and the privacy screen, redaction and CV
 rendering run locally without network access.
 
@@ -45,16 +46,17 @@ Notes:
 
 | Account | Key / credential | Used for | Required? |
 | --- | --- | --- | --- |
-| [OpenRouter](https://openrouter.ai/docs/quickstart) | `OPENROUTER_API_KEY` | The optional English-to-German CV translation script | Only for translation |
-| TypeSafe (Jev) | `TYPESAFE_API_KEY` | The advisory Jev fit and document checks | Only for live Jev checks |
+| [OpenRouter](OpenRouter-Setup.md) | `OPENROUTER_API_KEY` | Application AI functions and the translation script; configure the assistant separately | For those AI functions |
+| Same OpenRouter account | `OPENROUTER_JEV_API_KEY` | Advisory Jev fit and document checks | For live Jev checks |
 | A private Git host (for example a private GitHub repository) | Your own login | Off-machine backup/access for the private `JobSearch/` repository | Optional; a local repository works alone |
 
-OpenRouter and TypeSafe are **separate providers with separate accounts and
-keys**. One key does not cover both: translation calls the OpenRouter
-chat-completions API, while Jev calls the TypeSafe evaluation endpoint directly
-(no OpenRouter routing is involved). Never commit a key, pass it as a command
-argument, or paste it into chat or a hosted model. Set it from a secret manager
-or a non-echoing prompt and keep it out of shell history.
+**One OpenRouter account for all paid AI services** is the account design.
+Configure application assistance, translation and Jev through that account.
+Separate keys for application functions and Jev allow independent spending and
+privacy controls within the same account. Reusing one key in both
+places is supported; no TypeSafe account or key is required. Follow
+[OpenRouter setup](OpenRouter-Setup.md) for account creation, guardrails and safe
+environment loading. Never commit keys or paste them into chat or command arguments.
 
 ## Environment variables
 
@@ -63,7 +65,7 @@ or a non-echoing prompt and keep it out of shell history.
 | `OPENROUTER_API_KEY` | `CV/Scripts/translate.py` | For translation | Bearer credential for OpenRouter |
 | `OPENROUTER_MODEL` | `CV/Scripts/translate.py` | For translation | Model identifier, `<provider>/<model-id>`; override per run with `--model` |
 | `OPENROUTER_TRANSLATION_GUIDANCE` | `CV/Scripts/translate.py` | Optional | Default guidance profile; overrides `CV/Translation/german.json`, overridden by `--guidance` |
-| `TYPESAFE_API_KEY` | `CV/Scripts/jev_check.py` | For live Jev (`--send`) | Bearer credential for the TypeSafe endpoint |
+| `OPENROUTER_JEV_API_KEY` | `CV/Scripts/jev_check.py` | For live Jev (`--send`) | OpenRouter credential dedicated to Jev; may equal `OPENROUTER_API_KEY` |
 | `JOBJIMMY_PY_WITH` | `tools/py` | Optional | Space-separated packages to add as uv `--with` flags for one command (for example `pymupdf`, `certifi`) |
 
 The Jev model is configured in `CV/Jev/requests.json`, not in the environment.
@@ -73,11 +75,11 @@ Offline Jev previews (no `--send`) need no key and make no network call.
 
 | Endpoint | Used by | Notes |
 | --- | --- | --- |
-| `https://openrouter.ai/api/v1/chat/completions` | Translation | Requires a reviewed private `--privacy-policy`; enforces ZDR/no-fallback routing |
-| `https://api.typesafe.ai/v1/systemone` | Jev checks | Called only with `--send`; redirects are rejected and error bodies withheld |
+| `https://openrouter.ai/api/v1/chat/completions` | Translation (and separately configured assistant chat) | Translator requires a reviewed private `--privacy-policy` and enforces ZDR/no-fallback routing; assistant settings are separate |
+| `https://openrouter.ai/api/v1/systemone` | Jev checks | Called only with `--send`; redirects are rejected and error bodies withheld |
 
-No other component contacts the network. The privacy screen, redaction,
-identity hydration and CV/ODT rendering are local.
+The assistant, package downloads and Git remotes have their own network access.
+The privacy screen, redaction, identity hydration and CV/ODT rendering are local.
 
 ## Verify your environment
 

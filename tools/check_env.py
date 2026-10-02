@@ -22,7 +22,7 @@ SOFFICE_FALLBACK = Path("/Applications/LibreOffice.app/Contents/MacOS/soffice")
 KEYS = (
     ("OPENROUTER_API_KEY", "English-to-German CV translation (optional)"),
     ("OPENROUTER_MODEL", "OpenRouter model id for translation (optional)"),
-    ("TYPESAFE_API_KEY", "live Jev fit and document checks (optional)"),
+    ("OPENROUTER_JEV_API_KEY", "live Jev fit and document checks (optional)"),
 )
 
 

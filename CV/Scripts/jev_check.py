@@ -16,7 +16,7 @@ from output_paths import check_output
 from redact_md import CONTACT, policy_values
 
 DEFAULT_REQUESTS = Path(__file__).resolve().parents[1] / "Jev" / "requests.json"
-ENDPOINT = "https://api.typesafe.ai/v1/systemone"
+ENDPOINT = "https://openrouter.ai/api/v1/systemone"
 # Reject these in the outbound text; never rewrite executable paths or numeric IDs.
 LOCATORS = re.compile(r"https?://|www\.|\[\[|(?:/Users/|/home/|JobSearch/)|[A-Za-z]:[\\/]", re.I)
 
@@ -118,9 +118,9 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def send(payload):
-    key = os.environ.get("TYPESAFE_API_KEY")
+    key = os.environ.get("OPENROUTER_JEV_API_KEY")
     if not key:
-        raise ValueError("Jev unavailable: TYPESAFE_API_KEY is not set; no request sent.")
+        raise ValueError("Jev unavailable: OPENROUTER_JEV_API_KEY is not set; no request sent.")
     request = urllib.request.Request(ENDPOINT, data=encoded(payload), headers={
         "Authorization": "Bearer " + key, "Content-Type": "application/json",
     }, method="POST")

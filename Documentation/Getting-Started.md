@@ -16,8 +16,14 @@ You do not need OpenRouter or LibreOffice to reach it.
 | [LibreOffice](https://www.libreoffice.org/download/) — for documents | Writer opens an ODT and can export it as PDF |
 
 The full list of software, accounts, API keys, environment variables and network
-endpoints — including the optional OpenRouter (translation) and TypeSafe (Jev)
-credentials — is in [External dependencies](Dependencies.md).
+endpoints is in [External dependencies](Dependencies.md). For AI-assisted work,
+**use one OpenRouter account for all paid AI services**. This is the core
+account and billing design, including your assistant, translation and Jev.
+The default setup uses separate keys for application
+functions and Jev checks, so costs and privacy settings can be controlled separately.
+You can use the same key in both places. No TypeSafe account is needed.
+[Set up OpenRouter](OpenRouter-Setup.md) before your first AI call; that guide
+covers credit, limits, guardrails and loading keys into the environment.
 
 This guide uses macOS/Linux shell commands. On Windows, use Git Bash for the
 Git/file commands, and replace `python3` with your Python launcher as needed.
@@ -179,8 +185,10 @@ never add an exemption for real personal data just to make a check pass.
 - [Documents](Documents.md): add a personal layout and generate documents locally.
 - [Interviews and offers](Interviews-and-Offers.md): prepare using the same evidence.
 
-OpenRouter is only needed if you choose the supplied translation script. Its
-account and policy setup is covered in the documents guide, at the point you need it.
+For AI-assisted applications, translation or Jev checks, complete
+[OpenRouter setup](OpenRouter-Setup.md). Tracking and local document assembly
+work without an AI account. Configure your assistant to use OpenRouter separately;
+exporting a key does not automatically change its selected provider.
 
 ## Kilo Code: shared instructions across models
 

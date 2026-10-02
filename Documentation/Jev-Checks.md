@@ -79,14 +79,19 @@ request on every run. A missing/unreviewed policy or failed check blocks transmi
 Pattern checks cannot certify anonymity or detect all identifiers. Redacted career
 narrative can still be identifying; use the user's standing privacy policy for
 that residual risk. This workflow is authorised for anonymous Jev inputs, not raw
-private records. No TypeSafe retention or ZDR guarantee is implied.
+private records. Account/key privacy settings must be configured and verified separately; no
+live retention or ZDR guarantee is implied by the local tests.
 
 ## Run from the project root
 
-Python's standard library is sufficient. Set `TYPESAFE_API_KEY` through your local
+Python's standard library is sufficient. Set `OPENROUTER_JEV_API_KEY` through your local
 secret manager or a non-echoing prompt; never put the key in a file in this public
-repository, a command argument or chat. Calls go directly to TypeSafe's HTTPS
-evaluation endpoint; no OpenRouter redaction setting is involved.
+repository, a command argument or chat. This is an OpenRouter key, normally
+separate from the application key; the same value can be assigned to both.
+Follow [OpenRouter setup](OpenRouter-Setup.md) for environment commands.
+Calls use `https://openrouter.ai/api/v1/systemone`; no TypeSafe key is needed.
+The CLI does not fall back to the application key if the Jev variable is missing,
+so a missing dedicated key cannot silently charge a different budget.
 
 Prepare the following anonymous inputs privately. The example filenames are
 generic; use the current application's files. Preview the exact fit request
@@ -160,7 +165,8 @@ success report; provider error bodies are withheld. Retry only deliberately.
 
 ## Contract and validation
 
-Integration references checked 2026-10-01:
+Integration references checked 2026-10-02:
+[OpenRouter System One compatibility](https://openrouter.ai/docs/guides/community/typesafe-sdk),
 [HTTP API](https://docs.typesafe.ai/api),
 [Score](https://docs.typesafe.ai/primitives/score),
 [confidence](https://docs.typesafe.ai/confidence) and

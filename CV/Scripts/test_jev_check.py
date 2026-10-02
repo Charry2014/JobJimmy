@@ -152,12 +152,34 @@ class JevTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             jev.validate_response({"model": "test", "answers": {}}, payload)
 
+    def test_openrouter_jev_key_is_explicit_and_can_be_shared(self):
+        payload = jev.build_payload(self.config, "fit", "job", "analysis")
+        # Never silently charge the application budget or use a legacy key.
+        with patch.dict(jev.os.environ, {"OPENROUTER_API_KEY": "app-secret",
+                                         "TYPESAFE_API_KEY": "legacy-secret"}, clear=True), \
+                patch.object(jev.urllib.request, "build_opener") as opener:
+            with self.assertRaisesRegex(ValueError, "OPENROUTER_JEV_API_KEY"):
+                jev.send(payload)
+            opener.assert_not_called()
+        for app_key in ("other-secret", "jev-secret"):
+            with self.subTest(shared=app_key == "jev-secret"), \
+                    patch.dict(jev.os.environ, {"OPENROUTER_API_KEY": app_key,
+                                               "OPENROUTER_JEV_API_KEY": "jev-secret"}, clear=True), \
+                    patch.object(jev.urllib.request, "build_opener") as opener:
+                response = response_for(payload)
+                opener.return_value.open.return_value.__enter__.return_value = io.StringIO(json.dumps(response))
+                self.assertEqual(jev.send(payload), response)
+                request = opener.return_value.open.call_args.args[0]
+                self.assertEqual(request.full_url, "https://openrouter.ai/api/v1/systemone")
+                self.assertEqual(request.get_header("Authorization"), "Bearer jev-secret")
+                self.assertEqual(json.loads(request.data), payload)
+
     def test_api_errors_do_not_echo_payload_or_credentials(self):
         payload = jev.build_payload(self.config, "fit", "job", "analysis")
         with patch.dict(jev.os.environ, {}, clear=True), self.assertRaisesRegex(ValueError, "not set"):
             jev.send(payload)
         error = urllib.error.HTTPError(jev.ENDPOINT, 403, "private detail", {}, io.BytesIO(b"private body"))
-        with patch.dict(jev.os.environ, {"TYPESAFE_API_KEY": "synthetic-secret"}), patch.object(jev.urllib.request, "build_opener") as opener:
+        with patch.dict(jev.os.environ, {"OPENROUTER_JEV_API_KEY": "synthetic-secret"}), patch.object(jev.urllib.request, "build_opener") as opener:
             opener.return_value.open.side_effect = error
             with self.assertRaisesRegex(ValueError, "HTTP 403; response body withheld") as caught:
                 jev.send(payload)

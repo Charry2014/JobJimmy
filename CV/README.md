@@ -551,4 +551,4 @@ See [Jev checks](../Documentation/Jev-Checks.md) for commands, anonymous input
 preparation, report semantics and the editable `Jev/requests.json` defaults.
 The CV and letter are assessed separately before identity restoration; this
 check does not render or modify either document. Python's standard library is
-sufficient; live requests require `TYPESAFE_API_KEY` and `--send`.
+sufficient; live requests require `OPENROUTER_JEV_API_KEY` and `--send`.

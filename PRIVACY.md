@@ -174,8 +174,11 @@ rewriting text. Local inspection covers identifiers patterns cannot detect;
 `--reviewed` records that inspection, not a certification of anonymity. This
 does not require repeated approval for the anonymous workflow already requested.
 Re-identification risk remains for career narratives under the standing policy.
-Calls go directly to TypeSafe; the OpenRouter routing settings below do not apply.
-No TypeSafe ZDR or account-retention guarantees have been verified by this scaffold.
+Calls use OpenRouter’s System One endpoint with `OPENROUTER_JEV_API_KEY`.
+Configure and verify account/key guardrails using `Documentation/OpenRouter-Setup.md`.
+The Jev CLI does not send the translator’s provider-routing fields; its request
+shape is the System One contract. Local tests do not verify live guardrail
+enforcement or retention. Keep anonymous input checks in place for both routes.
 Reports and request snapshots stay private; API keys come only from the environment.
 HTTP error bodies are withheld and redirects are rejected. Offline previews make
 no calls. A failure reports the check as unavailable instead of loosening controls.

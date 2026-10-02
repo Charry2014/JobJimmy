@@ -166,8 +166,10 @@ Using **OpenRouter's AutoRouter with the defaults**, the project's estimate is
 
 Treat that as a useful ballpark, rather than a fixed price. Longer inputs,
 extra revisions, different models, and provider pricing changes can alter the
-bill. Separate assistant subscriptions and optional services such as TypeSafe
-may add their own costs.
+bill. **One OpenRouter account for all paid AI services** is a core design
+decision: application assistance, translation and Jev checks share one billing
+account. No separate paid AI subscription or TypeSafe account is required for
+the documented OpenRouter setup.
 
 The idea is simple: spend a little on the repetitive work, and keep your time
 for deciding where to apply, checking the result, and preparing for the
@@ -187,12 +189,15 @@ live in a separate private Git repository inside `JobSearch/`.
 | Python 3.11+ and uv | Automation scripts and privacy checks; development checks currently use Python 3.12. |
 | LibreOffice Writer | Personalise ODT layouts and export PDFs locally. |
 | A filesystem-capable AI assistant | Guided research, assessment, drafting, and record updates; VS Code with Kilo Code is one free, open-source setup. Manual tracking works without an assistant. |
-| OpenRouter account and API key | AI calls through OpenRouter, including AutoRouter; also used by the optional English-to-German translation script. |
-| TypeSafe account and API key | Optional advisory Jev fit and document checks. |
+| OpenRouter account and API key | All AI calls, including AutoRouter, optional English-to-German translation, and advisory Jev fit and document checks. |
 | PyMuPDF | Optional automated PDF layout/comparison checks; still inspect documents visually. |
 
-OpenRouter and TypeSafe use separate accounts and keys; neither is included
-with your assistant subscription. See [Getting started](Documentation/Getting-Started.md)
+One OpenRouter account covers all paid AI services, including Jev; no separate
+provider account is needed. Configure your assistant to use OpenRouter too.
+The default setup uses separate OpenRouter keys for application
+functions and Jev to control costs and privacy settings independently. You can
+assign the same key to both if preferred. Follow [OpenRouter setup](Documentation/OpenRouter-Setup.md)
+for account creation, guardrails, spending limits and environment variables. See [Getting started](Documentation/Getting-Started.md)
 for installation and [External dependencies](Documentation/Dependencies.md)
 for accounts, environment variables, and network endpoints.
 
@@ -211,7 +216,7 @@ doesn't discover a skill, ask it to read the file explicitly. It should follow
 | Cover letters | Markdown drafting and local identity insertion; ODT rendering needs your own compatible template. |
 | Translation | OpenRouter script for block-marked CVs, currently English to German. |
 | Interview and negotiation support | Guided conversations and activity notes; dedicated skills are proposed, not installed. |
-| Jev fit and document checks | Advisory CLI scaffold; requires a TypeSafe key and domain tuning. Scoring quality is not yet validated. |
+| Jev fit and document checks | Advisory CLI scaffold; uses your OpenRouter key to access Jev and requires domain tuning. Scoring quality is not yet validated. |
 | Email/calendar integration, automatic reminders, Notion sync | Not implemented as project workflows. |
 
 A blank `CV/Templates/CV Template.ott` is included. Your personal CV baselines,

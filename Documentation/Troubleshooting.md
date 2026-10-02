@@ -28,7 +28,7 @@
 | Translation rejects keep-block IDs | The policy does not match this baseline; inspect the source block IDs locally and correct the policy |
 | Translation fails with an HTTP status | Check key, balance, model/provider availability and strict routing. Error bodies are intentionally withheld; do not weaken privacy as a workaround |
 | Translation reports changed tokens | No translation should be accepted; inspect the private inputs and policy. Do not manually delete safeguards to force a render |
-| Jev reports `TYPESAFE_API_KEY` missing or HTTP 401 | Configure the TypeSafe key locally; report the check as unavailable until it succeeds. See [Jev checks](Jev-Checks.md) |
+| Jev reports `OPENROUTER_JEV_API_KEY` missing or HTTP 401 | Load the Jev OpenRouter key in the same process environment; see [OpenRouter setup](OpenRouter-Setup.md); report the check as unavailable until it succeeds. See [Jev checks](Jev-Checks.md) |
 | Jev rejects identifiers or locators | Review the anonymous advert, analysis/document, checklist and custom requests locally. Remove identifying links and use the reviewed private policy; do not send raw inputs |
 | Jev preview contains no score | Expected without `--send`: the preview is an offline request for tuning. Use a new output filename when running the live check |
 | Privacy screen flags an Obsidian state file | The vault now lives under the private `JobSearch/` tree, so workspace state is created there. If a stray `.obsidian/` file appears in the public tree, remove it; the app can recreate vault state when reopened |
