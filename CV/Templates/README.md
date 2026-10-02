@@ -1,13 +1,20 @@
 # Document templates
 
 This folder holds the blank CV template, a cover-letter Markdown starter and
-example layout configuration. Personal baselines and a cover-letter ODT are not
-bundled. Start with the [documents guide](../../Documentation/Documents.md).
+example layout configuration. Personal baselines and compatible cover-letter
+ODTs are never part of the public distribution; in this workspace they exist
+only in the attached private vault under `JobSearch/Templates/`. `JobSearch/`
+is gitignored, so ignore-aware tools (`glob`, `grep`, `rg` without
+`--no-ignore`) return no files there — locate templates with `ls`/`find` or the
+exact path, and do not treat an empty glob as a missing template. Start with the
+[documents guide](../../Documentation/Documents.md).
 Each user supplies their own ODT CV source with the layout and content they
 want; a blank public `.ott` does not supply personal CV content. The attached
-private vault has extracted `VP-CTO` and `Manager` pairs. Agents only adjust
-wording and ordering of existing bullets, never fundamentally rewrite the
-source or layout.
+private vault has extracted `VP-CTO` and `Manager` pairs plus the English and
+German cover-letter template/anchors and `letter-identity.json`; root
+`AGENTS.md` ("Locating CV and cover-letter templates") is the canonical
+inventory. Agents only adjust wording and ordering of existing bullets, never
+fundamentally rewrite the source or layout.
 
 The workflows use these assets:
 

@@ -94,6 +94,36 @@ break this rule are forbidden and must be fixed, not committed.
   simply not attached, the CV tooling paths resolve to nothing, and public development checks must work without it. Private workflows must
   report missing inputs and stop only dependent work, never create public substitutes.
 
+### Locating CV and cover-letter templates
+
+`JobSearch/` is gitignored, so ignore-aware discovery tools (the `glob` and
+`grep` tools, `rg` without `--no-ignore`) return **no files** under it even when
+the private vault is attached. An empty `JobSearch/**` result is never evidence
+that a template is missing. Locate private files with `ls`/`find` from the public
+project root, or open the exact documented path directly; never create a public
+substitute because a private file was not found.
+
+The attached private vault stores the rendering templates under
+`JobSearch/Templates/`:
+
+| Template | Pair / role |
+| --- | --- |
+| `VP-CTO.md` + `VP-CTO.odt` (+ `VP-CTO-layout-pages.json`) | Extracted reference baseline for VP/CTO/Director mandates |
+| `Manager.md` + `Manager.odt` | Extracted reference baseline for engineering manager/team lead mandates |
+| `letter-template-en.odt` + `letter-anchors-en.json` | English cover letter |
+| `letter-template-de.odt` + `letter-anchors-de.json` | German cover letter |
+| `letter-template.odt` + `letter-anchors.json` | Legacy German alias — never use for English |
+| `letter-identity.json` | Local Sender/Signature identity for letter hydration |
+| `letter-example-original.odt` | Private archive, not a rendering template |
+
+An extracted baseline always pairs its reference `.md` with its own
+`<baseline>.odt`; the `.odt` carries the embedded `cv-template.json` mapping and
+is the layout input for `align_md.py`/`cv.py render`. The public tree ships only
+the blank `CV/Templates/CV Template.ott`, the `Cover-Letter.md` starter and
+generic configuration; personal baselines and compatible cover-letter ODTs exist
+**only** in the private vault. "Not bundled publicly" means the public
+distribution omits them, not that they are absent here.
+
 ## Python tooling (no in-tree venv)
 
 This project has **no Python package manifest and no virtual environment**. Do
@@ -202,7 +232,7 @@ rule violation.
 | `JobSearch/Dashboard.md` (private) | Active application pipeline, status counts, directory links |
 | `JobSearch/Recruiters/Directory.md` (private) | Recruiter directory view over the private recruiter notes |
 | `JobSearch/Knowledge/` (private) | Curated professional profile and source knowledge |
-| `JobSearch/Templates/` (private) | Working copies of the note templates plus extracted personal CV baselines (reference Markdown with matching ODT per baseline) |
+| `JobSearch/Templates/` (private) | Working copies of the note templates, extracted personal CV baseline pairs (`VP-CTO`, `Manager`), cover-letter templates/anchors and `letter-identity.json`; see [Locating CV and cover-letter templates](#locating-cv-and-cover-letter-templates) |
 | `CV/Scripts/` and `CV/Templates/` | Shared CV tooling, block-marker templates and the `CV Template.ott` population template |
 | `Templates/` | Authoritative source templates for each note type (copied into the vault) |
 | `CV/` | CV Markdown references, document templates, renderer and validation artifacts |

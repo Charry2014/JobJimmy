@@ -8,7 +8,12 @@ description: Draft a cover letter in plain Obsidian Markdown, then locally merge
 Follow root `AGENTS.md`, `PRIVACY.md`, private `JobSearch/AGENTS.md` and
 `Documentation/Agent-Reference/Documents.md` (cover-letter and knowledge
 sections). Commands run from the public project root; personal files stay in
-`JobSearch/`. Never send a completed letter, identity JSON or PDF to an
+`JobSearch/`. `JobSearch/` is gitignored, so the `glob`/`grep` tools return
+nothing there; locate the letter template pair with `ls`/`find` or the exact
+path (root `AGENTS.md` "Locating CV and cover-letter templates" lists the
+`letter-template-<lang>.odt`/`letter-anchors-<lang>.json` pairs) and never treat
+an empty glob as a missing template.
+Never send a completed letter, identity JSON or PDF to a
 remote model. Before reading any advert, employer research or career evidence
 into a hosted agent, use `CV/Scripts/redact_md.py prepare` locally on each
 Markdown source with a private policy listing all explicit identifiers,

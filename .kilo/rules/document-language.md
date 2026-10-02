@@ -13,6 +13,11 @@ details stay in `Documentation/Agent-Reference/Documents.md` and `PRIVACY.md`.
 - Record the lowercase ISO 639-1 code in the research note's `document_language`
   property with the evidence under **Research notes**. Both document workflows
   reuse it; never ask the user again if the note already records it.
+- An explicit user instruction overrides the advert-language default and the
+  vault language rule. Record the correction in the research note with its
+  date, remove superseded drafts in the old language, and rerun document
+  checks for the new language; keep old-language check reports as dated
+  history.
 
 ## 2. Route (fixed mapping, no per-task debate)
 

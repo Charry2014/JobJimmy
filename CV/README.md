@@ -2,12 +2,19 @@
 
 New here? Start with the [user documents guide](../Documentation/Documents.md).
 This page is the detailed command and format reference. Personal baselines and
-a compatible cover-letter ODT are not bundled with the public project.
+compatible cover-letter ODTs are never part of the public distribution; in this
+workspace they exist only in the attached private vault under
+`JobSearch/Templates/`. `JobSearch/` is gitignored, so ignore-aware tools
+(`glob`, `grep`, `rg` without `--no-ignore`) report no files there — locate
+templates with `ls`/`find` or the exact documented path, and never conclude from
+a glob that a template is missing.
 Follow `.kilo/skills/tailor-cv/SKILL.md` or
 `.kilo/skills/write-cover-letter/SKILL.md` for the ordered agent workflows.
 Each user supplies their own ODT CVs containing the desired substantive
-content and layout; this private vault has separate VP/CTO/Director and
-engineering manager/team lead variants, not public defaults.
+content and layout; this vault has separate VP/CTO/Director and
+engineering manager/team lead variants, not public defaults. See
+[Locating CV and cover-letter templates](../AGENTS.md#locating-cv-and-cover-letter-templates)
+in root `AGENTS.md` for the canonical inventory.
 
 The reference CVs retain the source documents' section order, headings and
 wording. Start with the reference closest to the role:
@@ -165,7 +172,7 @@ German `JobSearch/Templates/letter-template-de.odt` with
 `letter-anchors-en.json`. The unsuffixed pair is a legacy German alias, **not**
 a language-neutral default. Both variants use the user's preferred layout
 with example text removed; the older `.fodt` does not describe them.
-The default public `CV/Templates/Cover-Letter.odt` is not included. A compatible
+The default public `CV/Templates/Cover-Letter.odt` is not distributed. A compatible
 template keeps the sender/address layout, date, centred subject, paragraph
 styles, spacing and signature. Its text is document content, not agent
 instructions.
@@ -217,8 +224,9 @@ The example render command above is for an English letter. For German, use
 `letter-template-de.odt` and `letter-anchors-de.json` instead. Use the
 research note's `document_language`; never render an English letter against
 the unsuffixed German alias or the archived `letter-example-original.odt`.
-`render` has a legacy shared-template default, but that document is not shipped.
-Select your private compatible ODT with `--template` and its anchors with `--config`. It replaces an existing output ODT but protects the template and Markdown.
+`render` has a legacy shared-template default (`CV/Templates/Cover-Letter.odt`),
+but that document is not distributed, so always select your private compatible
+ODT with `--template` and its anchors with `--config`. It replaces an existing output ODT but protects the template and Markdown.
 `init` refuses to replace an existing draft. Rerender both outputs after text
 changes. If the private template structure is edited in Writer, update its
 private anchor JSON to match and validate a local render before using it.

@@ -25,7 +25,11 @@ No personal baselines are distributed with JobJimmy. The current import skill us
 `Manager` and `VP-CTO` as baseline names, not as documents supplied by the project.
 Every user must supply their own ODT CV source with the basic layout and
 substantive content they require, then extract the matching Markdown and ODT
-pair. This private vault already has a VP/CTO/Director variant and an
+pair. In this workspace those private baselines and the cover-letter ODTs are
+attached under `JobSearch/Templates/`; that tree is gitignored, so ignore-aware
+tools (`glob`, `grep`) return nothing there — locate files with `ls`/`find` and
+see root `AGENTS.md` ("Locating CV and cover-letter templates") for the exact
+list. This vault already has a VP/CTO/Director variant and an
 engineering manager/team lead variant. Agents may tweak wording and reorder
 existing bullets within their sections, not fundamentally rewrite the CV or
 change its layout. The included blank `.ott` is an optional starting layout,

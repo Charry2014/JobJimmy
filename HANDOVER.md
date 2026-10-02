@@ -1,4 +1,4 @@
-# Engine handover — 2026-09-30
+# Engine handover — 2026-10-02
 
 This snapshot supports a clean agent context. It is a dated state snapshot, not a
 procedure: recurring vault actions are specified centrally in
@@ -7,6 +7,70 @@ durable instructions and recheck Git status before editing. Keep this file limit
 in `JobSearch/HANDOVER.md`; never name real applications or people here. Application and activity notes remain the source of
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
+
+## Template-location instructions clarified — 2026-10-02
+
+Agents repeatedly "failed to find" the CV baselines and cover-letter ODTs because
+`JobSearch/` is gitignored: the `glob`/`grep` tools (and `rg` without
+`--no-ignore`) silently return no files there, which reads as "templates are
+missing". Added one canonical inventory in root `AGENTS.md` ("Locating CV and
+cover-letter templates") plus the gitignore/glob warning, and pointed to it from
+`CV/README.md`, `CV/Templates/README.md`, `Documentation/Documents.md`,
+`Documentation/Agent-Reference/Documents.md`, both document skills, and the
+`JobSearch/Templates/` row of the Files table. Replaced ambiguous "not bundled
+with the public project" wording with an explicit public-vs-private distinction:
+"not bundled publicly" now states the files exist only in the attached private
+vault. Removed the superseded 2026-10-01 knowledge clean-check handover section
+and `.kilo/plans/knowledge-base-privacy-clean-check.md`.
+
+Validation: all rendering templates confirmed present under `JobSearch/Templates/`
+and valid ODF packages (embedded `cv-template.json` for `VP-CTO`/`Manager`;
+`content.xml` for the letter templates and `CV Template.ott`). Letter anchor
+`paragraph_count` matches each letter ODT (15/15/15); `letter-identity.json` has
+exactly `Sender`/`Signature`; extracted baselines' `cv:pNNN` marker counts equal
+their templates (VP-CTO 72, Manager 70). CV suite: 120 tests, OK (25 skipped for
+optional private fixtures). Known gap: `Manager` has no
+`JobSearch/Templates/Manager-layout-pages.json` (VP-CTO does), so its automated
+layout preflight is unavailable; that page-allocation config is private and was
+not created. No template binary or private document was changed.
+
+## Hosted drafting and live Jev findings — 2026-10-02
+
+First real application of the full hosted drafting flow (advert, baseline and
+knowledge articles via `redact_md.py prepare`/`restore`). Engine findings, all
+generic:
+
+- Redaction policies need every case and spacing variant: a title-case value
+  does not match an uppercase display heading. Bare company-name stems cause
+  substring false positives on ordinary target-language words, so prefer the
+  full names that actually occur. Locale words that are part of the user's own
+  seeded address (country names and German city exonyms) must be routed through
+  tokens in translated drafts, not written literally.
+- `redact_md.py restore` can restore authored drafts by pairing the response
+  with itself; when a draft mirrors the baseline structure 1:1, the baseline
+  body acts as the validation original and catches accidental token loss or
+  duplication, with deliberate token substitutions (e.g. localised city forms)
+  validated explicitly.
+- Live Jev checks on this machine require the certifi CA bundle
+  (`JOBJIMMY_PY_WITH="certifi"` plus `SSL_CERT_FILE`); the
+  standard-library-only claim holds elsewhere but not for this Python install.
+- Live Jev consistency is flaky under repeated load: cover-letter checks
+  validated four times in a row, then failed once and validated on retry; a
+  CV-sized request failed internal-consistency validation four times before
+  validating on the fifth. Both document kinds are therefore live-proven, but
+  expect intermittent "Invalid Jev score"/coverage failures — retry
+  deliberately, report failures, and never bypass `validate_response` to
+  force a score.
+- Layout preflights of tailored VP-CTO renders fail with baseline-inherent
+  underfill (identical blank-line numbers on pages 1–2, page 3 improved by
+  added bullets). The comparison render of the unchanged baseline with the
+  same environment/config is the evidence the human needs to accept the
+  exception explicitly; keep the preflight failure report in the folder.
+- Language corrections after drafting: an explicit user instruction overrides
+  the advert-language default. Update the recorded `document_language`, remove
+  the superseded drafts instead of keeping both languages, redraft, and run
+  document checks on the new language; keep old-language check reports as
+  dated history.
 
 ## Knowledge model-safety exception retired — 2026-10-02
 
@@ -89,33 +153,6 @@ No template binary or private data changed.
 Validation: default and `--all` privacy screens, diff whitespace and local
 Markdown link checks passed. Upstream license sources were reviewed. No runtime
 code changed; no rendering or full publication/history audit was performed.
-
-## Knowledge base is model-safe when clean — 2026-10-01 (superseded 2026-10-02)
-
-> Superseded: the reviewed policy was incomplete — the articles also held the
-> candidate's first name and real employer names — so the exception was retired
-> and knowledge now uses the reversible redaction workflow. See the 2026-10-02
-> entry.
-
-`redact_md.py` gained a `check` subcommand (backed by a `scan_reasons` helper)
-that fails closed when a document already contains a listed `redact_values`
-entry, a reserved privacy token or an unlisted contact pattern; it prints only
-generic PASS/FAIL status, never the matched value, and accepts files or
-directories. `PRIVACY.md`, root `AGENTS.md`, `.kilo/rules/project.md`, the
-document workflow reference, the import skill, the knowledge-base guide and both
-the private and scaffold `AGENTS.md` now state the same rule: curated
-`JobSearch/Knowledge/**` articles may be read into and sent to a remote model
-once this local clean check passes, while adverts, application/activity notes,
-employer and recruiter records, identity JSON and documents keep the reversible
-redaction workflow. An optional private-vault `.githooks/pre-commit` in the
-scaffold runs the check on staged knowledge files.
-
-Validation: redaction unit tests extended to 13 (all passed); the full CV suite
-passed 111 tests (25 skipped for absent templates); the privacy screen was clean
-in default and `--all` modes; `git diff --check` was clean. The check was also
-exercised locally against the private knowledge tree and returned only generic
-PASS/FAIL status; cleaning any flagged article remains private work. No private
-article was read or rewritten.
 
 ## External dependencies reference — 2026-10-01
 

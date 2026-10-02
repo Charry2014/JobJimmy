@@ -21,8 +21,10 @@ according to `PROCEDURES.md#jev-check-results`; scores never belong in CV/letter
 
 Use `.kilo/skills/write-cover-letter/SKILL.md` for the ordered workflow and
 `CV/Templates/Cover-Letter.md` as the plain Markdown starter. No personal
-cover-letter ODT is bundled publicly. This attached private vault has the
-user's preferred German letter layout (`letter-template-de.odt` / `letter-anchors-de.json`)
+cover-letter ODT is in the public distribution; it exists only under
+`JobSearch/Templates/` in the attached private vault (gitignored, so ignore-aware
+tools report nothing there — locate it with `ls`/`find` or the exact path). This
+vault has the user's preferred German letter layout (`letter-template-de.odt` / `letter-anchors-de.json`)
 and matching English layout (`letter-template-en.odt` /
 `letter-anchors-en.json`) under `JobSearch/Templates/`. The local Sender and
 Signature JSON was extracted from the user's example; do not read it into a
@@ -58,7 +60,9 @@ Read `.kilo/skills/tailor-cv/SKILL.md` and `CV/README.md` before working on
 CVs. Every user must supply their own ODT with the basic CV content and layout
 they require. The private `VP-CTO` (VP/CTO/Director) and `Manager`
 (engineering manager/team lead) versions belong to this vault, not the public
-distribution. For the extracted-reference workflow, the user supplies a reference Markdown
+distribution; they are gitignored, so ignore-aware discovery tools find nothing
+under `JobSearch/` — locate them with `ls`/`find` or the exact path. For the
+extracted-reference workflow, the user supplies a reference Markdown
 and its matching extracted ODT under `JobSearch/Templates/`. Baseline names are
 user-defined, not required to be `VP-CTO` or `Manager`. Check availability locally
 without returning identity-bearing contents to an unapproved model. Their section headings, wording and
