@@ -80,6 +80,11 @@ TypeSafe key is not interchangeable with `OPENROUTER_JEV_API_KEY`.
 The Jev model is configured in `CV/Jev/requests.json`, not in the environment.
 Offline Jev previews (no `--send`) need no key and make no network call.
 
+Any of the keys above may instead be placed in an optional `.env` file at the
+project root (copy `.env.example`); the scripts read it only when the same
+variable is not already set in the environment, and `.env` is ignored by Git.
+See [OpenRouter setup](OpenRouter-Setup.md) for the safe-loading steps.
+
 ## Network endpoints
 
 | Endpoint | Used by | Notes |

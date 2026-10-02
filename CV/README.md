@@ -374,7 +374,10 @@ python3 CV/Scripts/translate.py JobSearch/Applications/<application-slug>/CV/<ap
 ```
 
 `OPENROUTER_API_KEY` is the only secret required. `OPENROUTER_MODEL` selects the
-model exposed by OpenRouter and is required. Requests use OpenRouter reasoning
+model exposed by OpenRouter and is required. As an alternative to exporting the
+variables, copy `.env.example` to a Git-ignored `.env` at the project root; the
+script uses those values only when the same variable is not already set in the
+environment. Requests use OpenRouter reasoning
 effort `high` to improve nuanced CV translation; requests require a reviewed policy naming approved models/providers, kept blocks
 and explicit redaction values. Attribution headers are not sent. See `PRIVACY.md`
 for policy JSON, enforced ZDR/no-fallback routing and remaining limitations. Use `--output` for another destination, `--force` to replace

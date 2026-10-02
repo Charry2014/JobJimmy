@@ -83,9 +83,11 @@ act after data has already left your machine.
 ## 4. Load keys into the program's environment
 
 An environment variable is a named value inherited by programs started from your
-terminal. JobJimmy reads these variables; it does not load `.env` files automatically.
-Run the following in an interactive Bash or zsh terminal. Paste a key only at the
-hidden prompt, not into the command itself. Keep shell tracing (`set -x`) off.
+terminal. JobJimmy reads these variables, and falls back to an optional `.env`
+file at the project root when a variable is unset; a value already exported in
+the shell always wins. Run the following in an interactive Bash or zsh terminal.
+Paste a key only at the hidden prompt, not into the command itself. Keep shell
+tracing (`set -x`) off.
 
 ```sh
 set +x
@@ -105,6 +107,17 @@ export OPENROUTER_JEV_API_KEY="$OPENROUTER_API_KEY"
 | `OPENROUTER_API_KEY` | Translation script; use this application's key in your assistant's OpenRouter configuration too |
 | `OPENROUTER_JEV_API_KEY` | Jev CLI only; required explicitly, with no fallback to the application key |
 | `OPENROUTER_MODEL` | Translation model, unless overridden with `--model` |
+
+As an alternative to exports, copy the tracked placeholder file `.env.example`
+to `.env` in the project root and fill in the values. The scripts read `.env`
+only for variables that are not already set in the environment, so a real export
+still wins. `.env` is ignored by Git; keep real keys out of `.env.example`, and
+restrict the file's permissions:
+
+```sh
+cp .env.example .env
+chmod 600 .env
+```
 
 For translation, select a model supported by your privacy policy and set its
 OpenRouter ID, replacing the placeholder:
