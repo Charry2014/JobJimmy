@@ -134,6 +134,11 @@ def send(payload):
         raise ValueError("Jev unavailable: connection or response failure; details withheld.") from None
 
 
+# The service rounds the score and every probability to two decimals, so the
+# consistency checks allow half a unit (0.005) of error per rounded value.
+ROUNDING = 0.005
+
+
 def number(value, low, high):
     return type(value) in (int, float) and math.isfinite(value) and low <= value <= high
 
@@ -155,14 +160,15 @@ def validate_response(response, payload):
         if (not number(answer.get("confidence"), 0, 1)
                 or not isinstance(probabilities, dict) or set(probabilities) != expected
                 or any(not number(v, 0, 1) for v in probabilities.values())
-                or not math.isclose(sum(probabilities.values()), 1, abs_tol=0.001)):
+                or not math.isclose(sum(probabilities.values()), 1, abs_tol=ROUNDING * len(expected))):
             raise ValueError("Invalid Jev confidence or probability distribution.")
         item = {"type": question["type"], "confidence": answer["confidence"], "probabilities": probabilities}
         if question["type"] == "score":
             maximum = len(levels) - 1
             score = answer.get("score")
             if (not number(score, 0, maximum)
-                    or not math.isclose(score, sum(int(k) * v for k, v in probabilities.items()), abs_tol=0.01)):
+                    or not math.isclose(score, sum(int(k) * v for k, v in probabilities.items()),
+                                        abs_tol=ROUNDING * (1 + sum(range(len(levels)))))):
                 raise ValueError("Invalid Jev score.")
             item.update(score=score, match_score=100 * score / maximum,
                         legend={str(i): v for i, v in enumerate(levels)})

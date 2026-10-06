@@ -140,6 +140,22 @@ class JevTests(unittest.TestCase):
         response["answers"]["match"].update(score=0.25, probabilities={"0": 0.75, "1": 0.25})
         self.assertEqual(jev.validate_response(response, second)["match"]["match_score"], 25)
 
+    def test_two_decimal_rounding_is_accepted(self):
+        # The service rounds score and probabilities to two decimals; a 0.01 gap
+        # between score and expectation, or a 0.99 probability sum, is genuine.
+        payload = jev.build_payload(self.config, "fit", "job", "analysis")
+        levels = len(payload["questions"]["match"]["criteria"])
+        probabilities = {str(i): 0.0 for i in range(levels)}
+        probabilities.update({"0": 0.1, "1": 0.45, "2": 0.35, "3": 0.09})
+        for score in (1.43, 1.45):
+            response = response_for(payload)
+            response["answers"]["match"].update(score=score, probabilities=probabilities)
+            with self.subTest(score=score):
+                self.assertEqual(jev.validate_response(response, payload)["match"]["score"], score)
+        response["answers"]["match"].update(score=1.9)
+        with self.assertRaises(ValueError):
+            jev.validate_response(response, payload)
+
     def test_bad_response_does_not_create_result(self):
         payload = jev.build_payload(self.config, "fit", "job", "analysis")
         for change in [{"confidence": None}, {"confidence": float("nan")}, {"score": True},
