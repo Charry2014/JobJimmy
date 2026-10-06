@@ -335,7 +335,7 @@ def report(findings: list[Finding], identifiers_count: int, private_present: boo
 def main(argv: list[str] | None = None, root: Path | None = None) -> int:
     parser = argparse.ArgumentParser(description="Privacy screen for the public JobJimmy repository.")
     parser.add_argument("--all", action="store_true", help="screen every tracked and untracked file, not just changes")
-    parser.add_argument("paths", nargs="*", help="explicit file paths to screen (used without --all/--changed scan)")
+    parser.add_argument("paths", nargs="*", help="explicit file paths to screen (screened instead of the working-tree changes)")
     args = parser.parse_args(argv)
 
     root = (root or Path(__file__).resolve().parent.parent).resolve()

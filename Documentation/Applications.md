@@ -20,6 +20,38 @@ the notes it created. CV and letter preparation reuse this decision rather
 than selecting a language from the employer's location or template filename.
 A numeric fit score is a judgement with uncertainties, not a prediction of success.
 
+### Location preferences
+
+The fit assessment includes the role's location and working model. Set your
+preferences once in the private vault at
+`JobSearch/Templates/location-preferences.json`:
+
+```json
+{
+  "home": {"label": "Your town", "lat": 0.0, "lon": 0.0},
+  "max_daily_commute_km": 30,
+  "max_travel_percent": 50,
+  "accepted_regions": ["Your metropolitan area"],
+  "road_factor": 1.25
+}
+```
+
+- `home` is your home location as coordinates; the label is for you only.
+- `max_daily_commute_km` is the furthest road distance you will travel daily.
+- `max_travel_percent` is the most time you will spend away from home, counting
+  business travel and office days beyond your daily commute.
+- `accepted_regions` names areas you accept even if parts are beyond the commute
+  limit; the assistant judges whether an office lies inside one.
+- `road_factor` turns straight-line distance into an estimated road distance.
+
+Check the file with `tools/py CV/Scripts/location_fit.py check-config`. The
+assessment runs locally and reports only a verdict (`compatible`, `review`,
+`unknown` or `incompatible`) with distances rounded to 5 km, so your home
+location is never sent to a model. Add your home town to the redaction policy
+too, so it is masked if it appears in any text sent for remote drafting. An
+incompatible location limits the fit score unless you accept an exception for
+that role.
+
 After that analysis, the assistant runs a separate [Jev fit check](Jev-Checks.md)
 on the anonymous analysis and job description. It shows Jev's match score and
 confidence alongside the existing assessment and links the report from research

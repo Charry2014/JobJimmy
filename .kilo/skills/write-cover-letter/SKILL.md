@@ -36,7 +36,7 @@ for syntax and failure modes.
    `Writing-guide.md` and relevant experience. Unknown recipient details
    remain generic; do not invent names, dates, achievements or contact details.
 2. **Start a private plain-Markdown draft.** Run
-    `uv run --no-project python CV/Scripts/cover_letter.py init
+    `tools/py CV/Scripts/cover_letter.py init
    JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md`
    only if that file does not exist. Open it in Obsidian and retain exactly the
    eight English `##` field headings: `Sender`, `Date`, `Recipient`, `Subject`,
@@ -73,7 +73,7 @@ for syntax and failure modes.
    another language. The local
    `JobSearch/Templates/letter-identity.json` contains Sender and Signature
    arrays extracted from the user's example. From the public project root run
-   `uv run --no-project python CV/Scripts/cover_letter.py check-identity
+   `tools/py CV/Scripts/cover_letter.py check-identity
    JobSearch/Templates/letter-identity.json`. A successful check confirms a
    usable name, phone and email without printing them. A redacted CV baseline
    showing `[EMAIL]` is **not** evidence the letter identity is absent or lacks
@@ -86,19 +86,19 @@ for syntax and failure modes.
    full private Markdown and preserve the prose draft:
 
    ```sh
-    uv run --no-project python CV/Scripts/cover_letter.py hydrate-identity JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md JobSearch/Templates/letter-identity.json JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md
+    tools/py CV/Scripts/cover_letter.py hydrate-identity JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md JobSearch/Templates/letter-identity.json JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md
     ```
 
     Render the hydrated Markdown using the pair selected in step 4. For `en`:
 
     ```sh
-    uv run --no-project python CV/Scripts/cover_letter.py render JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt --template JobSearch/Templates/letter-template-en.odt --config JobSearch/Templates/letter-anchors-en.json
+    tools/py CV/Scripts/cover_letter.py render JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt --template JobSearch/Templates/letter-template-en.odt --config JobSearch/Templates/letter-anchors-en.json
     ```
 
     For `de`:
 
     ```sh
-    uv run --no-project python CV/Scripts/cover_letter.py render JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt --template JobSearch/Templates/letter-template-de.odt --config JobSearch/Templates/letter-anchors-de.json
+    tools/py CV/Scripts/cover_letter.py render JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt --template JobSearch/Templates/letter-template-de.odt --config JobSearch/Templates/letter-anchors-de.json
     ```
 
    `hydrate-identity` refuses to overwrite a prior complete draft: review and
@@ -112,7 +112,7 @@ for syntax and failure modes.
    only when it can verify exactly one page:
 
    ```sh
-   uv run --no-project python CV/Scripts/cover_letter.py export-pdf JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.pdf
+   tools/py CV/Scripts/cover_letter.py export-pdf JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.pdf
    ```
 
     An overflow keeps the ODT and writes **no final PDF**. Make exactly one

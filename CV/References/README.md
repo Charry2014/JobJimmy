@@ -9,7 +9,7 @@ References are extracted, editable Markdown copies of supplied source CVs,
 created with:
 
 ```sh
-python3 CV/Scripts/cv.py extract 'JobSearch/Templates/<source>.ott' 'JobSearch/Templates/<reference>.md' 'JobSearch/Templates/<reference>.odt' --variant <reference>
+tools/py CV/Scripts/cv.py extract 'JobSearch/Templates/<source>.ott' 'JobSearch/Templates/<reference>.md' 'JobSearch/Templates/<reference>.odt' --variant <reference>
 ```
 
 - One reference per source document, always used together with its generated

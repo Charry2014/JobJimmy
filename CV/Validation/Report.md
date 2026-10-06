@@ -8,9 +8,9 @@ source document:
 
 | Check | Reference | Command |
 | --- | --- | --- |
-| Editable Markdown blocks | block count from extraction output | `python3 CV/Scripts/cv.py extract ...` |
+| Editable Markdown blocks | block count from extraction output | `tools/py CV/Scripts/cv.py extract ...` |
 | Recreated ODT opens and exports in LibreOffice | visual/manual | LibreOffice export |
-| Document XML structure, attributes and text match source | structural | `python3 CV/Scripts/cv.py validate source.odt CV/Rendered/recreated.odt` |
+| Document XML structure, attributes and text match source | structural | `tools/py CV/Scripts/cv.py validate source.odt CV/Rendered/recreated.odt` |
 | Retained package entries (styles, images) | structural | included in `cv.py validate` |
 | Original / recreated page count | PDF | `CV/Scripts/compare_pdfs.py` |
 | PDF text and page sizes | PDF | `CV/Scripts/compare_pdfs.py` |

@@ -34,7 +34,7 @@ This does not apply to `CV Template.ott`, which is used directly by the
 population workflow below:
 
 ```sh
-python3 CV/Scripts/cv.py extract 'JobSearch/Templates/<source>.odt' 'JobSearch/Templates/<reference>.md' 'JobSearch/Templates/<reference>.odt' --variant <reference>
+tools/py CV/Scripts/cv.py extract 'JobSearch/Templates/<source>.odt' 'JobSearch/Templates/<reference>.md' 'JobSearch/Templates/<reference>.odt' --variant <reference>
 ```
 
 Rules:
@@ -66,7 +66,7 @@ following
 Agent Instructions]], using `CV/Scripts/populate_cv.py`:
 
 ```sh
-python3 CV/Scripts/populate_cv.py JobSearch/Outputs/body.md JobSearch/Templates/personal-master.odt JobSearch/Outputs/output.odt --pdf
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/populate_cv.py JobSearch/Outputs/body.md JobSearch/Templates/personal-master.odt JobSearch/Outputs/output.odt --pdf
 ```
 
 `personal-master.odt` is the user's private master, created from the `.ott`; it

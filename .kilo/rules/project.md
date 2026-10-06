@@ -4,6 +4,8 @@ For every Kilo mode and model family, read the project-root `AGENTS.md` and foll
 its task routing. Skills are agent-agnostic under `.kilo/skills/`; read their
 SKILL.md directly if discovery does not expose them. Do not duplicate rules for
 individual providers. Read `PRIVACY.md` before exposing private content to a model.
+For document language and hosted-drafting route decisions, follow
+`.kilo/rules/document-language.md`.
 Run commands from the public project root; `JobSearch/` is the separate private
 Obsidian vault. Switching models does not establish approval for a new data route.
 In every phase, private raw notes, filenames and tool output must stay out of

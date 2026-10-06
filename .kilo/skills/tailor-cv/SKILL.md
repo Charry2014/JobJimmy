@@ -91,7 +91,7 @@ ordinary document reads.
     block markers by hand, re-extract the source or mix variants. Run:
 
    ```sh
-    uv run --no-project python CV/Scripts/align_md.py JobSearch/Applications/<application-slug>/CV/<slug>-cv-draft.md JobSearch/Templates/<baseline>.odt JobSearch/Applications/<application-slug>/CV/<slug>-blocks.md --report JobSearch/Applications/<application-slug>/CV/<slug>-blocks-report.json
+    tools/py CV/Scripts/align_md.py JobSearch/Applications/<application-slug>/CV/<slug>-cv-draft.md JobSearch/Templates/<baseline>.odt JobSearch/Applications/<application-slug>/CV/<slug>-blocks.md --report JobSearch/Applications/<application-slug>/CV/<slug>-blocks-report.json
    ```
 
     Inspect *every* dropped source unit and fallback in the JSON report and
@@ -111,14 +111,14 @@ ordinary document reads.
     text with the approved draft. Render the *checked* block file locally:
 
    ```sh
-    uv run --no-project python CV/Scripts/cv.py render JobSearch/Applications/<application-slug>/CV/<slug>-blocks.md JobSearch/Templates/<baseline>.odt JobSearch/Applications/<application-slug>/CV/<slug>-cv.odt
+    tools/py CV/Scripts/cv.py render JobSearch/Applications/<application-slug>/CV/<slug>-blocks.md JobSearch/Templates/<baseline>.odt JobSearch/Applications/<application-slug>/CV/<slug>-cv.odt
     ```
 
     Confirm the rendered ODT contains each employer, dates and location once,
     in the reference styles, before exporting. A successful command or zero
     dropped units alone does not prove the fold is correct.
 6. **Personal-master pipeline instead:** after reviewing its body Markdown,
-    run `uv run --no-project python CV/Scripts/populate_cv.py <private-body.md>
+    run `tools/py CV/Scripts/populate_cv.py <private-body.md>
    <private-personal-master.odt> <private-output.odt> --pdf` from the root.
    This pipeline does not use `align_md.py` or extracted `cv:pNNN` blocks.
    Never populate directly from the public blank `.ott`.

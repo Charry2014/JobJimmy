@@ -122,8 +122,9 @@ under `JobSearch/`. See the linked guides for their schemas.
 | A personal CV master ODT or a source ODT plus its extracted baseline pair | Any CV rendering workflow |
 | A cover-letter ODT and matching anchors JSON | Automatic letter rendering; otherwise assemble manually in Writer |
 | `JobSearch/Templates/redaction-policy.json` (reviewed) | Remote drafting and Jev input checks |
+| `JobSearch/Templates/location-preferences.json` | Location and working-model factor in the fit assessment |
 | `JobSearch/Templates/translation-policy.json` (reviewed) | Translation |
-| `JobSearch/Templates/layout-pages.json` | Automatic layout checks; a synthetic default ships in `CV/Templates/` |
+| `JobSearch/Templates/<baseline>-layout-pages.json` | Automatic layout checks; a synthetic default ships in `CV/Templates/` |
 
 See [Getting started](Getting-Started.md) for installation links and the first
 checks, [Documents](Documents.md) for document inputs, and

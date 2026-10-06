@@ -86,8 +86,8 @@ taglines, Profile, Expertise and Achievements, and Work Experience body
 Markdown:
 
 ```sh
-python3 CV/Scripts/populate_cv.py JobSearch/Outputs/body.md JobSearch/Templates/master.odt JobSearch/Outputs/output.odt \
-    [--education-break suppress] [--pdf]
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/populate_cv.py JobSearch/Outputs/body.md JobSearch/Templates/master.odt JobSearch/Outputs/output.odt \
+    [--education-break keep|suppress] [--pdf] [--outdir DIR] [--strict]
 ```
 
 Identity and permanent sections are user-owned and must never be modified by an
@@ -240,7 +240,7 @@ inventing metrics or inflating ownership. The detailed rule is in
 
 Follow `CV/Style-guide.md`. Make best use of the available space without repeated
 points or a crammed appearance. The page allocation is defined per template in
-a user-specific `JobSearch/Templates/layout-pages.json`, passed to
+a user-specific `JobSearch/Templates/<baseline>-layout-pages.json`, passed to
 `check_layout.py --config` (for example: page one is the personal overview
 and offer; page two and three split the work experience and closing sections).
 Bullet counts and wording length are variable, but page/section allocation is not.
@@ -249,7 +249,7 @@ Do not invent content or shrink text indiscriminately to meet a space target.
 
 The public layout JSON is synthetic example configuration, not a personal layout oracle.
 If the private profile is absent, report automatic allocation checks as unavailable.
-Run `CV/Scripts/check_layout.py --config JobSearch/Templates/layout-pages.json` on the final PDF (PyMuPDF required; run it as `JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`), then inspect
+Run `CV/Scripts/check_layout.py --config JobSearch/Templates/<baseline>-layout-pages.json` on the final PDF (PyMuPDF required; run it as `JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`), then inspect
 all pages for overflow, density, repetition and readability. Its bottom-space
 measurement is approximate and its section checks do not prove every bullet is on
 the right page. Recorded fidelity baselines may themselves have whitespace
@@ -366,6 +366,15 @@ to the role rather than treating every listed technology as an equal blocker.
 Do not double-count repeated descriptions of the same experience or mistake a
 presentation gap for a capability gap. Unknown detail should qualify confidence,
 not automatically count as zero capability.
+
+Location and working model are a fit factor. Assess them with
+`CV/Scripts/location_fit.py`, which compares the office location, working model,
+office days and travel share against the private
+`JobSearch/Templates/location-preferences.json` (home location, maximum daily
+commute, maximum share of time away from home and accepted regions). Never read
+that file into a hosted model; use the script's generic verdict and banded
+distances. The import reference specifies how the verdict maps into the fit
+table and when it caps the score.
 
 A score is a reasoned assessment, not an independently measured fact. Use the
 vault's established scale when available and state the basis and key uncertainty.

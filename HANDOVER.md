@@ -1,4 +1,4 @@
-# Engine handover — 2026-10-02
+# Engine handover — 2026-10-06
 
 This snapshot supports a clean agent context. It is a dated state snapshot, not a
 procedure: recurring vault actions are specified centrally in
@@ -7,6 +7,39 @@ durable instructions and recheck Git status before editing. Keep this file limit
 in `JobSearch/HANDOVER.md`; never name real applications or people here. Application and activity notes remain the source of
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
+
+## Location fit factor — 2026-10-06
+
+Added `CV/Scripts/location_fit.py` (standard library, no network) and its tests.
+It compares a role's office coordinates, working model, office days and travel
+share against the private `JobSearch/Templates/location-preferences.json` and
+prints a verdict (`compatible`/`review`/`unknown`/`incompatible`), with distances
+rounded to 5 km and no home values. `--in-accepted-region` turns a commute over
+the limit into `review`. The import reference now always includes a Central
+**Location and working model** row in the fit table; an `incompatible` verdict
+caps fit at 4 unless an exception is accepted. Documented in
+`Documentation/Applications.md`, `Documentation/Agent-Reference/Documents.md` and
+`Documentation/Dependencies.md`. Corrected the stale `TYPESAFE_API_KEY` reference
+in import Step 0 to `OPENROUTER_JEV_API_KEY`. Not yet done: `check_env.py` does
+not report whether the preferences file is present.
+
+## Documentation consistency pass — 2026-10-06
+
+Removed the stale `.kilo/worktrees/planet-desk` worktree (its commit was already
+in `main`) and the implemented plans `central-action-procedures.md` and
+`cv-plain-draft-workflow.md` from `.kilo/plans/`. Layout allocation is now
+documented consistently as the private per-baseline
+`JobSearch/Templates/<baseline>-layout-pages.json`, with
+`CV/Templates/layout-pages.json` as the synthetic default only. Script commands in
+the docs and skills now use `tools/py`; `check_layout.py`/`compare_pdfs.py` and
+`populate_cv.py --pdf` add `JOBJIMMY_PY_WITH="pymupdf"`, and `translate.py`
+adds `certifi`. `.kilo/rules/project.md` now points to
+`.kilo/rules/document-language.md`, so the language rules load even if Kilo does
+not auto-discover rule files. README calls Kilo Code the primary setup throughout.
+Fixed the `privacy_screen.py` help text, which referred to a nonexistent
+`--changed` flag. Open: `.kilo/kilo.jsonc` holds only `$schema` and may be
+Kilo-generated; it was kept. The `APP_MAN_PRIVATE_<n>_TOKEN` redaction-token
+format keeps its legacy name for compatibility.
 
 ## Template-location instructions clarified — 2026-10-02
 

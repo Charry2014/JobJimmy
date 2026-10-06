@@ -68,7 +68,9 @@ and numbers are retained without editorial corrections.
 ## Layout rules
 
 Follow [[CV/Style-guide|the CV layout and style guide]] for every tuned version.
-The per-template page allocation is recorded in `CV/Templates/layout-pages.json`.
+The page allocation for each baseline is recorded privately in
+`JobSearch/Templates/<baseline>-layout-pages.json`; the public
+`CV/Templates/layout-pages.json` is only a synthetic default.
 Bullet counts and text length may vary within that structure. Avoid repetition,
 crowding and more than five empty body-text lines at the bottom.
 
@@ -120,14 +122,14 @@ and make targeted, surgical changes in the copy, then render it with the matchin
 template:
 
 ```sh
-python3 CV/Scripts/cv.py render JobSearch/Templates/<baseline>.md JobSearch/Templates/<baseline>.odt JobSearch/Outputs/Baselines/<baseline>.odt
+tools/py CV/Scripts/cv.py render JobSearch/Templates/<baseline>.md JobSearch/Templates/<baseline>.odt JobSearch/Outputs/Baselines/<baseline>.odt
 ```
 
 Replace the input/output paths for tailored drafts with paths inside the
 relevant application folder, for example:
 
 ```sh
-python3 CV/Scripts/cv.py render JobSearch/Applications/<application-slug>/CV/<application>.md JobSearch/Templates/<template>.odt JobSearch/Applications/<application-slug>/CV/<output>.odt
+tools/py CV/Scripts/cv.py render JobSearch/Applications/<application-slug>/CV/<application>.md JobSearch/Templates/<template>.odt JobSearch/Applications/<application-slug>/CV/<output>.odt
 ```
 
 The render command creates the editable ODT and must retain it in the application's
@@ -187,7 +189,7 @@ drafts can be retained until deliberately migrated; do not overwrite them.
 Create the draft from `CV/Templates/Cover-Letter.md` or run:
 
 ```sh
-python3 CV/Scripts/cover_letter.py init 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md'
+tools/py CV/Scripts/cover_letter.py init 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md'
 ```
 
 The Markdown has eight readable `##` section headings: `Sender`, `Date`,
@@ -215,9 +217,9 @@ No CV block markers or alignment intermediate are needed.
 Merge reviewed text locally using Python's standard library:
 
 ```sh
-python3 CV/Scripts/cover_letter.py render 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md' 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt' \
+tools/py CV/Scripts/cover_letter.py render 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md' 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt' \
   --template JobSearch/Templates/letter-template-en.odt --config JobSearch/Templates/letter-anchors-en.json
-python3 CV/Scripts/cover_letter.py export-pdf 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt' 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.pdf'
+tools/py CV/Scripts/cover_letter.py export-pdf 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt' 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.pdf'
 ```
 
 The example render command above is for an English letter. For German, use
@@ -256,7 +258,7 @@ this JSON. Never copy identity from the baseline or print the private JSON to
 a remote model. Check it from the public root without exposing values:
 
 ```sh
-uv run --no-project python CV/Scripts/cover_letter.py check-identity JobSearch/Templates/letter-identity.json
+tools/py CV/Scripts/cover_letter.py check-identity JobSearch/Templates/letter-identity.json
 ```
 
 Other checkouts may not have the attached private vault. If the command fails,
@@ -275,7 +277,7 @@ The agent drafts the other six sections and leaves `{{local sender}}` and
 JSON into hosted context. Produce a complete private Markdown deliverable locally:
 
 ```sh
-python3 CV/Scripts/cover_letter.py hydrate-identity \
+tools/py CV/Scripts/cover_letter.py hydrate-identity \
   'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md' \
   JobSearch/Templates/letter-identity.json \
   'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md'
@@ -294,12 +296,12 @@ converts ordinary Markdown prose into the block-marked intermediate that
 `cv.py render` requires:
 
 ```sh
-python3 CV/Scripts/align_md.py \
+tools/py CV/Scripts/align_md.py \
     JobSearch/Applications/<application-slug>/CV/<application>-cv-draft.md \
     JobSearch/Templates/<template>.odt \
     JobSearch/Applications/<application-slug>/CV/<application>-blocks.md \
     --report JobSearch/Applications/<application-slug>/CV/<application>-blocks-report.json
-python3 CV/Scripts/cv.py render \
+tools/py CV/Scripts/cv.py render \
     JobSearch/Applications/<application-slug>/CV/<application>-blocks.md \
     JobSearch/Templates/<template>.odt \
     JobSearch/Applications/<application-slug>/CV/<output>.odt
@@ -377,7 +379,7 @@ without changing the script:
 ```sh
 export OPENROUTER_API_KEY='your-openrouter-key'
 export OPENROUTER_MODEL='<provider>/<model-id>'
-python3 CV/Scripts/translate.py JobSearch/Applications/<application-slug>/CV/<application>-blocks.md \
+JOBJIMMY_PY_WITH="certifi" tools/py CV/Scripts/translate.py JobSearch/Applications/<application-slug>/CV/<application>-blocks.md \
   --privacy-policy JobSearch/Templates/translation-policy.json
 ```
 
@@ -496,7 +498,7 @@ Templates themselves contain placeholders and are not documents to submit.
 Use fresh output paths to avoid overwriting a tuned reference:
 
 ```sh
-python3 CV/Scripts/cv.py extract '/path/to/source.odt' JobSearch/Templates/New.md JobSearch/Templates/New.odt --variant new
+tools/py CV/Scripts/cv.py extract '/path/to/source.odt' JobSearch/Templates/New.md JobSearch/Templates/New.odt --variant new
 ```
 
 The extractor is designed for supplied Writer CV documents, not arbitrary ODT
@@ -515,7 +517,7 @@ LibreOffice installation.
 Structural comparison for an unchanged round trip:
 
 ```sh
-python3 CV/Scripts/cv.py validate '/path/to/original.odt' JobSearch/Outputs/Baselines/recreated.odt
+tools/py CV/Scripts/cv.py validate '/path/to/original.odt' JobSearch/Outputs/Baselines/recreated.odt
 python3 -m unittest discover -s CV/Scripts -p 'test_*.py' -v
 ```
 
@@ -552,8 +554,9 @@ sourced additional detail and a new review. Rerender after approval; keep the
 preflight failure visible if the underfill is accepted as an exception.
 
 The preflight is a review aid; final acceptance also requires visual and
-editorial review. Page allocation expectations come from
-`CV/Templates/layout-pages.json`; pass `--config` for a different profile.
+editorial review. Page allocation expectations come from the private
+`JobSearch/Templates/<baseline>-layout-pages.json` passed with `--config`; without it
+the synthetic `CV/Templates/layout-pages.json` default applies.
 
 ## Jev assessment checks
 

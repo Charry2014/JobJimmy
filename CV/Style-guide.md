@@ -41,8 +41,9 @@ scope. Follow [[Knowledge/Writing-guide]] for examples and evidence boundaries.
 
 ## Fixed page structure
 
-The page allocation is defined per document template in
-`CV/Templates/layout-pages.json`. The typical three-page allocation is:
+The page allocation is defined per baseline in the private
+`JobSearch/Templates/<baseline>-layout-pages.json` (the public
+`CV/Templates/layout-pages.json` is a synthetic default). The typical three-page allocation is:
 
 | Page | Purpose and required contents |
 | --- | --- |
@@ -106,7 +107,7 @@ follows text review.
 
 1. Review and correct the text for role relevance, factual accuracy, language and unnecessary repetition.
 2. Once the user confirms the text is correct or requests rendering, render the Markdown with its matching document template, then export to PDF.
-3. Check the page count and the allocation in `CV/Templates/layout-pages.json`,
+3. Check the page count and the allocation in `JobSearch/Templates/<baseline>-layout-pages.json`,
    including all bullets.
 4. Run `CV/Scripts/check_layout.py` on the PDF to flag misplaced section headings,
    overflow and excessive bottom space. It requires PyMuPDF; run it with
@@ -128,7 +129,8 @@ follows text review.
    rendering. Do not fill space automatically or change page breaks to mask it.
 
 ```sh
-python3 CV/Scripts/check_layout.py JobSearch/Outputs/tailored.pdf --report JobSearch/Outputs/layout-check.json
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py JobSearch/Outputs/tailored.pdf \
+  --config JobSearch/Templates/<baseline>-layout-pages.json --report JobSearch/Outputs/layout-check.json
 ```
 
 Use `--bottom-margin-mm` or `--line-height-pt` only to reflect the actual layout,

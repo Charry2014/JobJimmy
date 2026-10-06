@@ -113,7 +113,7 @@ reduces disclosure; it is not proof of anonymity.
 1. Seed the private policy from the private identity file *locally*, once:
 
    ```sh
-   uv run --no-project python CV/Scripts/redact_md.py seed-policy JobSearch/Templates/letter-identity.json JobSearch/Templates/redaction-policy.json
+   tools/py CV/Scripts/redact_md.py seed-policy JobSearch/Templates/letter-identity.json JobSearch/Templates/redaction-policy.json
    ```
 
    The seeded policy has `"reviewed": false` and cannot be used for export.
@@ -127,7 +127,7 @@ reduces disclosure; it is not proof of anonymity.
 2. Run from the public root, replacing the example private paths:
 
    ```sh
-   uv run --no-project python CV/Scripts/redact_md.py prepare JobSearch/Outputs/source.md JobSearch/Templates/redaction-policy.json JobSearch/Outputs/source-safe.md JobSearch/Outputs/source-map.json
+   tools/py CV/Scripts/redact_md.py prepare JobSearch/Outputs/source.md JobSearch/Templates/redaction-policy.json JobSearch/Outputs/source-safe.md JobSearch/Outputs/source-map.json
    ```
 
    Preparation refuses an unreviewed policy, a document matching none of its
@@ -141,7 +141,7 @@ reduces disclosure; it is not proof of anonymity.
    response to a private Markdown file, then restore locally:
 
    ```sh
-   uv run --no-project python CV/Scripts/redact_md.py restore JobSearch/Outputs/source-safe.md JobSearch/Outputs/response-safe.md JobSearch/Outputs/source-map.json JobSearch/Outputs/response.md
+   tools/py CV/Scripts/redact_md.py restore JobSearch/Outputs/source-safe.md JobSearch/Outputs/response-safe.md JobSearch/Outputs/source-map.json JobSearch/Outputs/response.md
    ```
 
    Restoration rejects missing, changed, duplicated or unknown tokens and

@@ -199,7 +199,7 @@ live in a separate private Git repository inside `JobSearch/`.
 | Git | The documented setup, separate public/private repositories, and privacy gate. |
 | Python 3.11+ and uv | Automation scripts and privacy checks; development checks currently use Python 3.12. |
 | LibreOffice Writer | Personalise ODT layouts and export PDFs locally. |
-| A filesystem-capable AI assistant | Guided research, assessment, drafting, and record updates; VS Code with Kilo Code is one free, open-source setup. Manual tracking works without an assistant. |
+| A filesystem-capable AI assistant | Guided research, assessment, drafting, and record updates; VS Code with Kilo Code is the primary, free and open-source setup. Manual tracking works without an assistant. |
 | OpenRouter account and API key | All AI calls, including AutoRouter, optional English-to-German translation, and advisory Jev fit and document checks. |
 | PyMuPDF | Optional automated PDF layout/comparison checks; still inspect documents visually. |
 

@@ -92,7 +92,7 @@ Save a reviewed working copy as `JobSearch/Outputs/cv-body.md` for a first local
 trial. To populate an editable ODT and export PDF:
 
 ```sh
-python3 CV/Scripts/populate_cv.py \
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/populate_cv.py \
   JobSearch/Outputs/cv-body.md \
   JobSearch/Templates/personal-master.odt \
   JobSearch/Outputs/cv-preview.odt --pdf
@@ -116,7 +116,7 @@ first. Keep your original untouched.
 Extract a baseline and matching template:
 
 ```sh
-python3 CV/Scripts/cv.py extract \
+tools/py CV/Scripts/cv.py extract \
   JobSearch/Templates/source.odt \
   JobSearch/Templates/Manager.md \
   JobSearch/Templates/Manager.odt --variant manager
@@ -130,11 +130,11 @@ tracked changes and unfamiliar structures may need adaptation.
 Before tailoring anything, check an unchanged round trip:
 
 ```sh
-python3 CV/Scripts/cv.py render \
+tools/py CV/Scripts/cv.py render \
   JobSearch/Templates/Manager.md \
   JobSearch/Templates/Manager.odt \
   JobSearch/Outputs/baseline-check.odt
-python3 CV/Scripts/cv.py validate \
+tools/py CV/Scripts/cv.py validate \
   JobSearch/Templates/source.odt \
   JobSearch/Outputs/baseline-check.odt
 ```
@@ -162,7 +162,7 @@ For approach B, map a plain draft back onto the chosen extracted template with
 replace the slug with your existing application folder:
 
 ```sh
-python3 CV/Scripts/align_md.py \
+tools/py CV/Scripts/align_md.py \
   JobSearch/Applications/2026-09-example-lead/CV/example-cv-draft.md \
   JobSearch/Templates/Manager.odt \
   JobSearch/Applications/2026-09-example-lead/CV/example-blocks.md \
@@ -174,7 +174,7 @@ unmatched template content can retain baseline wording. Resolve any unintended
 omission or fallback, then:
 
 ```sh
-python3 CV/Scripts/cv.py render \
+tools/py CV/Scripts/cv.py render \
   JobSearch/Applications/2026-09-example-lead/CV/example-blocks.md \
   JobSearch/Templates/Manager.odt \
   JobSearch/Applications/2026-09-example-lead/CV/example-cv.odt
@@ -205,13 +205,14 @@ new reference/template pair. Keep each reference paired with its own template;
 do not mix baselines or reuse old alignment reports after changing structure.
 
 The public `layout-pages.json` contains synthetic employer headings. Copy it to
-`JobSearch/Templates/layout-pages.json` and change the expected sections/page
+`JobSearch/Templates/<baseline>-layout-pages.json` (one per baseline, for example
+`VP-CTO-layout-pages.json`) and change the expected sections/page
 allocation privately before using automatic checks:
 
 ```sh
 JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py \
   JobSearch/Outputs/cv-preview.pdf \
-  --config JobSearch/Templates/layout-pages.json \
+  --config JobSearch/Templates/<baseline>-layout-pages.json \
   --report JobSearch/Outputs/cv-layout.json
 ```
 
@@ -231,7 +232,7 @@ Use the eight-section [Markdown starter](../CV/Templates/Cover-Letter.md).
 The `init` command copies it into a private file:
 
 ```sh
-python3 CV/Scripts/cover_letter.py init JobSearch/Outputs/letter-prose.md
+tools/py CV/Scripts/cover_letter.py init JobSearch/Outputs/letter-prose.md
 ```
 
 Complete Date, Recipient, Subject, Salutation, Body and Closing. For the
@@ -241,7 +242,7 @@ Signature. Create your private identity JSON locally using the format in the
 Do not paste that JSON into a hosted assistant. Assemble a complete private draft:
 
 ```sh
-python3 CV/Scripts/cover_letter.py hydrate-identity \
+tools/py CV/Scripts/cover_letter.py hydrate-identity \
   JobSearch/Outputs/letter-prose.md \
   JobSearch/Templates/letter-identity.json \
   JobSearch/Outputs/letter.md
@@ -264,7 +265,7 @@ arbitrary letter is insufficient. See
 [template configuration](../CV/Templates/README.md#cover-letter). Then run:
 
 ```sh
-python3 CV/Scripts/cover_letter.py render \
+tools/py CV/Scripts/cover_letter.py render \
   JobSearch/Outputs/letter.md JobSearch/Outputs/letter.odt \
   --template JobSearch/Templates/letter-template-en.odt \
   --config JobSearch/Templates/letter-anchors-en.json
@@ -279,7 +280,7 @@ example's original letter prose or identity.
 Export through the guarded command, not an unchecked Writer conversion:
 
 ```sh
-uv run --no-project python CV/Scripts/cover_letter.py export-pdf \
+tools/py CV/Scripts/cover_letter.py export-pdf \
   JobSearch/Outputs/letter.odt JobSearch/Outputs/letter.pdf
 ```
 
@@ -317,7 +318,7 @@ guidance changes. Do not assume a guidance file alone changes the target languag
 5. Run on a reviewed block-marked file, for example:
 
 ```sh
-python3 CV/Scripts/translate.py \
+JOBJIMMY_PY_WITH="certifi" tools/py CV/Scripts/translate.py \
   JobSearch/Applications/2026-09-example-lead/CV/example-blocks.md \
   --privacy-policy JobSearch/Templates/translation-policy.json
 ```

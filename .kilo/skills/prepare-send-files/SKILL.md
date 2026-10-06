@@ -20,7 +20,7 @@ identifiers into a hosted model; use a permitted local-only route for this step.
    JSON itself, so the name never enters the agent context:
 
    ```sh
-   python3 CV/Scripts/prepare_send_files.py \
+   tools/py CV/Scripts/prepare_send_files.py \
      --identity JobSearch/Templates/letter-identity.json \
      --cv 'JobSearch/Applications/<application-slug>/CV/<slug>-cv.pdf' \
      --cover-letter 'JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.pdf'

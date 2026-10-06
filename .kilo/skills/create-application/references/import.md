@@ -37,7 +37,7 @@ never printed).
   - `OPENROUTER_API_KEY` / `OPENROUTER_MODEL` — only the optional
     English-to-German CV translation. Options: set the key, skip translation, or
     stop.
-  - `TYPESAFE_API_KEY` — only the live Jev check in Step 7. Options: set the key,
+  - `OPENROUTER_JEV_API_KEY` — only the live Jev check in Step 7. Options: set the key,
     continue and record the Jev check as unavailable, or stop.
   Never ask the user to paste a key into chat: direct them to a secret manager or
   a non-echoing prompt and the variable names in
@@ -204,7 +204,10 @@ transcripts, portfolio, referee list); specific forms, portals or questionnaire
 fields; deadlines or closing dates; salary expectations; location, on-site or
 travel requirements; screening process notes (AI-assisted screening,
 assessments, mandatory cover letter, "tell us about X" questions); anything
-else unusual. Impact states the concrete consequence (for example "blocker —
+else unusual. For location, record the office town or address, the working
+model (on-site, hybrid, remote or not stated), required office days per week and
+the stated travel share; these feed the location factor in Step 7. Impact states
+the concrete consequence (for example "blocker —
 cannot attest clearance", "prepare referee list", "drives the language
 decision").
 
@@ -235,8 +238,29 @@ uncertainty — followed by the standard table:
   `[[Knowledge/Experience#Relevant experience]]`,
   `[[Templates/VP-CTO]]`.
 
+**Location and working model** is always one row of the table, with Importance
+`Central`. Do not read the private location preferences: run the local check
+with the public office coordinates (looked up from the advert or employer address)
+and the Step 6 facts:
+
+```sh
+tools/py CV/Scripts/location_fit.py assess --work-mode <onsite|hybrid|remote|unknown> \
+  [--office LAT,LON] [--office-days N] [--travel-percent N] [--in-accepted-region]
+```
+
+Pass `--in-accepted-region` only when the office clearly lies inside a region the
+script lists under `accepted_regions`. Map the verdict to the Fit category:
+`compatible` → `Strong fit`; `review` → `Secondary match` (state the commute or
+time-away figure and ask the user if it is material); `unknown` → `Unknown` (ask
+for the missing working model, office location or office days); `incompatible` →
+`Gap`. Quote only the script's banded distances and reasons as evidence, never a
+home location. If the preferences file is missing, record the row as `Unknown` with
+"location preferences not configured".
+
 Derive the numeric fit from the table: strong evidence on Central requirements
-supports a high score; Central gaps cap it; state the reasoning. Set the
+supports a high score; Central gaps cap it; an `incompatible` location verdict caps the score at 4
+unless the user has accepted relocation or an exception for this role; state the
+reasoning. Set the
 application's `fit` property to the integer for a new assessment; preserve an existing
 score on simple reimport unless reassessment was requested. Leave it blank only when evidence
 is genuinely insufficient, and say why in the note. A score is a reasoned

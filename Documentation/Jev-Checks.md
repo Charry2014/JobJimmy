@@ -98,7 +98,7 @@ generic; use the current application's files. Preview the exact fit request
 offline first while tuning:
 
 ```sh
-python3 CV/Scripts/jev_check.py fit \
+tools/py CV/Scripts/jev_check.py fit \
   --job JobSearch/Outputs/job-safe.md \
   --analysis JobSearch/Outputs/fit-safe.md \
   --policy JobSearch/Templates/redaction-policy.json --reviewed \
@@ -112,14 +112,14 @@ An offline preview does not have to be approved each time; it is a tuning aid.
 Run the final documents individually:
 
 ```sh
-python3 CV/Scripts/jev_check.py cv \
+tools/py CV/Scripts/jev_check.py cv \
   --job JobSearch/Outputs/job-safe.md \
   --document JobSearch/Outputs/cv-safe.md \
   --requirements JobSearch/Outputs/required-points-safe.json \
   --policy JobSearch/Templates/redaction-policy.json --reviewed --send \
   --output JobSearch/Outputs/jev-cv-v1.json
 
-python3 CV/Scripts/jev_check.py cover-letter \
+tools/py CV/Scripts/jev_check.py cover-letter \
   --job JobSearch/Outputs/job-safe.md \
   --document JobSearch/Outputs/letter-safe.md \
   --requirements JobSearch/Outputs/required-points-safe.json \

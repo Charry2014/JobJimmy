@@ -67,10 +67,11 @@ The personal master `.odt` and the blank `.ott` must remain unchanged. Open the
 master as a template or make a byte-preserving working copy through an ODF-aware
 mechanism before making any changes, then save the working file as `.odt`.
 
-The population tooling is `CV/Scripts/populate_cv.py` (standard library only):
+The population tooling is `CV/Scripts/populate_cv.py` (standard library only; the optional
+`--pdf` page count needs PyMuPDF, supplied per command as shown):
 
 ```sh
-python3 CV/Scripts/populate_cv.py JobSearch/Outputs/body.md JobSearch/Templates/personal-master.odt JobSearch/Outputs/output.odt \
+JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/populate_cv.py JobSearch/Outputs/body.md JobSearch/Templates/personal-master.odt JobSearch/Outputs/output.odt \
     [--education-break keep|suppress] [--pdf] [--outdir DIR] [--strict]
 ```
 
