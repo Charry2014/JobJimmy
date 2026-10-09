@@ -112,8 +112,12 @@ specific tailoring changes in the activity note. Preserved block IDs alone do
 not prove fidelity to the reference.
 
 Before drafting, identify the language of the job description and the
-application instructions. If the main advert is in a foreign language, prepare the
-CV and cover letter in that language. For mixed-language adverts, use the
+application instructions. If the main advert is in a foreign language, the final
+CV and cover letter use that language. For German applications, first draft and
+revise both texts in English with the user, then translate the agreed sources
+and review German before rendering. Retain English sources separately; follow
+[the staged workflow](../Documentation/Agent-Reference/Documents.md#english-drafting-before-german-translation).
+For mixed-language adverts, use the
 application instructions and explicit document requirements to decide. Record
 the code in the linked research note's `document_language` property and the
 evidence under **Research notes**; CV and letter steps reuse it. Resolve

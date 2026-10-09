@@ -1,4 +1,4 @@
-# Engine handover — 2026-10-06
+# Engine handover — 2026-10-09
 
 This snapshot supports a clean agent context. It is a dated state snapshot, not a
 procedure: recurring vault actions are specified centrally in
@@ -7,6 +7,24 @@ durable instructions and recheck Git status before editing. Keep this file limit
 in `JobSearch/HANDOVER.md`; never name real applications or people here. Application and activity notes remain the source of
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
+
+## English review before German translation — 2026-10-09
+
+German applications now prepare both CV and cover letter in English through
+evidence, wording and user-feedback rounds before translation. The agreed English
+sources remain alongside separate German drafts; `document_language` continues
+to describe the final submission language. German wording gets its own review
+and per-document Jev checks before rendering. Substantive later changes return
+to English first. The shared sequence lives in
+`Documentation/Agent-Reference/Documents.md`; language routing, document skills,
+import proposals, send-file checks and user guides point to the same stages.
+This supersedes the earlier direct-German letter rule and the earlier handover
+advice to remove all old-language drafts: retain English working sources.
+
+Validation: all four affected skills passed the skill validator; obsolete
+direct-German instructions were checked for conflicts; changed-file and `--all`
+privacy screens passed, and `git diff --check` was clean. Documentation/skill
+instructions only: no live translation, Jev request or rendering was run.
 
 ## Location fit factor — 2026-10-06
 

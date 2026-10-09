@@ -18,6 +18,13 @@ Run whichever document is ready without waiting for its companion. Run again aft
 substantive wording, advert, checklist or request changes; old results describe
 only the saved input snapshot. Do not rerun on a simple unchanged reimport.
 
+For German applications, check each review-ready English source before translation
+and each final German version before rendering, following the
+[English-first sequence](Agent-Reference/Documents.md#english-drafting-before-german-translation).
+Label reports by document, language and revision in the activity's Notes and use
+distinct report filenames. An English score does not validate German wording;
+neither score authorises translation or replaces the user's wording review.
+
 ## Editable requests
 
 Tune [CV/Jev/requests.json](../CV/Jev/requests.json). It contains the suggested

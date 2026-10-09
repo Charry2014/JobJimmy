@@ -92,7 +92,11 @@ If the role looks worthwhile:
 > cover letter. Use specific evidence from my knowledge base. Flag anything
 > you need me to confirm.
 
-Review the wording, then use the local document tools to assemble and inspect
+For German applications, refine both the CV and cover letter in English over
+review rounds first. Once you agree the English content is ready, Jimmy translates
+it into German for final review, retaining the English sources for comparison.
+
+Review the final wording, then use the local document tools to assemble and inspect
 the result. The [documents guide](Documentation/Documents.md) covers layouts,
 rendering, and translation. You remain the editor: check the facts, tone, and
 final PDF before sending it.

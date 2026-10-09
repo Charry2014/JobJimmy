@@ -297,6 +297,10 @@ actual mandate. Name the baseline and its template, and three to six targeted
   evidence in **Research notes**. Use the advert's main prose and explicit
   document instructions, not the employer's location. If genuinely ambiguous,
   leave it blank and flag before drafting. Do not defer this decision to rendering.
+  This is the final submission language. For `de`, propose English drafting and
+  review rounds for both CV and letter first, then translation once the English
+  content is agreed; keep `document_language: de` throughout. Follow
+  `Documentation/Agent-Reference/Documents.md#english-drafting-before-german-translation`.
 Flag missing inputs for the selected document workflow. Substantial rewrites need an
 explicit user request; tailoring is small edits to existing points.
 

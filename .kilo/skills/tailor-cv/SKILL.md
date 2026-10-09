@@ -27,7 +27,10 @@ model. Do not mistake translation-only `translate.py` tokens for protection of
 ordinary document reads.
 
 1. **Identify the application and language.** Read `document_language` from
-   its linked research note and reuse that decision for the CV and letter. For
+   its linked research note and reuse that decision for the final CV and letter.
+   For `de`, first follow
+   `Documentation/Agent-Reference/Documents.md#english-drafting-before-german-translation`:
+   English drafting and revision rounds precede German translation. For
    an older note without the field, determine it once from the advert and
    explicit application instructions, record the code and evidence there,
    then proceed. Never choose by template name or employer location; clarify
@@ -53,7 +56,8 @@ ordinary document reads.
    and follow `Documentation/CV-Automation-User-Template-Setup.md`; do not
    fabricate identity, permanent sections or another person's CV.
 3. **Draft plain Markdown in Obsidian.** Put a working copy in the existing
-   application's flat `CV/` folder as `<slug>-cv-draft.md`. For the extracted
+   application's flat `CV/` folder as `<slug>-cv-draft.md`, or
+   `<slug>-cv-draft-en.md` when the final language is German. For the extracted
     pipeline, use the baseline's visible text with its heading order, chronology,
     paragraphs and bullets. Strip YAML frontmatter, both opening and closing
     `cv:pNNN` block markers, and instructional comments from the *plain draft
@@ -74,8 +78,16 @@ ordinary document reads.
    pipeline, use the exact body structure and YAML `taglines` in
    `CV/Templates/CV-Template-Population-Agent-Instructions.md` instead; do not
    include fixed identity sections. Keep draft notes outside renderable text.
-4. **Review before rendering.** When the final plain Markdown wording is ready,
-   run the CV check in `Documentation/Jev-Checks.md` on its checked anonymous
+4. **Review before translation or rendering.** For German applications, review
+   and revise English for evidence, coverage and wording with the user until
+   agreed for translation; if both documents were requested, finish both English
+   reviews first. Preserve that source, translate to a separate German draft,
+   and review its fidelity and wording before rendering. Follow the shared
+   sequence above for translation routes and later content changes. Subsequent
+   commands show generic filenames: use the approved German draft/blocks as
+   render input, never the English working source for a German final CV.
+   At English review and again at final German review (or final review for other
+   languages), run the CV check in `Documentation/Jev-Checks.md` on its checked anonymous
    copy, the anonymous advert and complete required-points checklist. Send this
    CV alone, before identity restoration; never include the companion letter.
    Present Jev's match score, confidence and partial/missing/unclear points with

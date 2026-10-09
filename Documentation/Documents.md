@@ -143,13 +143,32 @@ Also open the source and recreated ODT in Writer, export both to PDF, and compar
 every page. Structural validation does not prove visual fidelity. Do not rely on
 a new template until you have checked it.
 
+## German applications: review English first
+
+For a German advert, the final CV and cover letter are German unless explicit
+application instructions or you specify otherwise. Both texts are prepared in
+English first: review the evidence and requirement coverage, refine the wording,
+and work through feedback rounds until you agree they are ready to translate.
+When preparing both documents, finish both English reviews before translating
+either. An English first draft does not automatically trigger translation.
+
+The assistant retains the agreed English sources and creates separate German
+drafts, checks them against the English, and presents them for final wording
+review before rendering. Substantive changes return to the English source first;
+German grammar and idiom corrections can stay in German if meaning is unchanged.
+Each document gets separate Jev checks at the English and German review stages.
+The research note keeps `document_language: de` throughout: it describes what
+you will submit, not the working language. English-only applications keep their
+existing workflow. See the [agent sequence](Agent-Reference/Documents.md#english-drafting-before-german-translation).
+
 ## Tailor for an application
 
 > Use my chosen baseline and this application's advert to prepare a plain
 > Markdown CV draft. Preserve the baseline's wording except where a specific
 > requirement warrants a supported change. List each targeted change and its
-> evidence. Decide the language from the advert and application instructions.
-> Do not render yet.
+> evidence. Decide the final language from the advert and application instructions.
+> For German output, work through English review rounds with me first and wait
+> until we agree the English text is ready before translating. Do not render yet.
 
 For agents, follow `.kilo/skills/tailor-cv/SKILL.md` step by step. Store the
 draft in the application's `CV/` folder. Review factual claims, tone,
@@ -224,8 +243,9 @@ wording to force a page count.
 ## Write a cover letter
 
 > Draft a cover letter for this application, using my strongest relevant evidence
-> and sourced company research. Use the application's language and natural
-> first-person prose. Leave identity fields for local insertion. Do not render
+> and sourced company research. For German output, draft and refine English with
+> me before translating the agreed text. Use natural first-person prose.
+> Leave identity fields for local insertion. Do not render
 > or send it yet.
 
 Use the eight-section [Markdown starter](../CV/Templates/Cover-Letter.md).
@@ -297,7 +317,12 @@ If no compatible private letter template is available, use manual Writer
 assembly. Keep the final Markdown, ODT and PDF in the application's `CV/`
 folder, link them from the application and record a `document-added` activity.
 
-## Optional: English-to-German CV translation
+## Optional tool: English-to-German CV translation
+
+Use this tool only after the English review stage above. Translation is required
+for German final output; this script is one available route. Cover letters and
+approach A use the assistant's redacted translation workflow or a permitted local
+route, always starting from the agreed English text.
 
 This script translates the **block-marked CV format from approach B**. It does
 not directly accept approach A's body format or cover-letter Markdown. Other
@@ -315,7 +340,8 @@ guidance changes. Do not assume a guidance file alone changes the target languag
 4. Set `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` in the terminal environment.
    Use your secret manager or a non-echoing prompt for the key; never commit it,
    paste it into chat or put it in a command saved to shell history.
-5. Run on a reviewed block-marked file, for example:
+5. Fold the agreed English CV into blocks and inspect the alignment report, then
+   run on that checked English block-marked file, for example:
 
 ```sh
 JOBJIMMY_PY_WITH="certifi" tools/py CV/Scripts/translate.py \

@@ -27,7 +27,10 @@ for syntax and failure modes.
 
 1. **Check inputs.** Identify the application and read `document_language` in
    its linked research note. Reuse that research decision (`en`, `de`, etc.)
-   for drafting and rendering; do not choose by template filename or company
+   for final output. For `de`, follow
+   `Documentation/Agent-Reference/Documents.md#english-drafting-before-german-translation`:
+   draft and revise English first, then translate the agreed source. Do not
+   choose by template filename or company
    location. For an older note without the field, derive it once from the
    advert and explicit application instructions, record the code and evidence
    there, then proceed. Clarify only genuinely conflicting instructions.
@@ -38,10 +41,13 @@ for syntax and failure modes.
 2. **Start a private plain-Markdown draft.** Run
     `tools/py CV/Scripts/cover_letter.py init
    JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md`
-   only if that file does not exist. Open it in Obsidian and retain exactly the
+   only if that file does not exist. For German final output, start instead with
+   `<slug>-cover-letter-prose-en.md` and preserve it through translation. Open
+   it in Obsidian and retain exactly the
    eight English `##` field headings: `Sender`, `Date`, `Recipient`, `Subject`,
    `Salutation`, `Body`, `Closing`, `Signature`. Write the *field values* in
-   the application's language; use first-person natural prose and blank lines
+   English during preparation for a German application, otherwise in the
+   application's language; use first-person natural prose and blank lines
    between body paragraphs. The renderer does not support lists, inline
    Markdown, YAML, HTML or links in this letter. Replace all placeholders
     except `{{local sender}}` and `{{local signature}}` in their respective
@@ -49,8 +55,17 @@ for syntax and failure modes.
     those placeholders before prose review. They remain until local identity
     insertion. Use one line each
    for date, subject, salutation and closing, and set a deliberate date.
-3. **Review prose first.** When the final Markdown prose is ready, run the
-   cover-letter check in `Documentation/Jev-Checks.md` on its checked anonymous
+3. **Review prose first.** For German applications, work through English evidence
+   and wording review rounds with user feedback until agreed for translation.
+   If both documents were requested, finish both English reviews first. Translate
+   the agreed prose to `<slug>-cover-letter-prose-de.md` under the redaction
+   workflow, keeping the eight English field headings and local identity
+   placeholders. Review German against English and obtain German wording approval
+   or an explicit render request before step 4. Subsequent commands use generic
+   filenames: hydrate/render the approved German prose for `de`, retaining the
+   English source. `translate.py` does not accept cover letters.
+   At English review and again at final German review (or final review for other
+   languages), run the cover-letter check in `Documentation/Jev-Checks.md` on its checked anonymous
    copy, the anonymous advert and complete required-points checklist. Send this
    letter alone before identity restoration/hydration; do not include the CV.
    Present Jev's match score, confidence and partial/missing/unclear points with

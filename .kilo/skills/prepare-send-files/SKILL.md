@@ -12,7 +12,9 @@ identifiers into a hosted model; use a permitted local-only route for this step.
 
 1. Confirm that this is the intended application and that its final CV and
    cover-letter PDFs both exist and have passed their respective layout and
-   content checks. Do not use drafts, ODTs, PDFs from another application or
+   content checks. Verify both match the research note's `document_language`;
+   for `de`, use the approved German outputs, never the English working sources.
+   Do not use drafts, ODTs, PDFs from another application or
    unverified exports. If either is missing, stop and finish its document
    workflow first.
 2. Run the local-only send-files script to create the recruiter-friendly
