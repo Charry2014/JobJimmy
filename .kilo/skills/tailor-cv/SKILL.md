@@ -5,6 +5,12 @@ description: Draft an evidence-backed CV in plain Markdown for an application, t
 
 # Tailor a CV
 
+For rendering requests, follow
+`Documentation/Agent-Reference/Documents.md#rendering-scope-and-completion`.
+When "render to PDF" follows work on both CV and cover letter, render both using
+their respective skills unless the user narrows the scope. This skill produces
+only the CV; also run `.kilo/skills/write-cover-letter/SKILL.md` for the letter.
+
 Follow root `AGENTS.md`, `PRIVACY.md` and the private vault's `AGENTS.md`.
 All filesystem commands run from the public project root. All personal sources,
 drafts and outputs stay inside `JobSearch/`; vault links omit that prefix.
@@ -169,6 +175,11 @@ ordinary document reads.
     or report a failed preflight as passed. Record an explicit acceptance as
     an exception with the document, then finish visual review.
 8. **Record only actual outputs.** Link the actual documents from the application;
+   for rendering requests, verify the current approved CV's ODT and PDF both
+   exist and passed the required checks. If rendering includes a letter, complete its workflow too
+   and account for all four outputs before reporting the combined task complete.
+   Report any missing or blocked output explicitly; a finished CV is not a
+   finished CV-and-letter request. Then
    follow `PROCEDURES.md` and `Templates/Activity.md` for a `document-added`
    activity if documents were added. Rendering does not submit the application.
    Check private `git status` and public privacy screen. State which pipeline,

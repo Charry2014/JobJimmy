@@ -5,6 +5,12 @@ description: Draft a cover letter in plain Obsidian Markdown, then locally merge
 
 # Write a cover letter
 
+For rendering requests, follow
+`Documentation/Agent-Reference/Documents.md#rendering-scope-and-completion`.
+When "render to PDF" follows work on both CV and cover letter, render both using
+their respective skills unless the user narrows the scope. This skill produces
+only the letter; also run `.kilo/skills/tailor-cv/SKILL.md` for the CV.
+
 Follow root `AGENTS.md`, `PRIVACY.md`, private `JobSearch/AGENTS.md` and
 `Documentation/Agent-Reference/Documents.md` (cover-letter and knowledge
 sections). Commands run from the public project root; personal files stay in
@@ -159,7 +165,12 @@ for syntax and failure modes.
    the one-page PDF locally for omitted text, address, signature and the
    bottom-right linked LinkedIn icon; keep the Markdown and ODT. If rendering
    or page counting cannot be verified, report it as blocked, not completed.
-7. **Record real documents.** Link only existing files from the application
+7. **Record real documents.** For rendering requests, verify the current approved
+   letter's ODT and PDF both exist and passed the required checks. If rendering includes a CV,
+   complete its rendering workflow too and account for all four outputs before
+   reporting the combined task complete. Report any missing or blocked output
+   explicitly; a finished letter is not a finished CV-and-letter request.
+   Link only existing files from the application
    and use `PROCEDURES.md` plus the activity template for a `document-added`
    note. Run private diff checks and the public privacy screen; report what was
    generated and what remains unverified. Do not submit or email the letter.

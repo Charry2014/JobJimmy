@@ -17,6 +17,36 @@ omissions and uncertainties. Keep Jev advisory and separate from the existing
 `fit` field; report missing inputs/service failures explicitly. Record results
 according to `PROCEDURES.md#jev-check-results`; scores never belong in CV/letter prose.
 
+## Rendering scope and completion
+
+Resolve a rendering request against the current conversation and application.
+If CV and cover letter are both being prepared, a follow-up such as "render to
+PDF" applies to both unless the user explicitly narrows it. A CV-only or
+letter-only request stays limited to that document. Reuse the established scope;
+do not ask again merely because rendering uses two different skills.
+
+For each requested document, retain the approved Markdown and generate both an
+editable ODT and its PDF in the application's flat `CV/` folder. A combined
+request requires running both `.kilo/skills/tailor-cv/SKILL.md` and
+`.kilo/skills/write-cover-letter/SKILL.md`; the CV renderer does not generate the
+letter. Resume at the appropriate rendering stage using the latest reviewed
+Markdown, rather than restarting drafting. Existing English/German wording
+review requirements still apply; an unreviewed translation remains pending.
+
+Before reporting completion, verify each requested ODT and PDF exists, is
+nonempty, was generated from the current approved text in the submission
+language, and has passed its required content/layout checks. Old files alone
+are not evidence that this render succeeded. For a combined request, account
+explicitly for **CV ODT, CV PDF, cover-letter ODT and cover-letter PDF** in the
+final response, using privacy-safe labels and permitted links. A command's exit
+status or successful CV export is not proof that the letter was produced.
+
+If one document is blocked by missing inputs, approval, rendering or validation,
+finish independent authorised work and report the blocked document, missing
+formats and concrete reason. Do not silently omit it or describe the combined
+request as complete. Follow each renderer's existing failure/retry rules; this
+completion check does not authorise bypassing them or submitting the files.
+
 ## Editable draft files
 
 Every CV or cover-letter drafting request writes a real `.md` file in the

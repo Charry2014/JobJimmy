@@ -8,6 +8,20 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Combined rendering completion — 2026-10-09
+
+Closed an instruction gap between the independent CV and letter skills: a
+follow-up "render to PDF" now carries forward both documents when both are in
+scope, unless explicitly narrowed. Both skills route to a shared rendering
+completion rule and to the companion skill. Completion requires accounting for
+the current CV ODT/PDF and letter ODT/PDF, including required validation; missing
+or blocked outputs must be reported individually. Existing wording review and
+renderer failure rules remain in force. No private application was inspected
+or rendered as part of this instruction fix.
+
+Validation: both skills passed the skill validator; changed-file privacy screen
+and diff whitespace checks passed. No live rendering test was run.
+
 ## Draft files edited in place — 2026-10-09
 
 Both document skills now require every draft/revision to be written to a real

@@ -143,6 +143,14 @@ Also open the source and recreated ODT in Writer, export both to PDF, and compar
 every page. Structural validation does not prove visual fidelity. Do not rely on
 a new template until you have checked it.
 
+## Asking for PDFs
+
+After reviewing both the CV and cover letter, "render to PDF" means render both.
+Each keeps its editable ODT alongside the PDF and Markdown in the application's
+`CV/` folder. You can explicitly request just one document instead. The assistant
+must report the result for each requested ODT and PDF; if the letter is blocked,
+it must say why rather than presenting the CV alone as a completed request.
+
 ## Editable drafts in Obsidian
 
 The assistant saves every CV and cover-letter draft as a `.md` file in the
