@@ -143,6 +143,15 @@ Also open the source and recreated ODT in Writer, export both to PDF, and compar
 every page. Structural validation does not prove visual fidelity. Do not rely on
 a new template until you have checked it.
 
+## Editable drafts in Obsidian
+
+The assistant saves every CV and cover-letter draft as a `.md` file in the
+application's `CV/` folder, ready for you to edit in Obsidian. Each revision
+incorporates your latest edits and updates the same file. Git keeps the history;
+there are no numbered, dated or backup draft copies. English sources and German
+translations each have their own current file. Drafts are saved before review,
+even when document rendering or Jev checks are unavailable.
+
 ## German applications: review English first
 
 For a German advert, the final CV and cover letter are German unless explicit

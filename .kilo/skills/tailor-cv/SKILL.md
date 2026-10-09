@@ -55,9 +55,18 @@ ordinary document reads.
    A blank `.ott` is not a personal master. If missing, stop only that pipeline
    and follow `Documentation/CV-Automation-User-Template-Setup.md`; do not
    fabricate identity, permanent sections or another person's CV.
-3. **Draft plain Markdown in Obsidian.** Put a working copy in the existing
-   application's flat `CV/` folder as `<slug>-cv-draft.md`, or
-   `<slug>-cv-draft-en.md` when the final language is German. For the extracted
+3. **Save the draft as an editable Markdown file.** Every drafting or revision
+   request must write the actual `.md` file under
+   `JobSearch/Applications/<application-slug>/CV/` before presenting it for
+   review; a chat-only draft is not complete. Use `<slug>-cv-draft.md`, or
+   `<slug>-cv-draft-en.md` when the final language is German. The user edits this
+   file in Obsidian. Read its latest contents through the privacy workflow before
+   revising so their edits are retained. Overwrite this same working file on each
+   revision; do not create `(1)`, `-v2`, timestamped or backup draft copies. Git
+   provides history. Keep one current file per document and language, so German
+   translation has its own `-de.md` file alongside the English source.
+   Save the draft even when rendering or Jev is unavailable; report any actual
+   write failure rather than claiming it was saved. For the extracted
     pipeline, use the baseline's visible text with its heading order, chronology,
     paragraphs and bullets. Strip YAML frontmatter, both opening and closing
     `cv:pNNN` block markers, and instructional comments from the *plain draft

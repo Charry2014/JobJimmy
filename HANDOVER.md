@@ -8,6 +8,19 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Draft files edited in place — 2026-10-09
+
+Both document skills now require every draft/revision to be written to a real
+Markdown file in the application's flat `CV/` folder before review. Read the
+latest file through the privacy workflow to incorporate Obsidian edits, then
+update the same path. Git provides history; no numbered, timestamped or backup
+draft copies. English and German remain separate current documents. The letter
+hydration instructions replace the previous manual-versioning advice with a
+temporary private output followed by replacement at the stable Markdown path.
+
+Validation: both edited skills passed the skill validator; changed-file privacy
+screen and `git diff --check` passed. Instructions only; no private drafts changed.
+
 ## English review before German translation — 2026-10-09
 
 German applications now prepare both CV and cover letter in English through

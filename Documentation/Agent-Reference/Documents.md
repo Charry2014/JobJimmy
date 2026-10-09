@@ -17,6 +17,20 @@ omissions and uncertainties. Keep Jev advisory and separate from the existing
 `fit` field; report missing inputs/service failures explicitly. Record results
 according to `PROCEDURES.md#jev-check-results`; scores never belong in CV/letter prose.
 
+## Editable draft files
+
+Every CV or cover-letter drafting request writes a real `.md` file in the
+application's flat `JobSearch/Applications/<application-slug>/CV/` folder before
+review. Chat text alone is not a completed draft. This file is the working copy
+the user can edit in Obsidian. Before each revision, read the current file through
+the privacy workflow and incorporate the user's edits rather than regenerating
+from an older chat response. Save revisions to the same path: no `(1)`, `-v2`,
+timestamped, backup or history copies of drafts. Git provides revision history.
+English sources and German translations remain distinct current documents, one
+file per document/language, not revision snapshots. Required redaction artifacts
+and check reports retain their existing handling; they are not draft histories.
+Do not defer saving a draft until approval, Jev availability or rendering.
+
 ## English drafting before German translation
 
 `document_language` is the **final submission language**, not the working-draft
@@ -113,8 +127,8 @@ folder as `<compact-slug>-cover-letter.md`, `-cover-letter.odt` and
 `-cover-letter.pdf`. Retain all three, inspect the PDF layout, link the documents
 from the application's Cover letter entry and a `document-added` activity. Do not
 apply the CV-specific page rules to letters. Rendering does not submit the
-application or change its status. Preserve existing drafts unless deliberately
-migrating them. Preserve the user-supplied original; personal rendering templates and anchors
+application or change its status. Revise working drafts in place, preserving
+user edits as described above. Preserve the user-supplied original; personal rendering templates and anchors
 belong under `JobSearch/Templates/`.
 
 ## CV tuning and document rendering

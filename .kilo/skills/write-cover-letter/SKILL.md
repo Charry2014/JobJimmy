@@ -38,7 +38,17 @@ for syntax and failure modes.
    `JobSearch/Knowledge/Overview.md`, `Evidence-and-sources.md`,
    `Writing-guide.md` and relevant experience. Unknown recipient details
    remain generic; do not invent names, dates, achievements or contact details.
-2. **Start a private plain-Markdown draft.** Run
+2. **Save the draft as an editable Markdown file.** Every drafting or revision
+   request must write the actual `.md` file under
+   `JobSearch/Applications/<application-slug>/CV/` before presenting it for
+   review; a chat-only draft is not complete. The user edits this file in
+   Obsidian. Read its latest contents through the privacy workflow before
+   revising so their edits are retained. Overwrite the same working file on each
+   revision; do not create `(1)`, `-v2`, timestamped or backup draft copies. Git
+   provides history. Keep one current file per document and language, including
+   separate English and German prose files when translating. Save the prose even
+   when rendering or Jev is unavailable; report any actual write failure rather
+   than claiming it was saved. To initialise a missing draft, run
     `tools/py CV/Scripts/cover_letter.py init
    JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md`
    only if that file does not exist. For German final output, start instead with
@@ -73,7 +83,8 @@ for syntax and failure modes.
    checks explicitly. Record the report with the document activity per
    `PROCEDURES.md`, outside the letter text. Check the factual claims, specific motivation,
    recipient, language, signature plan and length with the user. Do not render
-   for every revision. Preserve existing drafts rather than reinitialising.
+   for every revision. Update the existing draft in place rather than
+   reinitialising it or keeping revision copies.
 4. **Choose the exact language pair and check identity.** For `en` use
    `JobSearch/Templates/letter-template-en.odt` and
    `JobSearch/Templates/letter-anchors-en.json`; for `de` use
@@ -116,8 +127,11 @@ for syntax and failure modes.
     tools/py CV/Scripts/cover_letter.py render JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt --template JobSearch/Templates/letter-template-de.odt --config JobSearch/Templates/letter-anchors-de.json
     ```
 
-   `hydrate-identity` refuses to overwrite a prior complete draft: review and
-   deliberately version an existing file before repeating. The full Markdown
+   `hydrate-identity` refuses to overwrite a prior complete draft. To refresh it,
+   first reconcile any user edits with the prose source through the privacy
+   workflow, hydrate to a temporary private `.md` file, validate locally, then
+   replace the existing complete Markdown at its stable path. Do not keep the
+   temporary file or a numbered history copy; Git provides history. The full Markdown
    signature must contain name, phone and email, with contacts below the name.
    Alternatively render the prose file using `render ... --identity
    JobSearch/Templates/letter-identity.json` when a complete Markdown copy is
