@@ -156,6 +156,28 @@ python <script> [args]`. Most scripts, including the privacy screen and
 missing package or a TLS error; add `--with` instead, and never disable TLS
 verification.
 
+## Fresh checkout
+
+Run by the CodeFactory build loop in a new worktree before the builder starts.
+Nothing is installed: Python runs through `tools/py` (see above), so setup only
+checks that uv is present and enables the privacy pre-commit hook.
+
+```sh
+uv --version
+git config core.hooksPath .githooks
+```
+
+## Validation commands
+
+Run by the CodeFactory build loop after each build step; every command must
+exit 0. Tests that need the private vault skip when `JobSearch/` is absent.
+
+```sh
+tools/py -m unittest discover -s tools -p 'test_*.py'
+tools/py -m unittest discover -s CV/Scripts -p 'test_*.py'
+tools/py tools/privacy_screen.py
+```
+
 ## Privacy screening (hard gate)
 
 The public repository must never contain personal data. This gate is
