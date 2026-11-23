@@ -9,6 +9,18 @@ For document language and hosted-drafting route decisions, follow
 Run commands from the public project root; `JobSearch/` is the separate private
 Obsidian vault.
 
+**Global software-project rules do not apply to job-search work here.** The
+global agent instructions (Serena code navigation, the knowledge-graph memory,
+vault tickets and progress calendars, Architecture Reference upkeep, branch,
+worktree and stash checks) are written for code projects. For application
+records, fit assessments, CVs and cover letters, skip them: do not start
+Serena, search or write memory, create tickets or inspect branches. Apply them
+only when the user asks for a change to the JobJimmy engine itself (scripts,
+templates, skills or documentation). This project's `AGENTS.md`,
+`PROCEDURES.md` and the skills govern the work. Keep context small: read the
+sections you need rather than whole long files, and do not re-read a file you
+have already read in this session.
+
 **Use project-relative paths with every file tool** (`PROCEDURES.md`,
 `.kilo/skills/create-application/SKILL.md`, `JobSearch/Templates/...`), never
 absolute paths. The OpenRouter sensitive-information guardrail redacts names
