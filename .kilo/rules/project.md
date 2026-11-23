@@ -7,7 +7,16 @@ individual providers. Read `PRIVACY.md` before exposing private content to a mod
 For document language and hosted-drafting route decisions, follow
 `.kilo/rules/document-language.md`.
 Run commands from the public project root; `JobSearch/` is the separate private
-Obsidian vault. Switching models does not establish approval for a new data route.
+Obsidian vault.
+
+**Use project-relative paths with every file tool** (`PROCEDURES.md`,
+`.kilo/skills/create-application/SKILL.md`, `JobSearch/Templates/...`), never
+absolute paths. The OpenRouter sensitive-information guardrail redacts names
+in the request, including the account name inside the workspace path, so an
+absolute path can reach you as `/Users/[PERSON_NAME]/...`. A path containing a
+redaction token such as `[PERSON_NAME]`, `[EMAIL]` or `[PHONE]` does not exist on
+disk: drop everything up to the project root and retry with the relative path.
+If a "File not found" error shows such a token, the file is usually present. Switching models does not establish approval for a new data route.
 In every phase, private raw notes, filenames and tool output must stay out of
 a hosted model: run local redaction first and use only checked safe Markdown.
 Curated `JobSearch/Knowledge/**` articles are private content too: redact them

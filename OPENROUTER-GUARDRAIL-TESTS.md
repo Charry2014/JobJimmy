@@ -72,6 +72,7 @@ fixtures are the practical way to observe enforcement.
 | Plain email | `[EMAIL]` / blocked / unchanged |
 | Phone with country prefix | e.g. `+1 [PHONE]` — prefix may survive |
 | Name in prose | `[PERSON_NAME]` / unchanged |
+| Account name inside a file path (`/Users/<name>/...`) | e.g. `/Users/[PERSON_NAME]/...`, so agents must use project-relative paths |
 | Obfuscated email | frequently unchanged |
 | CV-shaped JSON | e.g. email redacted, name survives, JSON may become malformed |
 | Streaming | e.g. redacted |
