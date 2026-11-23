@@ -216,17 +216,22 @@ tools/py CV/Scripts/cv.py render \
   JobSearch/Applications/2026-09-example-lead/CV/example-cv.odt
 ```
 
-Export in Writer, or with LibreOffice on your PATH:
+Export in Writer, or headless through the repository wrapper:
 
 ```sh
-soffice --headless --convert-to pdf \
+tools/soffice --headless --convert-to pdf \
   --outdir JobSearch/Applications/2026-09-example-lead/CV \
   JobSearch/Applications/2026-09-example-lead/CV/example-cv.odt
 ```
 
-On macOS, the executable is commonly
-`/Applications/LibreOffice.app/Contents/MacOS/soffice`; use that quoted path if
-`soffice` is not on PATH. Automatic discovery in `populate_cv.py` checks that path.
+`tools/soffice` finds LibreOffice (the macOS application bundle first, then
+`soffice` on PATH) and passes every argument through. Do not call `soffice`
+directly for headless export on macOS: there LibreOffice's bundled fontconfig
+sees only LibreOffice's own fonts, so template fonts fall back silently and page
+breaks change. The wrapper, `populate_cv.py --pdf` and `cover_letter.py
+export-pdf` all set `FONTCONFIG_FILE` to a generated configuration (see
+`CV/Scripts/office.py`). Every font a template uses must still be installed;
+template-specific substitutions go in the private `JobSearch/Templates/fonts.conf`.
 
 ## Change the layout safely
 

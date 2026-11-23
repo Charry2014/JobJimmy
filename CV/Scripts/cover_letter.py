@@ -12,13 +12,13 @@ import json
 from pathlib import Path
 from output_paths import check_output
 import re
-import shutil
 import subprocess
 import tempfile
 import zipfile
 from xml.dom import minidom as D
 
 import cv
+from office import find_soffice, soffice_env
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / 'Templates/Cover-Letter.odt'
@@ -207,13 +207,15 @@ def export_pdf(odt, output):
         raise ValueError('Export requires a distinct .pdf output path.')
     if output.exists():
         raise ValueError('Final PDF already exists; review or version it before replacing.')
-    soffice = shutil.which('soffice') or '/Applications/LibreOffice.app/Contents/MacOS/soffice'
-    if not Path(soffice).is_file():
-        raise ValueError('LibreOffice is unavailable; no final PDF written.')
+    try:
+        soffice = find_soffice()
+    except ValueError:
+        raise ValueError('LibreOffice is unavailable; no final PDF written.') from None
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='letter-export-', dir=output.parent) as temporary:
         result = subprocess.run([soffice, '--headless', '--convert-to', 'pdf',
-                                 '--outdir', temporary, str(odt)], capture_output=True)
+                                 '--outdir', temporary, str(odt)], capture_output=True,
+                                env=soffice_env())
         rendered = Path(temporary) / (odt.stem + '.pdf')
         if result.returncode or not rendered.is_file():
             raise ValueError('LibreOffice PDF export failed; no final PDF written.')

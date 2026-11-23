@@ -20,6 +20,7 @@ from output_paths import check_output
 from xml.dom import minidom as D
 
 import cv
+from office import find_soffice, soffice_env
 
 PARAGRAPH_TAGS = ('text:p', 'text:h')
 BOOKMARK_TAGS = ('text:bookmark', 'text:bookmark-start', 'text:bookmark-end')
@@ -616,20 +617,14 @@ def populate(markdown, master, output, education_break='keep', strict=False):
 def render_pdf(output, outdir):
     import subprocess
     import tempfile
-    candidates = [Path('/Applications/LibreOffice.app/Contents/MacOS/soffice')]
-    for candidate in candidates + [Path('soffice')]:
-        if candidate.exists() or candidate.name == 'soffice':
-            soffice = candidate
-            break
-    else:
-        raise ValueError('LibreOffice (soffice) not found; export the PDF manually.')
+    soffice = find_soffice()
     check_output(outdir / (output.stem + ".pdf"), output)
     outdir.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.lo_profile_', dir=outdir) as profile:
         result = subprocess.run(
             [str(soffice), '--headless', f'-env:UserInstallation=file://{profile}',
              '--convert-to', 'pdf', '--outdir', str(outdir), str(output)],
-            capture_output=True, text=True, timeout=120)
+            capture_output=True, text=True, timeout=120, env=soffice_env())
     if result.returncode != 0:
         raise ValueError('PDF export failed; renderer diagnostics withheld to protect document data.')
     pdf = outdir / (output.stem + '.pdf')

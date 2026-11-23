@@ -1,0 +1,12 @@
+#!/bin/sh
+# Run LibreOffice headless with fonts resolved correctly.
+#
+# Headless LibreOffice on macOS sees only its bundled fonts unless
+# FONTCONFIG_FILE names a configuration; templates then fall back to
+# substitute fonts and change page breaks. This wrapper sets it (see
+# CV/Scripts/office.py) and passes every argument to soffice. Run it from the
+# repository root, like tools/py:
+#
+#   tools/soffice --headless --convert-to pdf --outdir <dir> <file.odt>
+set -eu
+exec "$(dirname -- "$0")/py" CV/Scripts/office.py "$@"

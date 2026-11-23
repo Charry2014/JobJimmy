@@ -36,9 +36,15 @@ Notes:
   example `JOBJIMMY_PY_WITH="pymupdf" tools/py CV/Scripts/check_layout.py ...`.
 - `soffice` must be on `PATH`, or present at the macOS path
   `/Applications/LibreOffice.app/Contents/MacOS/soffice`; otherwise export PDFs
-  manually from Writer.
+  manually from Writer. Export headless through `tools/soffice` (or the
+  `populate_cv.py`/`cover_letter.py` exporters), never plain `soffice`: on macOS
+  headless LibreOffice otherwise sees only its bundled fonts.
 - Document fidelity depends on the same LibreOffice and **fonts** being available
-  wherever a document is rendered and compared.
+  wherever a document is rendered and compared. Install every font your
+  templates use (in `~/Library/Fonts` on macOS) in the version the reference
+  baselines were rendered with; a different version of the same family can
+  change line heights. Put template-specific substitutions in the private
+  `JobSearch/Templates/fonts.conf` (a fontconfig file, included automatically).
 - macOS and Linux commands are the validated route. Windows is documented but not
   validated; use Git Bash and LibreOffice's **Export as PDF**.
 

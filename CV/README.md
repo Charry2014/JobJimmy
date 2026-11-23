@@ -525,10 +525,12 @@ tools/py CV/Scripts/cv.py validate '/path/to/original.odt' JobSearch/Outputs/Bas
 python3 -m unittest discover -s CV/Scripts -p 'test_*.py' -v
 ```
 
-Render originals and outputs to PDFs using LibreOffice:
+Render originals and outputs to PDFs using LibreOffice through
+`tools/soffice`, which makes headless LibreOffice on macOS see installed fonts
+(see `CV/Scripts/office.py`):
 
 ```sh
-soffice --headless --convert-to pdf --outdir JobSearch/Outputs/Baselines '/path/to/original.odt' JobSearch/Outputs/Baselines/recreated.odt
+tools/soffice --headless --convert-to pdf --outdir JobSearch/Outputs/Baselines '/path/to/original.odt' JobSearch/Outputs/Baselines/recreated.odt
 ```
 
 Compare PDFs with `CV/Scripts/compare_pdfs.py` (optional PyMuPDF dependency):
