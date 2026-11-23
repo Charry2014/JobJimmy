@@ -131,10 +131,14 @@ on that risk. Never return the registry or restored text to a hosted model.
       rerun with `--accept-fallbacks`;
     - **a final PDF exists:** rerun with `--replace` once the user approves;
     - **page allocation differs from the baseline** (overflow, a moved section,
-      another page count) or **underfill beyond the baseline**: present the
-      printed figures. Never shrink text, move page breaks or pad. The user
-      either accepts the layout (`--accept-layout`, recorded as an exception
-      with the document) or directs sourced content changes and another review.
+      another page count) or **underfill** (more than five blank lines at the
+      bottom of a page, even where the baseline is as sparse): present the
+      printed figures for both. Never shrink text, move page breaks or pad. The
+      user either accepts the layout (`--accept-layout`, recorded as an
+      exception with the document) or directs sourced content changes and
+      another review.
+    Until every check passes or is accepted, only a `-preview.pdf` is written;
+    the final PDF is never replaced by a failed render.
     Reordered bullets can misalign silently: inspect the rendered PDF locally
     for each employer, dates and location appearing once.
 6. **Personal-master pipeline instead:** after reviewing its body Markdown,

@@ -235,6 +235,49 @@ class BundleTests(Base):
         self.assertEqual(jf.document_language(self.vault, self.slug), "de")
 
 
+class ReviewFixTests(Base):
+    def test_lowercase_or_team_headers_are_not_names(self):
+        names = dict(jf.discover("To: hiring team\nFrom: Talent <t@example.com>\nCc: Jane Placeholder\n"))
+        self.assertNotIn("hiring team", names)
+        self.assertIn("Jane Placeholder", names)
+        self.assertNotIn("Placeholder", names)  # no surname-alone entries
+
+    def test_add_name_without_capture_updates_policy(self):
+        result = jf.add_name(self.vault, "Someone Example")
+        self.assertEqual((result["added"], result["safe"]), (1, None))
+        self.assertIn("Someone Example", self.policy_values())
+
+    def test_bundle_lists_unlisted_contacts_instead_of_withholding(self):
+        self.captured()
+        jf.records(self.vault, self.spec())
+        slug = "2026-11-example-robotics-platform"
+        jf.update(self.vault, slug, "company", "Contacts", "- press@robotics.example.com\n")
+        _, results = jf.bundle(self.vault, slug)
+        states = {name: state for name, state, _ in results}
+        self.assertEqual(states["policy"], "UPDATED")
+        self.assertEqual(states["company.md"], "PASS")
+        self.assertIn("press@robotics.example.com", self.policy_values())
+
+    def test_update_recruiter_note_and_find(self):
+        self.captured()
+        jf.records(self.vault, self.spec())
+        slug = "2026-11-example-robotics-platform"
+        jf.update(self.vault, slug, "recruiter", "Contact details", "General agency line.\n")
+        recruiter = (self.root / "JobSearch/Recruiters/agency-example-jane-placeholder.md").read_text()
+        self.assertIn("General agency line.", recruiter)
+        found = jf.find(self.vault, "example-robotics")
+        self.assertEqual(found["applications"], [slug])
+        self.assertTrue(found["company note"])
+        self.assertEqual(jf.find(self.vault, "agency-example")["agency recruiter notes"], 1)
+
+    def test_template_drift_reported(self):
+        self.captured()
+        private = self.root / "JobSearch/Templates/Application.md"
+        private.write_text((self.root / "Templates/Application.md").read_text() + "\n## Extra\n")
+        status = jf.records(self.vault, self.spec())
+        self.assertIn("Application", status["template drift"])
+
+
 class NoteEditingTests(unittest.TestCase):
     def test_yaml_values_quoted_when_needed(self):
         self.assertEqual(jf.yaml_value("[[Companies/x]]"), '"[[Companies/x]]"')

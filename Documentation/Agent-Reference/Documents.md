@@ -125,6 +125,10 @@ superseded. Other final languages retain their existing workflow.
 
 ## Cover-letter generation
 
+Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
+`render`), which applies the checks below and stops with a reason; the
+commands in this section are the manual equivalent and the detail behind it.
+
 Use `.kilo/skills/write-cover-letter/SKILL.md` for the ordered workflow and
 `CV/Templates/Cover-Letter.md` as the plain Markdown starter. No personal
 cover-letter ODT is in the public distribution; it exists only under
@@ -162,6 +166,10 @@ user edits as described above. Preserve the user-supplied original; personal ren
 belong under `JobSearch/Templates/`.
 
 ## CV tuning and document rendering
+
+Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
+`render`), which applies the checks below and stops with a reason; the
+commands in this section are the manual equivalent and the detail behind it.
 
 Read `.kilo/skills/tailor-cv/SKILL.md` and `CV/README.md` before working on
 CVs. Every user must supply their own ODT with the basic CV content and layout

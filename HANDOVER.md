@@ -13,18 +13,24 @@ submit anything or an instruction to redo completed work.
 New `CV/Scripts/jobflow.py` (tests: `test_jobflow.py`) replaces hand-run tool
 sequences. `capture --clipboard|--file` keeps an advert or email verbatim in
 `JobSearch/Outputs/inbox/<id>/`, auto-adds emails, phones, LinkedIn profiles
-and email-header display names (plus a surname that only occurs as a whole
-word) to the policy with labels, and writes the safe copy; `add-name` adds a
+and capitalised email-header display names (no surname-alone entries) to the
+policy with labels, and writes the safe copy; `add-name` adds a
 name typed in the user's terminal. `records <spec.json>` creates the linked
 notes from the canonical templates (no-op on rerun, refuses a duplicate advert
 URL, derives the recruiter file name locally from the restored name) and
 archives the original between `advert:start`/`advert:end` markers. `update`
 replaces or appends a note section and sets fields, restoring tokens.
+`find` reports existing application slugs for one organisation, so the
+private folders are not listed into model context. `records` reports template
+drift between the private working copies and the canonical templates.
 `bundle`/`restore` handle drafting, with a hash guard against overwriting
-user edits. `render` runs the CV fold, ODT, PDF and layout comparison with the
-unchanged baseline, and the letter hydration, ODT and one-page export with the
-single compact retry; it stops with a reason on dropped units, unconfirmed
-fallbacks, existing PDFs, layout differences or overflow.
+user edits; `bundle` also lists unlisted contacts it finds instead of
+withholding the file. `render` checks for an existing final PDF first, then
+runs the CV fold, ODT, a `-preview.pdf` and the layout check (printed beside
+the unchanged baseline's figures; underfill above five lines still stops), and
+the letter hydration, ODT and one-page export with the single compact retry.
+It promotes the preview to the final PDF only when every check passes or the
+user accepts it.
 
 Validation: unit tests pass with `JobSearch/` absent. A local render smoke test
 on a throwaway application rendered real approved drafts (VP-CTO layout matched

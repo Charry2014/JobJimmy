@@ -159,19 +159,9 @@ def header_names(text):
             found = [value.strip()]
         for name in found:
             name = " ".join(name.replace('"', "").split())
-            if NAME.fullmatch(name):
+            if NAME.fullmatch(name) and all(word[0].isupper() for word in name.replace(",", "").split()):
                 names.append(name)
     return names
-
-
-def whole_word_only(word, text):
-    """True when every occurrence of word in text is a whole word."""
-    for match in re.finditer(re.escape(word), text):
-        before = text[match.start() - 1] if match.start() else " "
-        after = text[match.end()] if match.end() < len(text) else " "
-        if before.isalnum() or after.isalnum():
-            return False
-    return True
 
 
 def discover(text):
@@ -188,11 +178,6 @@ def discover(text):
         if "," in name:  # "Doe, Jane" -> also "Jane Doe"
             last, first = [part.strip() for part in name.split(",", 1)]
             found.append((f"{first} {last}", "PERSON"))
-            surname = last.split()[-1]
-        else:
-            surname = name.split()[-1]
-        if len(surname) >= 4 and whole_word_only(surname, text):
-            found.append((surname, "PERSON"))
     unique = {}
     for value, label in found:
         if len(value) >= 4 and not rm.RESERVED.search(value):
@@ -256,8 +241,11 @@ def add_name(vault, name, label="PERSON", capture_id="latest"):
     name = " ".join(name.split())
     if len(name) < 2 or rm.RESERVED.search(name) or not rm.LABEL.fullmatch(label):
         raise ValueError("Give a real name and a label of capital letters.")
-    folder = vault.capture_dir(capture_id)
     added = add_to_policy(vault, [(name, label)])
+    try:
+        folder = vault.capture_dir(capture_id)
+    except ValueError:
+        return {"added": len(added), "replaced": 0, "reasons": [], "safe": None}
     safe, replaced, reasons = prepare_text(vault, (folder / "original.txt").read_text(encoding="utf-8"))
     write_private(folder / "advert-safe.md", safe)
     return {"added": len(added), "replaced": replaced, "reasons": reasons,
@@ -403,6 +391,30 @@ def existing_url(vault, url, slug):
     return None
 
 
+def find(vault, company_slug):
+    """Existing application slugs and notes for one (public) target organisation."""
+    vault.require()
+    if not SLUG.fullmatch(company_slug or ""):
+        raise ValueError("Give the company or agency slug in lowercase words joined by hyphens.")
+    applications = sorted(p.name for p in (vault.private / "Applications").glob("*")
+                          if p.is_dir() and f"-{company_slug}-" in f"-{p.name[8:]}-")
+    return {"applications": applications,
+            "company note": (vault.private / "Companies" / f"{company_slug}.md").is_file(),
+            "agency recruiter notes": len(list((vault.private / "Recruiters").glob(f"{company_slug}-*.md")))}
+
+
+def template_drift(vault):
+    """Names of private working templates that differ from the canonical ones."""
+    drift = []
+    for name in ("Application", "Research", "Company", "Recruiter"):
+        private = vault.private / "Templates" / f"{name}.md"
+        if private.is_file():
+            strip = lambda t: [line.rstrip() for line in t.strip().split("\n")]  # noqa: E731
+            if strip(private.read_text(encoding="utf-8")) != strip(template(vault, name)):
+                drift.append(name)
+    return drift
+
+
 def records(vault, spec):
     vault.require()
     registry = rm.load_registry(vault.registry)
@@ -426,6 +438,10 @@ def records(vault, spec):
         raise ValueError(f"This advert URL is already recorded in application {duplicate}; enrich that one instead.")
 
     status = {}
+    drift = template_drift(vault)
+    if drift:
+        status["template drift"] = (", ".join(drift) + ": the private working copy differs from the canonical "
+                                    "template; the canonical one was used. Ask the user to review the difference.")
     app_path, research_path = vault.application(slug), vault.research(slug)
     company_link = f'[[Companies/{company["slug"]}]]' if company else ""
     recruiter_link = ""
@@ -522,13 +538,14 @@ def note_path(vault, slug, which):
         return vault.application(slug)
     if which == "research":
         return vault.research(slug)
-    if which == "company":
-        link = get_field(vault.application(slug).read_text(encoding="utf-8"), "company")
-        match = re.fullmatch(r"\[\[Companies/([a-z0-9-]+)(?:\|.*)?\]\]", link)
+    if which in ("company", "recruiter"):
+        folder = "Companies" if which == "company" else "Recruiters"
+        link = get_field(vault.application(slug).read_text(encoding="utf-8"), which)
+        match = re.fullmatch(rf"\[\[{folder}/([a-z0-9-]+)(?:\|.*)?\]\]", link)
         if not match:
-            raise ValueError("The application links no company note.")
-        return vault.private / "Companies" / f"{match.group(1)}.md"
-    raise ValueError("Note must be application, research or company.")
+            raise ValueError(f"The application links no {which} note.")
+        return vault.private / folder / f"{match.group(1)}.md"
+    raise ValueError("Note must be application, research, company or recruiter.")
 
 
 def update(vault, slug, which, section=None, content=None, fields=None, level=2, append=False):
@@ -602,7 +619,11 @@ def bundle(vault, slug, knowledge=None, baselines=()):
             sources.append((f"drafts/{draft.name}", draft.read_text(encoding="utf-8")))
             manifest[draft.name] = digest(draft)
 
+    contacts = [(v, l) for _, text in sources for v, l in discover(text) if l != "PERSON"]
+    added = add_to_policy(vault, contacts)
     results = []
+    if added:
+        results.append(("policy", "UPDATED", f"{len(added)} contact value(s) added (values withheld)"))
     for name, text in sources:
         try:
             safe, replaced, reasons = prepare_text(vault, text)
@@ -701,10 +722,13 @@ def render_cv(vault, slug, baseline, language, accept_fallbacks=False, replace=F
     blocks = cv_dir / f"{prefix}-cv-blocks{suffix}.md"
     report = cv_dir / f"{prefix}-cv-blocks{suffix}-report.json"
     odt, pdf = cv_dir / f"{prefix}-cv{suffix}.odt", cv_dir / f"{prefix}-cv{suffix}.pdf"
+    preview = cv_dir / f"{prefix}-cv{suffix}-preview.pdf"
     lines = []
+    if pdf.exists() and not replace:
+        raise StepFailure(lines, "a final CV PDF exists; rerun with --replace once the user approves replacing it")
     code, _ = run_script("align_md.py", draft, odt_template, blocks, "--report", report)
     if code:
-        raise ValueError("Fold failed (align_md.py); check the draft's structure.")
+        raise StepFailure(lines, "fold failed (align_md.py); check the draft's structure")
     data = json.loads(report.read_text(encoding="utf-8"))
     dropped, fallbacks = len(data["dropped_source"]), len(data["fallback_blocks"])
     lines.append(f"fold: {data['pairs']} matched, {fallbacks} baseline fallbacks, {dropped} source units dropped")
@@ -717,30 +741,30 @@ def render_cv(vault, slug, baseline, language, accept_fallbacks=False, replace=F
     if code:
         raise StepFailure(lines, "ODT render failed")
     lines.append("odt: rendered")
-    if pdf.exists() and not replace:
-        raise StepFailure(lines, "a final CV PDF exists; rerun with --replace once the user approves replacing it")
-    export_odt(odt, pdf)
-    lines.append("pdf: exported with the template fonts (tools/soffice environment)")
+    preview.unlink(missing_ok=True)
+    export_odt(odt, preview)
+    lines.append("preview pdf: exported with the template fonts (tools/soffice environment)")
     config = vault.private / "Templates" / f"{baseline}-layout-pages.json"
     uv = shutil.which("uv")
     if not config.is_file() or not uv:
-        lines.append("layout: unavailable (no layout profile for this baseline, or uv missing)")
-        return lines
-    tailored = layout(pdf, config, uv)
-    reference = layout(baseline_pdf(vault, baseline, odt_template), config, uv)
-    lines.append("layout: " + describe(tailored) + " | baseline: " + describe(reference))
-    if accept_layout:
-        lines.append("layout: differences accepted by the user (--accept-layout)")
-        return lines
-    if tailored["structural"] or tailored["pages"] != reference["pages"]:
-        raise StepFailure(lines, "page allocation differs from the baseline (overflow, moved sections or page count); "
-                                 "do not shrink text or move breaks; ask the user")
-    worse = [page for page, blank in tailored["blank"].items()
-             if blank > 5 and blank > reference["blank"].get(page, 0) + 2]
-    if worse:
-        raise StepFailure(lines, f"underfill beyond the baseline on page(s) {', '.join(map(str, worse))}; ask the "
-                                 "user to accept it (--accept-layout) or add sourced content")
-    lines.append("layout: matches the baseline's page allocation")
+        lines.append("layout: automated check unavailable (no layout profile for this baseline, or uv missing)")
+    else:
+        tailored = layout(preview, config, uv)
+        reference = layout(baseline_pdf(vault, baseline, odt_template), config, uv)
+        lines.append("layout: " + describe(tailored) + " | unchanged baseline: " + describe(reference))
+        sparse = [str(page) for page, blank in tailored["blank"].items() if blank > 5]
+        if accept_layout:
+            lines.append("layout: accepted by the user (--accept-layout); record the exception with the document")
+        elif tailored["structural"] or tailored["pages"] != reference["pages"]:
+            raise StepFailure(lines, "page allocation differs from the baseline (overflow, moved sections or page "
+                                     "count); the preview PDF is kept for inspection. Do not shrink text or move "
+                                     "breaks; ask the user")
+        elif sparse:
+            raise StepFailure(lines, f"underfill: more than five blank lines at the bottom of page(s) "
+                                     f"{', '.join(sparse)}. Show the user these figures and the baseline's; they "
+                                     "accept the space (--accept-layout) or direct sourced content changes")
+    preview.replace(pdf)
+    lines.append("pdf: final CV PDF written")
     return lines
 
 
@@ -802,10 +826,14 @@ def render_letter(vault, slug, language, replace=False):
     anchors = vault.private / "Templates" / anchors_name
     if not letter_template.is_file() or not anchors.is_file():
         raise ValueError(f"Letter template pair for '{language}' is missing.")
-    cl.load_identity(identity)
-    lines = ["identity: complete (values withheld)"]
     complete = cv_dir / f"{prefix}-cover-letter{suffix}.md"
     odt, pdf = cv_dir / f"{prefix}-cover-letter{suffix}.odt", cv_dir / f"{prefix}-cover-letter{suffix}.pdf"
+    preview = cv_dir / f"{prefix}-cover-letter{suffix}-preview.pdf"
+    lines = []
+    if pdf.exists() and not replace:
+        raise StepFailure(lines, "a final letter PDF exists; rerun with --replace once the user approves replacing it")
+    cl.load_identity(identity)
+    lines.append("identity: complete (values withheld)")
     values = cl.read_markdown(prose, identity)
     text = "\n\n".join("## " + name + "\n\n" + ("\n\n" if name == "Body" else "\n").join(values[name])
                        for name in cl.SECTIONS) + "\n"
@@ -815,24 +843,23 @@ def render_letter(vault, slug, language, replace=False):
                                      "into the prose file, then rerun")
     write_private(complete, text)
     lines.append("complete letter: hydrated locally")
-    if pdf.exists():
-        if not replace:
-            raise StepFailure(lines, "a final letter PDF exists; rerun with --replace once the user approves replacing it")
-        pdf.unlink()
+    preview.unlink(missing_ok=True)
     cl.render(complete, letter_template, odt, config_path=anchors)
     try:
-        cl.export_pdf(odt, pdf)
-        lines.append("pdf: exactly one page")
+        cl.export_pdf(odt, preview)
+        lines.append("preview pdf: exactly one page")
     except ValueError as error:
         if "pages" not in str(error):
             raise StepFailure(lines, str(error)) from None
         cl.render(complete, letter_template, odt, config_path=anchors, compact_title_gap=True)
         try:
-            cl.export_pdf(odt, pdf)
+            cl.export_pdf(odt, preview)
         except ValueError:
             raise StepFailure(lines, "the letter overflows one page even with the compact title gap; "
                                      "ask the user how to proceed") from None
-        lines.append("pdf: exactly one page after the one allowed compact-title-gap retry")
+        lines.append("preview pdf: exactly one page after the one allowed compact-title-gap retry")
+    preview.replace(pdf)
+    lines.append("pdf: final letter PDF written")
     return lines
 
 
@@ -863,11 +890,13 @@ def main(argv=None):
     p = commands.add_parser("add-name", help="add a name to the policy (type it in your own terminal)")
     p.add_argument("--label", default="PERSON")
     p.add_argument("--capture", default="latest")
+    p = commands.add_parser("find", help="existing applications and notes for one company or agency slug")
+    p.add_argument("company_slug")
     p = commands.add_parser("records", help="create the linked notes from a JSON spec")
     p.add_argument("spec", type=Path)
     p = commands.add_parser("update", help="replace a note section or set fields from safe Markdown")
     p.add_argument("slug")
-    p.add_argument("note", choices=["application", "research", "company"])
+    p.add_argument("note", choices=["application", "research", "company", "recruiter"])
     p.add_argument("--section")
     p.add_argument("--level", type=int, default=2, choices=[2, 3])
     p.add_argument("--from", dest="source", type=Path)
@@ -909,8 +938,16 @@ def main(argv=None):
             if not sys.stdin.isatty():
                 raise ValueError("Run add-name in your own terminal; the name is typed locally.")
             result = add_name(vault, input("Name or other value to redact: "), args.label, args.capture)
-            print(f"Policy: {result['added']} added. Safe copy re-prepared: {result['safe']} "
-                  f"({result['replaced']} replaced; check {'FAIL' if result['reasons'] else 'PASS'}).")
+            print(f"Policy: {result['added']} added.")
+            if result["safe"]:
+                print(f"Safe copy re-prepared: {result['safe']} ({result['replaced']} replaced; "
+                      f"check {'FAIL' if result['reasons'] else 'PASS'}). Rerun bundle for other safe copies.")
+            return 0
+        if args.command == "find":
+            result = find(vault, args.company_slug)
+            print("applications: " + (", ".join(result["applications"]) or "none"))
+            print(f"company note: {'exists' if result['company note'] else 'none'}")
+            print(f"agency recruiter notes: {result['agency recruiter notes']}")
             return 0
         if args.command == "records":
             spec = json.loads(args.spec.read_text(encoding="utf-8"))

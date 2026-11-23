@@ -76,6 +76,10 @@ crowding and more than five empty body-text lines at the bottom.
 
 ## Edit and render
 
+Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
+`render`), which applies the checks below and stops with a reason; the
+commands in this section are the manual equivalent and the detail behind it.
+
 Review and correct the Markdown text with the user first. Do not render ODT/PDF
 for each wording revision. Render only once the user confirms the text is correct
 or requests rendering, then validate layout. Existing previews become outdated
@@ -170,6 +174,10 @@ use a new filename for versions you want to retain. The renderer refuses to
 overwrite its template.
 
 ## Cover letters: plain Markdown to ODT/PDF
+
+Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
+`render`), which applies the checks below and stops with a reason; the
+commands in this section are the manual equivalent and the detail behind it.
 
 Supply a compatible private cover-letter ODT plus its matching anchor JSON,
 then pass `--template` and `--config`. This attached private vault includes a
