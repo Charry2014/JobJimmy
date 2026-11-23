@@ -268,8 +268,8 @@ or agent can read independently.
 ### Shared instructions across models
 
 Open the public JobJimmy folder as the Kilo workspace; open `JobSearch/` separately
-as the Obsidian vault. The project `kilo.jsonc` loads `.kilo/rules/project.md`,
-which routes every mode/model to `AGENTS.md`. Skills remain agent-agnostic in
+as the Obsidian vault. Kilo loads `.kilo/rules/*.md` automatically;
+`.kilo/rules/project.md` routes every mode/model to `AGENTS.md`. Skills remain agent-agnostic in
 `.kilo/skills/`; if a client does not discover them, explicitly ask it to read the
 relevant `SKILL.md`. Do not copy instructions into separate provider folders.
 
@@ -277,7 +277,24 @@ Start a fresh session after updating these files. Check that the assistant can
 identify the two roots and select the appropriate task reference before giving it
 private inputs. Changing provider or model requires checking the private-data
 route again; shared instructions do not enforce a provider's retention controls.
-No model credentials or permission overrides are included in the project config.
+No model credentials are included in the project config.
+
+The project `kilo.jsonc` keeps sessions cheap and predictable:
+
+- **A fixed model** (`openrouter/anthropic/claude-haiku-5.5`) instead of a
+  router such as `openrouter/auto`. A router can switch models mid-session,
+  for example when a model is rate-limited, and each switch re-sends the whole
+  conversation without the prompt cache. Change the `model` line to use a
+  stronger model, such as `openrouter/anthropic/claude-sonnet-5.5`, for
+  drafting sessions. The model must be allowed by your OpenRouter guardrails.
+- **Skills limited to JobJimmy's four.** Global skills are hidden in this
+  project, so their descriptions are not re-sent with every call.
+- **No Serena or knowledge-graph MCP tools.** Disable any other global MCP
+  servers the same way (`"tools": {"<server>_*": false}`).
+
+Every model call re-sends the instructions and the conversation so far, so cost
+grows with the number of steps and with how much the agent has read. Give one
+clear task per session, and start a new session for the next application.
 
 This wiring follows Kilo's [project rule configuration](https://kilo.ai/docs/customize/custom-rules).
 It requires a client supporting `kilo.jsonc` instructions; older clients should
