@@ -26,6 +26,10 @@ baseline matched the stored baseline PDF (same pages, text per page and
 fonts, word positions within 2 pt); a synthetic letter exported to one page.
 Not done: `check_env.py` does not yet report missing template fonts.
 
+The new-computer checklist is now in `Documentation/Getting-Started.md`
+("Moving to a new computer"). Engine work is tracked in the knowledge vault
+project `jobjimmy` (see `AGENTS.md`, "Vault project").
+
 ## Combined rendering completion — 2026-10-09
 
 Closed an instruction gap between the independent CV and letter skills: a

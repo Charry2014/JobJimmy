@@ -178,6 +178,44 @@ ephemeral environment instead of weakening the scanner. The hook does not config
 prevent every leak, or scan historical Git objects. A finding needs investigation;
 never add an exemption for real personal data just to make a check pass.
 
+## Moving to a new computer
+
+A fresh clone is not a working setup until the checks below pass. Git does not
+carry ignored files, fonts or local Git settings, and a missing font changes
+page breaks without any error.
+
+1. **Attach the current private repository.** Clone it into `JobSearch/`. If
+   you have used more than one private repository over time, check that it is
+   the current one: `JobSearch/Templates/` must hold your baseline pairs (for
+   example `VP-CTO.md` with `VP-CTO.odt`), the `letter-template-*.odt` and
+   `letter-anchors-*.json` pairs and `letter-identity.json`. Use `ls`, not an
+   ignore-aware search; see [Locating CV and cover-letter templates](../AGENTS.md#locating-cv-and-cover-letter-templates).
+   Never rename an old private checkout inside the JobJimmy folder: only the
+   exact `JobSearch/` path is ignored. Move it outside the checkout.
+2. **Enable the privacy hook** (section 6). `core.hooksPath` is a local Git
+   setting and is not cloned.
+3. **Check the environment.** Run `tools/py tools/check_env.py`. Python, uv,
+   git, LibreOffice and the private tree must be present, and the API keys you
+   use must be set.
+4. **Install the template fonts in the right version.** List the fonts your
+   reference baseline PDFs embed, and install those exact versions in
+   `~/Library/Fonts` on macOS. A newer version of the same family can change
+   line heights: for example, a baseline made with Lato 1.104 needs Lato 1.104,
+   not 2.015. Put template-specific substitutions (such as a missing weight
+   mapped to an installed one) in the private `JobSearch/Templates/fonts.conf`.
+5. **Export only through the wrappers.** Headless LibreOffice on macOS sees
+   only its bundled fonts unless `FONTCONFIG_FILE` is set. Use `tools/soffice`,
+   `populate_cv.py --pdf` or `cover_letter.py export-pdf`, never plain `soffice`.
+6. **Prove a render.** Render each baseline with `cv.py render` into
+   `JobSearch/Outputs/`, export it with `tools/soffice`, and compare it with a
+   reference PDF using `compare_pdfs.py` or `check_layout.py`. Page count, text
+   per page and embedded fonts must match. Reference PDFs under
+   `JobSearch/Outputs/` are ignored and not cloned, so copy them from the old
+   machine or keep them somewhere tracked. Render a cover letter from synthetic
+   prose and confirm `export-pdf` produces one page.
+7. **Run the validation commands** in [AGENTS.md](../AGENTS.md#validation-commands)
+   and `tools/py tools/privacy_screen.py --all`.
+
 ## 7. Choose your next step
 
 - [Knowledge base](Knowledge-Base.md): record your experience before asking for fit analysis.

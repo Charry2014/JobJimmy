@@ -1,5 +1,12 @@
 # JobJimmy job-search engine: agent guide
 
+## Vault project
+
+The engine's work record lives in the shared knowledge vault under the project
+slug `jobjimmy` (`Projects/jobjimmy/jobjimmy-project.md`). That project tracks
+reusable engine work only. Personal job-search state, application names and
+employer details never go there; they stay in the private `JobSearch/` tree.
+
 ## Vault actions
 
 Recurring vault actions — recording an application submission, follow-ups,
