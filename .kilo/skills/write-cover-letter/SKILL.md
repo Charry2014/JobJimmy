@@ -22,12 +22,14 @@ an empty glob as a missing template.
 Never send a completed letter, identity JSON or PDF to a
 remote model. Before reading any advert, employer research or career evidence
 into a hosted agent, use `CV/Scripts/redact_md.py prepare` locally on each
-Markdown source with a private policy listing all explicit identifiers,
-including company names and addresses. Read only safe copies, preserve tags
-in the drafted prose, and run `redact_md.py restore` locally before rendering.
+Markdown source with the reviewed private policy (candidate identity, past
+employers, people's names and contacts; the target employer may stay visible).
+Read only safe copies. Tokens such as `@@EMPLOYER_03@@` are stable across all
+safe copies: copy them exactly, combine them freely and never invent one. Run
+`redact_md.py restore <response-safe.md> <prose.md>` locally before rendering.
 Follow `PRIVACY.md#remote-drafting-reversible-markdown-tags`; the user accepts
 residual identity inference from redacted career history. Never send the token
-mapping or a restored letter back to the model. Read
+registry or a restored letter back to the model. Read
 `CV/README.md#cover-letters-plain-markdown-to-odtpdf`
 for syntax and failure modes.
 

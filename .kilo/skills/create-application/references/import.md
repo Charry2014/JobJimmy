@@ -55,7 +55,17 @@ exhaustive. Before a hosted agent reads any article or the original advert,
 prepare reversible redacted copies with `CV/Scripts/redact_md.py prepare` under
 `PRIVACY.md#remote-drafting-reversible-markdown-tags`; read only the checked
 safe copies. Do not read raw adverts or articles into model context; redact the
-advert first. `redact_md.py check` is a local safety scanner only; a pass is not
+advert first. The target employer is public and stays visible in the advert's
+safe copy, so company research (Step 5) can use it; recruiter names and
+contacts are listed in the policy. An advert with no listed values still
+produces a safe copy.
+
+Private records keep real values. When you write a record that needs a listed
+value (a recruiter's name, a past employer), write its token, then restore the
+file in place: `tools/py CV/Scripts/redact_md.py restore <file> <file>`. Never
+leave tokens in a record, and never type a provider placeholder such as
+`[EMAIL]` into one. If the safe advert still shows a person's name, ask the
+user to add it to the policy and prepare again. `redact_md.py check` is a local safety scanner only; a pass is not
 proof of anonymity and does not authorise remote use.
 
 Check the model and tool route against `PRIVACY.md` before returning safe

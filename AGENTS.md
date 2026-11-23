@@ -314,10 +314,11 @@ raw values not handled by local tools, flag the blocker rather than sending
 them to a remote model. A Git boundary is not a model-output filter.
 For remote document drafting, first use `CV/Scripts/redact_md.py` to prepare
 reversible tagged Markdown locally; read and send only the checked safe copy.
-Redact names, contacts, employer names and addresses, and other explicit
-identifiers in every document and context sent. The user accepts residual
+Redact the candidate's name and contacts, past employers, other people's names
+and contacts, and other explicit identifiers in every document and context sent;
+the target employer named in an advert is public and may stay visible. The user accepts residual
 identity inference from redacted career history; do not block solely on that
-risk. Restore locally after model work. Never show the mapping or restored text
+risk. Restore locally after model work. Never show the token registry or restored text
 to a remote model. See `PRIVACY.md#remote-drafting-reversible-markdown-tags`.
 Curated knowledge-base articles (`JobSearch/Knowledge/**`) are private content
 like every other note, not an exception: they contain the candidate's name,

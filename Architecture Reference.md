@@ -29,6 +29,12 @@ Contents: [[#Purpose]] · [[#How it works]] · [[#Interfaces to other projects]]
 
 <!-- The main modules, processes or services: each one's responsibility and where it lives in the code. -->
 
+- **Redaction layer**: `CV/Scripts/redact_md.py` turns private Markdown into
+  safe copies with stable `@@LABEL_NN@@` tokens and restores model responses
+  locally. It is driven by the private policy
+  (`JobSearch/Templates/redaction-policy.json`) and token registry
+  (`JobSearch/Templates/redaction-tokens.json`). `jev_check.py` reuses its
+  policy and contact checks.
 - **PDF export layer**: `CV/Scripts/office.py` finds LibreOffice and builds
   the font environment; `tools/soffice` is its command-line form. It is used by
   `populate_cv.py --pdf`, `cover_letter.py export-pdf` and the documented CV
