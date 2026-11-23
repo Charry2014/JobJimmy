@@ -67,9 +67,10 @@ This session is a hosted model. The stance does not depend on who drives it:
    never print the policy or identity JSON into context.
 2. Policy `reviewed: false` or missing: stop dependent drafting. Do not send
    private material to the model; report the blocker instead.
-3. Draft with `APP_MAN_PRIVATE_..._TOKEN` placeholders preserved exactly; save
-   output to a private file and restore locally with `redact_md.py restore`.
-   Never show the mapping or restored text back to the model; showing restored
-   text to the user in chat is fine.
+3. Draft with the stable `@@LABEL_NN@@` tokens copied exactly (they may be
+   combined, dropped or repeated, never invented); save output to a private
+   file and restore locally with `redact_md.py restore`. Never show the token
+   registry or restored text to the model; the user reviews restored text in
+   Obsidian.
 4. The user accepting residual identity inference from redacted career history
    is the standing policy: do not re-ask, and do not block drafting on it.

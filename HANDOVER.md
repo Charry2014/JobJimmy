@@ -8,6 +8,23 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Stable redaction tokens — 2026-11-23
+
+`redact_md.py` now uses stable, readable tokens (`@@EMPLOYER_03@@`, `@@ID_07@@`)
+from a private registry, `JobSearch/Templates/redaction-tokens.json` (mode 0600),
+instead of a random per-document nonce and mapping. One value always gets the
+same token, so safe copies of the advert, knowledge base, baseline and drafts
+can be combined. `restore RESPONSE OUTPUT` needs only the registry, accepts
+dropped and repeated tokens, and may run in place on records. It still refuses
+unknown or damaged tokens and provider placeholders. `prepare` allows documents
+with no listed values and overwrites its safe output. `check` accepts stable
+tokens and flags legacy or damaged ones. Policy entries may carry a `label`.
+`restore-legacy` keeps the old strict APP_MAN_PRIVATE path. Policy guidance: the
+target employer in an advert is public and need not be listed.
+
+Validation: unit suites pass. Local smoke test on two knowledge files: prepare,
+check PASS, combined restore byte-identical to the sources.
+
 ## Headless LibreOffice fonts on macOS — 2026-11-23
 
 On a fresh Mac with LibreOffice 26.8, headless `soffice` resolved fonts only

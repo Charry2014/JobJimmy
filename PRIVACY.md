@@ -83,11 +83,11 @@ For document drafting, the user accepts the residual re-identification risk of
 employment history once explicit identifiers are redacted. Do not block drafting
 solely because the remaining career narrative could identify them. **Before any
 private document or tool response is shown to a remote model**, replace the
-candidate's name, email, phone, address, employer and recruiter names, company
-addresses, personal profile URLs and other specific identifiers with reversible
+candidate's name, email, phone, address, past and current employer names,
+recruiter names, personal profile URLs and other specific identifiers with reversible
 local tags. A tool response is already model input: do not read unredacted notes
-into a hosted agent and attempt redaction afterwards. Keep the policy, mapping
-and restored result local; only checked redacted text goes to the model.
+into a hosted agent and attempt redaction afterwards. Keep the policy, token
+registry and restored result local; only checked redacted text goes to the model.
 
 Use an appropriate operating profile:
 
@@ -117,44 +117,63 @@ reduces disclosure; it is not proof of anonymity.
    ```
 
    The seeded policy has `"reviewed": false` and cannot be used for export.
-   A local-only reviewer must add employer/recruiter names, addresses, profile
-   links, spelling variants and other specific identifiers to `redact_values`
-   before setting `"reviewed": true`. Review each document and context; the
-   identity JSON cannot discover company names in career evidence or adverts.
-   Never print the policy into hosted context. If local review cannot happen,
-   do not send private material to a remote model. A shared reviewed policy
-   can contain values absent from a given document; preparation uses matches.
+   A local-only reviewer must add past and current employer names, recruiter
+   and other people's names, personal addresses, profile links, spelling
+   variants and other specific identifiers to `redact_values` before setting
+   `"reviewed": true`. An entry is a literal string or
+   `{"value": "...", "label": "EMPLOYER"}`; the optional label (capital letters
+   and underscores) only makes the token readable, for example
+   `@@EMPLOYER_03@@` instead of `@@ID_03@@`. Never print the policy into hosted
+   context. If local review cannot happen, do not send private material to a
+   remote model.
+
+   **The target employer in an advert need not be listed.** It is public, and
+   the model needs it to research the company and tailor the documents. What
+   must stay out of model context is the candidate's identity and history:
+   their name and contacts, past and current employers, and the names and
+   contacts of recruiters and other people. List a recruiting agency's people
+   and contact details; the agency name may stay when it is public.
 2. Run from the public root, replacing the example private paths:
 
    ```sh
-   tools/py CV/Scripts/redact_md.py prepare JobSearch/Outputs/source.md JobSearch/Templates/redaction-policy.json JobSearch/Outputs/source-safe.md JobSearch/Outputs/source-map.json
+   tools/py CV/Scripts/redact_md.py prepare JobSearch/Outputs/source.md JobSearch/Templates/redaction-policy.json JobSearch/Outputs/source-safe.md
    ```
 
-   Preparation refuses an unreviewed policy, a document matching none of its
-   values, existing tokens, leftover listed identifiers and detectable
-   email/phone/LinkedIn patterns. The mapping is
-   private and mode `0600`. On failure, revise the policy or input and use new
-   output filenames. Review the **safe** file for identifiers patterns cannot
-   recognise. Never send the source, policy, mapping, ODT or PDF.
-3. Give the model only the safe Markdown and similarly redacted advert/context.
-   Require preservation of every `APP_MAN_PRIVATE_..._TOKEN` exactly. Save its
-   response to a private Markdown file, then restore locally:
+   Tokens are **stable**: the private registry
+   `JobSearch/Templates/redaction-tokens.json` (mode `0600`) gives each value
+   one token the first time it is redacted and reuses it in every later
+   document. Safe copies of the advert, knowledge articles, baseline and
+   earlier drafts therefore share one vocabulary and can be combined.
+   Preparation refuses an unreviewed policy, input that already contains
+   tokens, and any listed identifier or detectable email/phone/LinkedIn
+   pattern left after redaction. A document containing no listed values is
+   allowed; the command then says so, and you review the safe copy for names
+   the policy does not list. The safe output is overwritten on each run.
+   Never send the source, policy, registry, ODT or PDF.
+3. Give the model only safe Markdown. Require every `@@LABEL_NN@@` token to be
+   copied exactly. A response may drop, repeat or combine tokens from any safe
+   source. Save the response to a private Markdown file, then restore locally:
 
    ```sh
-   tools/py CV/Scripts/redact_md.py restore JobSearch/Outputs/source-safe.md JobSearch/Outputs/response-safe.md JobSearch/Outputs/source-map.json JobSearch/Outputs/response.md
+   tools/py CV/Scripts/redact_md.py restore JobSearch/Outputs/response-safe.md JobSearch/Applications/<slug>/CV/<slug>-cv-draft.md
    ```
 
-   Restoration rejects missing, changed, duplicated or unknown tokens and
-   common provider placeholders before writing output. Review restored wording
-   locally, then render normally. Do not send restored text back to the model;
-   prepare a newly redacted copy for further remote revisions. This command
-   does not intercept arbitrary tool calls: agents must select safe inputs
-   before reading private content into remote context. No repository script
-   can rewrite a user message already sent to a provider, redact historical
-   transcripts or intercept arbitrary file/tool output in Kilo. Those require
-   a client-side redaction gateway or a truly local model execution route.
-   Where raw private values cannot stay in local scripts, stop and flag that
-   a remote-model transfer would be needed; do not silently send them.
+   Restoration refuses unknown or damaged tokens and provider placeholders
+   (`[EMAIL]`, `[PERSON_NAME]` and similar) and then writes nothing. The
+   output may be the working draft, which it overwrites. Do not send restored
+   text back to the model; prepare a new safe copy for further revisions. A
+   response made with the older per-document `APP_MAN_PRIVATE_..._TOKEN`
+   mappings is restored with `redact_md.py restore-legacy SAFE RESPONSE
+   MAPPING OUTPUT`.
+
+   These commands do not intercept arbitrary tool calls: agents must select
+   safe inputs before reading private content into remote context. No
+   repository script can rewrite a user message already sent to a provider,
+   redact historical transcripts or intercept arbitrary file/tool output in
+   Kilo. Those require a client-side redaction gateway or a truly local model
+   execution route. Where raw private values cannot stay in local scripts,
+   stop and flag that a remote-model transfer would be needed; do not
+   silently send them.
 
 ## Jev fit and document checks
 
@@ -163,7 +182,7 @@ checked anonymous job descriptions plus either the fit/gap analysis or one final
 Markdown document and its required-points checklist. Use the safe copies before
 identity restoration/hydration; the workflow stage alone does not prove anonymity.
 The existing locally reviewed redaction policy applies to all these inputs,
-including names in adverts and private citation targets. Never send mappings,
+including names in adverts and private citation targets. Never send token registries,
 policies, raw masters or conversation history.
 
 `CV/Scripts/jev_check.py` checks the complete payload against that local policy
