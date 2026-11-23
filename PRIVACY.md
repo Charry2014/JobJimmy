@@ -133,7 +133,16 @@ reduces disclosure; it is not proof of anonymity.
    their name and contacts, past and current employers, and the names and
    contacts of recruiters and other people. List a recruiting agency's people
    and contact details; the agency name may stay when it is public.
-2. Run from the public root, replacing the example private paths:
+2. **The usual route is `CV/Scripts/jobflow.py`**, which runs these steps
+   for the import and document workflows: `capture` keeps an advert or
+   recruiter email from the clipboard verbatim in a private inbox, adds the
+   emails, phone numbers, LinkedIn profiles and email-header names it finds to
+   the policy (names in free text need `add-name`, typed in the user's own
+   terminal) and writes the safe copy; `bundle` writes checked safe copies of
+   everything a drafting session needs; `records`, `update` and `restore`
+   restore tokens locally as they write notes and drafts. Adverts and emails
+   are captured, never pasted into chat: pasted text reaches the provider
+   unredacted. The manual equivalent, from the public root:
 
    ```sh
    tools/py CV/Scripts/redact_md.py prepare JobSearch/Outputs/source.md JobSearch/Templates/redaction-policy.json JobSearch/Outputs/source-safe.md

@@ -54,7 +54,7 @@ claims; the knowledge base informs drafting and is not inserted automatically.
 | `Knowledge` | *Moved* — the personal knowledge base lives in the private repository at `JobSearch/Knowledge/` (curated profile, career evidence, role preferences and source snapshots) |
 | `Templates` | Matching CV document templates and the cover-letter template/Markdown starter |
 | `Rendered` | Non-personal documentation only; personal recreations belong in `JobSearch/Outputs/Baselines/` |
-| `Scripts` | Extraction, rendering, alignment, layout and PDF comparison tools |
+| `Scripts` | Extraction, rendering, alignment, layout and PDF comparison tools; `jobflow.py` chains them into the workflow steps (capture, records, bundle, restore, render) |
 | `Validation` | Non-personal documentation only; personal validation belongs in `JobSearch/Outputs/Baselines/` |
 
 After initial extraction from a supplied source document, rendering needs only
@@ -75,6 +75,10 @@ Bullet counts and text length may vary within that structure. Avoid repetition,
 crowding and more than five empty body-text lines at the bottom.
 
 ## Edit and render
+
+Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
+`render`), which applies the checks below and stops with a reason; the
+commands in this section are the manual equivalent and the detail behind it.
 
 Review and correct the Markdown text with the user first. Do not render ODT/PDF
 for each wording revision. Render only once the user confirms the text is correct
@@ -170,6 +174,10 @@ use a new filename for versions you want to retain. The renderer refuses to
 overwrite its template.
 
 ## Cover letters: plain Markdown to ODT/PDF
+
+Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
+`render`), which applies the checks below and stops with a reason; the
+commands in this section are the manual equivalent and the detail behind it.
 
 Supply a compatible private cover-letter ODT plus its matching anchor JSON,
 then pass `--template` and `--config`. This attached private vault includes a

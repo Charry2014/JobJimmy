@@ -20,16 +20,17 @@ path (root `AGENTS.md` "Locating CV and cover-letter templates" lists the
 `letter-template-<lang>.odt`/`letter-anchors-<lang>.json` pairs) and never treat
 an empty glob as a missing template.
 Never send a completed letter, identity JSON or PDF to a
-remote model. Before reading any advert, employer research or career evidence
-into a hosted agent, use `CV/Scripts/redact_md.py prepare` locally on each
-Markdown source with the reviewed private policy (candidate identity, past
-employers, people's names and contacts; the target employer may stay visible).
-Read only safe copies. Tokens such as `@@EMPLOYER_03@@` are stable across all
-safe copies: copy them exactly, combine them freely and never invent one. Run
-`redact_md.py restore <response-safe.md> <prose.md>` locally before rendering.
-Follow `PRIVACY.md#remote-drafting-reversible-markdown-tags`; the user accepts
-residual identity inference from redacted career history. Never send the token
-registry or a restored letter back to the model. Read
+remote model. Run `tools/py CV/Scripts/jobflow.py bundle <slug>` and read only
+the checked safe copies it prints (advert, notes, company research, knowledge
+articles and the current drafts with the user's latest edits). Tokens such as
+`@@EMPLOYER_03@@` are stable across all safe copies: copy them exactly, combine
+them freely and never invent one. Write the prose to the bundle's `out/` folder
+under its `CV/` file name and run `tools/py CV/Scripts/jobflow.py restore
+<slug>`; restore refuses a draft the user changed since the bundle (bundle
+again and revise their version). Follow
+`PRIVACY.md#remote-drafting-reversible-markdown-tags`; the user accepts residual
+identity inference from redacted career history. Never send the token registry
+or a restored letter back to the model. Read
 `CV/README.md#cover-letters-plain-markdown-to-odtpdf`
 for syntax and failure modes.
 
@@ -47,8 +48,8 @@ for syntax and failure modes.
    `Writing-guide.md` and relevant experience. Unknown recipient details
    remain generic; do not invent names, dates, achievements or contact details.
 2. **Save the draft as an editable Markdown file.** Every drafting or revision
-   request must write the actual `.md` file under
-   `JobSearch/Applications/<application-slug>/CV/` before presenting it for
+   request must restore the actual `.md` file into
+   `JobSearch/Applications/<application-slug>/CV/` (`jobflow.py restore`) before presenting it for
    review; a chat-only draft is not complete. The user edits this file in
    Obsidian. Read its latest contents through the privacy workflow before
    revising so their edits are retained. Overwrite the same working file on each
@@ -56,12 +57,9 @@ for syntax and failure modes.
    provides history. Keep one current file per document and language, including
    separate English and German prose files when translating. Save the prose even
    when rendering or Jev is unavailable; report any actual write failure rather
-   than claiming it was saved. To initialise a missing draft, run
-    `tools/py CV/Scripts/cover_letter.py init
-   JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md`
-   only if that file does not exist. For German final output, start instead with
-   `<slug>-cover-letter-prose-en.md` and preserve it through translation. Open
-   it in Obsidian and retain exactly the
+   than claiming it was saved. A new draft starts from the public starter `CV/Templates/Cover-Letter.md`,
+   written to `out/<slug>-cover-letter-prose.md` (for a German final:
+   `<slug>-cover-letter-prose-en.md`, preserved through translation). Retain exactly the
    eight English `##` field headings: `Sender`, `Date`, `Recipient`, `Subject`,
    `Salutation`, `Body`, `Closing`, `Signature`. Write the *field values* in
    English during preparation for a German application, otherwise in the
@@ -79,7 +77,7 @@ for syntax and failure modes.
    the agreed prose to `<slug>-cover-letter-prose-de.md` under the redaction
    workflow, keeping the eight English field headings and local identity
    placeholders. Review German against English and obtain German wording approval
-   or an explicit render request before step 4. Subsequent commands use generic
+   or an explicit render request before step 4 (rendering). Subsequent commands use generic
    filenames: hydrate/render the approved German prose for `de`, retaining the
    English source. `translate.py` does not accept cover letters.
    At English review and again at final German review (or final review for other
@@ -93,81 +91,28 @@ for syntax and failure modes.
    recipient, language, signature plan and length with the user. Do not render
    for every revision. Update the existing draft in place rather than
    reinitialising it or keeping revision copies.
-4. **Choose the exact language pair and check identity.** For `en` use
-   `JobSearch/Templates/letter-template-en.odt` and
-   `JobSearch/Templates/letter-anchors-en.json`; for `de` use
-   `letter-template-de.odt` and `letter-anchors-de.json` in that folder.
-   The unsuffixed `letter-template.odt` / `letter-anchors.json` is a legacy
-   **German alias, not a language-neutral default**. Never use it for English.
-   `letter-example-original.odt` is a private archive, not a rendering
-   template; `letter-template.fodt` is obsolete, and any
-   `letter-template-smoke.md` is test input, not an application draft. For a
-   language without a validated pair, keep the prose draft and use local
-   Writer assembly or report the missing render pair; never silently substitute
-   another language. The local
-   `JobSearch/Templates/letter-identity.json` contains Sender and Signature
-   arrays extracted from the user's example. From the public project root run
-   `tools/py CV/Scripts/cover_letter.py check-identity
-   JobSearch/Templates/letter-identity.json`. A successful check confirms a
-   usable name, phone and email without printing them. A redacted CV baseline
-   showing `[EMAIL]` is **not** evidence the letter identity is absent or lacks
-   an email; do not derive contacts from CV baselines. Do not read or print the
-   JSON into hosted context. If this command fails in another checkout, verify
-   that checkout has the attached private `JobSearch/` repository. Only if its
-   identity is genuinely missing or invalid should you request local setup or
-   a complete private Markdown letter. Never fabricate contacts.
-5. **Hydrate locally, then render.** Once the identity JSON exists, create the
-   full private Markdown and preserve the prose draft:
-
-   ```sh
-    tools/py CV/Scripts/cover_letter.py hydrate-identity JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter-prose.md JobSearch/Templates/letter-identity.json JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md
-    ```
-
-    Render the hydrated Markdown using the pair selected in step 4. For `en`:
-
-    ```sh
-    tools/py CV/Scripts/cover_letter.py render JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt --template JobSearch/Templates/letter-template-en.odt --config JobSearch/Templates/letter-anchors-en.json
-    ```
-
-    For `de`:
-
-    ```sh
-    tools/py CV/Scripts/cover_letter.py render JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.md JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt --template JobSearch/Templates/letter-template-de.odt --config JobSearch/Templates/letter-anchors-de.json
-    ```
-
-   `hydrate-identity` refuses to overwrite a prior complete draft. To refresh it,
-   first reconcile any user edits with the prose source through the privacy
-   workflow, hydrate to a temporary private `.md` file, validate locally, then
-   replace the existing complete Markdown at its stable path. Do not keep the
-   temporary file or a numbered history copy; Git provides history. The full Markdown
-   signature must contain name, phone and email, with contacts below the name.
-   Alternatively render the prose file using `render ... --identity
-   JobSearch/Templates/letter-identity.json` when a complete Markdown copy is
-   not required; prefer retaining all three formats for an application.
-6. **Export only one page and inspect.** Do not call `soffice` directly for a
-   final letter. Run the guarded local exporter, which writes the final PDF
-   only when it can verify exactly one page:
-
-   ```sh
-   tools/py CV/Scripts/cover_letter.py export-pdf JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.odt JobSearch/Applications/<application-slug>/CV/<slug>-cover-letter.pdf
-   ```
-
-    An overflow keeps the ODT and writes **no final PDF**. Make exactly one
-    spacing retry: rerun the **same** language-specific `render` command from
-    step 5 with `--compact-title-gap` appended, using the **same** approved
-    Markdown and ODT output path. This removes only the template's empty
-    paragraph between the Position/Subject title and the salutation (the
-    two-line-looking gap); it does not edit prose or search for other space.
-    Run the **same** `export-pdf` command once more. If it still has more than
-    one page, **stop and ask the user how to proceed**; do not search for other
-    whitespace, shrink text/margins/font, move blocks or trim prose on your
-    own. If the template lacks that exact gap, the option fails closed: stop
-    and ask instead of improvising. Existing final PDFs are never silently
-    overwritten. Inspect
-   the one-page PDF locally for omitted text, address, signature and the
-   bottom-right linked LinkedIn icon; keep the Markdown and ODT. If rendering
-   or page counting cannot be verified, report it as blocked, not completed.
-7. **Record real documents.** For rendering requests, verify the current approved
+4. **Render with checks.** Run
+   `tools/py CV/Scripts/jobflow.py render <slug> --letter`. It reads
+   `document_language` from the research note and uses only the validated pair
+   for it (`letter-template-<lang>.odt` with `letter-anchors-<lang>.json`; the
+   unsuffixed legacy pair is never used, and a language without a pair stops).
+   It checks the local identity without printing it, hydrates the complete
+   private letter (`<slug>-cover-letter.md`), renders the ODT and exports the
+   PDF only if it is exactly one page, making the one allowed
+   `--compact-title-gap` retry itself. It stops when:
+   - **the complete letter was edited after its prose:** carry those edits into
+     the prose file through the bundle, then rerun;
+   - **a final PDF exists:** rerun with `--replace` once the user approves;
+   - **the letter still overflows:** ask the user how to proceed; never shrink
+     text, margins or fonts, move blocks or trim prose on your own;
+   - **the identity is missing or invalid:** request local setup; never derive
+     contacts from a CV baseline (a redacted `[EMAIL]` there is not evidence)
+     and never fabricate them.
+   Inspect the one-page PDF locally for omitted text, address, signature and
+   the bottom-right linked LinkedIn icon; keep the Markdown and ODT. Never call
+   `soffice` directly. If rendering or page counting cannot be verified,
+   report it as blocked, not completed.
+5. **Record real documents.** For rendering requests, verify the current approved
    letter's ODT and PDF both exist and passed the required checks. If rendering includes a CV,
    complete its rendering workflow too and account for all four outputs before
    reporting the combined task complete. Report any missing or blocked output

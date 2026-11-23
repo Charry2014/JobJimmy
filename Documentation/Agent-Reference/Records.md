@@ -75,9 +75,12 @@ listing changes; describe later changes separately.
 
 When a URL is the only input, respect applicable reproduction restrictions.
 If a full copy cannot be saved, add a clearly labelled summary and source link,
-leave `advert_captured` blank, and request the user's advert text. Do not label a
-summary, snippet or inaccessible page as a complete original. Re-read existing
-research before asking: the user may already have pasted the text there.
+leave `advert_captured` blank, and ask the user to copy the advert text to the
+clipboard for `jobflow.py capture`. Do not label a summary, snippet or
+inaccessible page as a complete original. `jobflow.py records` creates the
+linked notes and archives a captured advert verbatim between
+`<!-- advert:start ... -->` and `<!-- advert:end -->` markers; never edit
+between them.
 
 ### Recruiters
 
@@ -127,7 +130,7 @@ These are declarative views and an agent workflow, not background jobs:
 - **Agent import skill:** skills are agent-agnostic and canonical under `.kilo/skills/`;
   the directory name does not require a particular agent. The in-repo skill
   `.kilo/skills/create-application/SKILL.md` (invoke as `create-application`) is
-  authoritative for requests to add a job from a link or pasted advert text. It
+  authoritative for requests to add a job from a link or captured advert text. It
   verifies the knowledge base, creates the linked records, checks publisher
   identity, produces the standard fit and gap analysis, and proposes CV
   positioning and a cover-letter flow. A legacy external skill

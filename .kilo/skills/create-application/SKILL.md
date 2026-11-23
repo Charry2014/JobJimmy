@@ -1,6 +1,6 @@
 ---
 name: create-application
-description: Create or update linked job application records from a job URL or pasted advert, including sourced fit assessment and positioning proposals. Use for imports, not standalone document rendering or interview preparation.
+description: Create or update linked job application records from a job URL or an advert or email captured from the clipboard, including sourced fit assessment and positioning proposals. Use for imports, not standalone document rendering or interview preparation.
 ---
 
 # Create application
@@ -20,6 +20,10 @@ workflow; do not read the original advert to investigate the blocker.
 Before returning private evidence to a model, check `PRIVACY.md` and the private
 agent guide. Never invent career claims, publisher identity or submission history.
 Do not send messages or submit an application as part of importing it.
+Never ask for advert or email text in chat: the user copies it to the clipboard
+and `tools/py CV/Scripts/jobflow.py capture --clipboard` archives it locally and
+writes the safe copy. Records, note sections and safe bundles are `jobflow.py`
+commands (see the import workflow).
 
 Read [the import workflow](references/import.md) for advert retrieval, deduplication,
 linked records, the required fit table and verification. Its **Step 0 — Environment

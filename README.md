@@ -82,7 +82,10 @@ Try:
 From there, the skill handles the import and assessment automatically, creating
 linked records for the role, employer, advert, and recruiter where applicable.
 You review the result and decide whether to proceed. If LinkedIn blocks access
-to the listing, paste the advert text instead so Jimmy can carry on.
+to the listing, or the job came by email, copy the advert or email text to the
+clipboard and ask the assistant to capture it: a local script archives it and
+hands the model a redacted copy. Don't paste it into the chat, where it
+reaches the model unredacted.
 
 ### 3. Make the relevant experience easy to find
 
