@@ -49,24 +49,23 @@ never printed).
 ## Step 1 — Knowledge base readiness check
 
 The personal knowledge base lives in `JobSearch/Knowledge/`. The curated
-articles are private content, not model-safe: they hold the candidate's name,
-contacts and real employer names, and the reviewed `redact_values` is not
-exhaustive. Before a hosted agent reads any article or the original advert,
-prepare reversible redacted copies with `CV/Scripts/redact_md.py prepare` under
-`PRIVACY.md#remote-drafting-reversible-markdown-tags`; read only the checked
-safe copies. Do not read raw adverts or articles into model context; redact the
-advert first. The target employer is public and stays visible in the advert's
-safe copy, so company research (Step 5) can use it; recruiter names and
-contacts are listed in the policy. An advert with no listed values still
-produces a safe copy.
+articles, the advert and every record are private content, not model-safe.
+Never read them directly: `CV/Scripts/jobflow.py` prepares checked safe copies
+under `PRIVACY.md#remote-drafting-reversible-markdown-tags`, and you read only
+those. Before the records exist, the only safe copy is the captured advert's
+(Step 3). After Step 5, run `tools/py CV/Scripts/jobflow.py bundle <slug>` and
+read the safe advert, notes and knowledge articles from the folder it prints.
+The target employer is public and stays visible, so company research can use
+it; the candidate's identity, past employers and people's names and contacts
+appear as tokens such as `@@PERSON_04@@`.
 
-Private records keep real values. When you write a record that needs a listed
-value (a recruiter's name, a past employer), write its token, then restore the
-file in place: `tools/py CV/Scripts/redact_md.py restore <file> <file>`. Never
-leave tokens in a record, and never type a provider placeholder such as
-`[EMAIL]` into one. If the safe advert still shows a person's name, ask the
-user to add it to the policy and prepare again. `redact_md.py check` is a local safety scanner only; a pass is not
-proof of anonymity and does not authorise remote use.
+Private records keep real values. Never write a private note with the file
+tools: write its content (tokens allowed) to a file under
+`JobSearch/Outputs/safe/<slug>/notes/` and let `jobflow.py records` or
+`jobflow.py update` restore the tokens locally as it writes the note. Never
+type a provider placeholder such as `[EMAIL]` into anything. `redact_md.py
+check` and the bundle's PASS are local safety scans only; a pass is not proof
+of anonymity and does not authorise remote use.
 
 Check the model and tool route against `PRIVACY.md` before returning safe
 context to a hosted agent. Read the safe copies of `Overview.md` and
@@ -95,35 +94,44 @@ gap prominently. Never invent missing knowledge-base content.
 
 ## Step 2 — Deduplicate before creating
 
-Search `JobSearch/Applications/`, `JobSearch/Companies/`,
-`JobSearch/Recruiters/` for the same source URL, job or
-requisition ID, or role and organisation. The same company may have several
-applications. If the opportunity exists: enrich the existing application and
-research note, preserve status, dates, priority, fit and user-written
-assessment, reuse the existing research note, and describe any advert changes
-separately with an observation date. Do not create duplicate contacts or
-research notes on reruns.
+List the application, company and recruiter folders by name only (`ls
+JobSearch/Applications JobSearch/Companies`) and look for the same role and
+organisation. `records` refuses an advert URL already recorded in another
+application and leaves existing notes untouched, so a rerun creates no
+duplicates. If the opportunity exists, enrich it with `update` instead:
+preserve status, dates, priority, fit and the user's assessment, and describe
+advert changes separately with an observation date.
 
-## Step 3 — Capture the advert
+## Step 3 — Capture the advert locally
 
-- **Pasted text supplied:** archive the user-supplied text in full under
-  **Original job advert**; set `advert_captured` to today (`DD-MM-YYYY`); set
-  `advert_url` to the link if one was supplied, otherwise leave blank and note
-  the missing URL. Preserve the original order, wording, headings, paragraphs,
-  bullets and emphasis, representing the source formatting in Markdown only.
-  Convert HTML headings/lists to Markdown; do not paste raw HTML, redesign the
-  layout, summarise sections or add analysis inside the original advert.
-  Normalise copied HTML space entities and redundant line breaks only when
-  they do not change the source's structure or meaning.
-- **Link only:** fetch the listing with available browsing tools. Prefer the
-  employer's original advert or its official recruitment provider. Verify role
-  and location before using an alternate source. Full reproduction requires
-  user-supplied text or other permission: if it is not permitted, save a clearly
-  labelled summary plus source link, leave `advert_captured` blank, and ask the
-  user to paste the original advert text. Do not bypass access controls, do not
-  claim a complete capture from a snippet, and never substitute a similar
-  vacancy. Do not infer a specific vacancy from a company homepage with several
-  jobs — create the company overview and ask which role to add.
+Never ask the user to paste an advert or recruiter email into chat: pasted text
+reaches the hosted model and the provider's guardrail unredacted, and its
+placeholders then end up in the records.
+
+- **Text from the user (advert, email, PDF text):** ask the user to copy it to
+  the clipboard, then run
+  `tools/py CV/Scripts/jobflow.py capture --clipboard [--url <advert URL>]`
+  (or `--file <path>` if they saved it to a file). The script keeps the
+  original verbatim in a private inbox, adds the emails, phone numbers,
+  LinkedIn profiles and email-header names it finds to the redaction policy,
+  and prints the path of the checked safe copy. Read only that safe copy. If
+  the user already pasted the text into chat, still ask for a capture: the
+  archive must be the exact original, not the chat copy.
+- **A name still visible in the safe copy** (a recruiter's name in a signature
+  or the body): ask the user to run
+  `tools/py CV/Scripts/jobflow.py add-name` in their own terminal and type the
+  name there, never in chat. It adds the name to the policy and re-prepares the
+  safe copy.
+- **Link only:** fetch the public listing with the browsing tools. Prefer the
+  employer's original advert or its official recruitment provider and verify
+  role and location before using an alternate source. If the user can copy the
+  page text, capture it as above; otherwise write a clearly labelled summary
+  plus source link with `update --section "Original job advert"`, leave
+  `advert_captured` blank and ask for the original text. Do not bypass access
+  controls, do not claim a complete capture from a snippet, and never
+  substitute a similar vacancy. Do not infer a specific vacancy from a company
+  homepage with several jobs: create the company overview and ask which role
+  to add.
 - Access may fail: complete what is supported by evidence and state exactly
   what is missing.
 
@@ -135,24 +143,18 @@ an external agency, and set `publisher_type` to `employer`, `recruiter` or
 platform (LinkedIn, StepStone), an ATS host, or an internal talent-acquisition
 employee does not establish an agency.
 
-- Recruiter listing: create or reuse
-  `JobSearch/Recruiters/<agency-slug>-<person-slug>.md` from
-  `Templates/Recruiter.md` (unknown person: `<agency-slug>-contact.md`, name
-  blank). Populate only verified public business contacts with sources; never
-  guess email patterns; label general agency contact details in the body, not
-  as a person's direct details. Link the application's `recruiter` property to
-  this note.
+- Recruiter listing: give the agency and person in the `records` spec (Step 5);
+  an unknown person becomes `<agency-slug>-contact`. Populate only verified
+  public business contacts; never guess email patterns; put general agency
+  contact details in the note body (`update`), not as the person's details.
 - Keep application `company` as the actual employer, never the agency. For an
   undisclosed client leave `company` blank, explain in the title/body, and use
   the agency slug in place of the company in the application slug.
 
 ## Step 5 — Create the linked records
 
-Use lowercase hyphenated slugs. Application folder and note:
-`JobSearch/Applications/<application-slug>/<application-slug>.md` with slug
-`YYYY-MM-company-position` (known opportunity month, otherwise the import
-month; agency slug for undisclosed clients). Resolve filesystem paths against the
-public project root; wikilinks are relative to the private vault root; do not search for the folder.
+Application slug: `YYYY-MM-company-position` (known opportunity month,
+otherwise the import month; agency slug for undisclosed clients).
 
 Keep the slug short and recognisable: use the established company slug (or a
 short, unambiguous agency name if the employer is undisclosed), then two to
@@ -163,38 +165,43 @@ in the application property, not in the filename. Reuse existing slugs on
 reruns; if two opportunities would collide, add a short distinguishing term
 or verified requisition ID rather than overwriting either.
 
-- **Company** (when an employer is identified): `Templates/Company.md` →
-  `JobSearch/Companies/<company-slug>.md`. Populate company name, website,
-  location, sourced products/technology facts and `last_reviewed` (today,
-  `DD-MM-YYYY`); link the application under **Applications**; reuse an existing
-  company note and preserve personal notes.
-- **Application**: `Templates/Application.md` → the path above. Populate:
-  `company` (quoted wikilink, blank for undisclosed clients), exact advert
-  position title, `status: researching`, `priority: medium`, `fit` (step 7),
-  `location`, `source` (platform; blank if unknown), `publisher_type`,
-  `recruiter` (wikilink or blank), `advert_url`, `date_found` (today, or the
-  user-provided discovery date), `date_applied` blank, `next_action: Send
-  Application`, `next_action_date` blank unless a real date is known,
-  `notion_id` blank. Leave unknown properties blank.
-- **Research note**: `Templates/Research.md` →
-  `Activities/<application-filename>-research.md` inside the application
-  folder. Set `date` (today), `advert_url`, `advert_captured` (only when the
-  full original is actually saved), and `application` as a quoted wikilink to
-  the exact application note. This note is the import's research activity; do
-  not create a duplicate activity for the same import.
-- Resolve every `{{title}}` and date placeholder yourself, including the
-  Dataview `FROM "Applications/{{title}}/Activities"` path. Keep
-  **Activity** immediately below the YAML; keep YAML valid; quote wikilinks;
-  use `documents: []` when empty; never leave `{{...}}` in a written file.
-  Cross-check: company **Applications** list ↔ application `company`; the
-  application **Job advert** link ↔ the research note.
+Write a JSON spec to `JobSearch/Outputs/safe/<slug>/notes/records.json` and run
+`tools/py CV/Scripts/jobflow.py records <that file>`:
+
+```json
+{"capture": "latest", "slug": "2026-11-company-role",
+ "position": "Exact advert position title",
+ "location": "Town, hybrid", "source": "LinkedIn", "publisher_type": "recruiter",
+ "advert_url": "", "date_found": "",
+ "company": {"slug": "company", "name": "Company GmbH", "website": "", "location": ""},
+ "recruiter": {"agency": "Agency", "agency_slug": "agency", "name": "@@PERSON_04@@",
+               "email": "@@EMAIL_05@@", "phone": "", "linkedin": "", "website": ""}}
+```
+
+Use `null` for an unknown employer (`company`) or a direct employer listing
+(`recruiter`); copy tokens exactly from the safe copy and leave unknown values
+empty. The script creates the application, research, company and recruiter
+notes from the canonical `Templates/`, resolves every placeholder and link
+(the recruiter's file name is derived locally from the restored name),
+archives the captured original verbatim under **Original job advert**, links
+the application from the company note and prints `created`, `exists` or
+`linked` per note. It sets `status: researching`, `priority: medium` and
+`next_action: Send Application`; set `fit` and other properties later with
+`update <slug> application --set fit=7`.
+
+Fill the notes' sections with `update`: write the section body to a file under
+`JobSearch/Outputs/safe/<slug>/notes/`, then run
+`tools/py CV/Scripts/jobflow.py update <slug> <application|research|company> --section "<Heading>" --from <file>`.
+It replaces that section, restores tokens and never rewrites the archived
+advert. Company facts (website, location, products) go into the company note
+the same way.
 
 If the user reports an earlier submission, apply the submission runbook in
 `PROCEDURES.md`; new-record defaults do not override reported history.
 
 ## Step 6 — Extract the requirements (research note)
 
-Under **Research notes**, first record provenance: capture date and method,
+Write these sections with `update <slug> research --section "Research notes"` (one file holding the whole section, `###` subsections included). Under **Research notes**, first record provenance: capture date and method,
 publisher evidence, posting title, location (flag variants), advert language,
 application route, and anything missing.
 
@@ -271,7 +278,7 @@ Derive the numeric fit from the table: strong evidence on Central requirements
 supports a high score; Central gaps cap it; an `incompatible` location verdict caps the score at 4
 unless the user has accepted relocation or an exception for this role; state the
 reasoning. Set the
-application's `fit` property to the integer for a new assessment; preserve an existing
+application's `fit` property to the integer for a new assessment (`update <slug> application --set fit=N`); preserve an existing
 score on simple reimport unless reassessment was requested. Leave it blank only when evidence
 is genuinely insufficient, and say why in the note. A score is a reasoned
 assessment: always state the key uncertainty. Do not deduct heavily for missing
@@ -303,7 +310,7 @@ workflow using `JobSearch/Knowledge/CV-positioning.md` and the role's
 actual mandate. Name the baseline and its template, and three to six targeted
   change points, each tied to a concrete advert requirement and supported by
   documented evidence. During research set `document_language` on the research
-  note to a lowercase ISO 639-1 code (for example `en` or `de`), and record the
+  note (`update <slug> research --set document_language=en`) to a lowercase ISO 639-1 code (for example `en` or `de`), and record the
   evidence in **Research notes**. Use the advert's main prose and explicit
   document instructions, not the employer's location. If genuinely ambiguous,
   leave it blank and flag before drafting. Do not defer this decision to rendering.
@@ -324,7 +331,7 @@ phone and email under the name. First-person natural prose applies when drafted.
 
 ## Step 9 — Application note summary
 
-Fill the application body from the analysis, grounded and concise:
+Fill the application body from the analysis with `update <slug> application --section ...`, grounded and concise:
 
 - **Assessment:** two to four sentences covering the mandate match, the 0–10 fit
   score, the Jev match score and confidence (Step 7), and the key uncertainty.
@@ -361,18 +368,13 @@ no memory update.
 
 ## Step 11 — Finish checklist and report
 
-Check before reporting: YAML parses; no unresolved placeholders; every new
-wikilink resolves to a real file; Dataview `FROM` paths match the real folders;
-the research note's `application` link and the application's `company`/
-`recruiter` links are exact; the application **Assessment** records the 0–10 fit
-and, when a check ran, the Jev match score and confidence; a repeat run would
-create no duplicates; no unrequested CV or cover-letter files were created;
-nothing was submitted or sent. Run
-`python3 tools/privacy_screen.py` on the outer-repository changes — any finding
-is a blocker: fix it by moving personal content into `JobSearch/`, genericising
-it or removing it, then re-run until clean. Run `git diff --check` in the outer
-repository and `git -C JobSearch diff --check` in the private repository; never
-commit or stage anything.
+`records` resolves templates, placeholders and links, so check only what you
+wrote: every `update` printed success; the application **Assessment** records
+the 0–10 fit and, when a check ran, the Jev match score and confidence; no
+unrequested CV or cover-letter files were created; nothing was submitted or
+sent. Run `python3 tools/privacy_screen.py` if the public repository changed
+(any finding is a blocker) and `git -C JobSearch diff --check`; never commit
+or stage anything.
 
 Standard report in chat, in this order:
 

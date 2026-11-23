@@ -8,8 +8,8 @@ happened without overwriting the history.
 
 ## Add a job with an assistant
 
-> Use .kilo/skills/create-application/SKILL.md to add this opportunity: [paste the
-> job URL or advert text]. Check for duplicates, assess it against my knowledge
+> Use .kilo/skills/create-application/SKILL.md to add this opportunity: [job URL,
+> or "the advert is on my clipboard"]. Check for duplicates, assess it against my knowledge
 > base, and propose CV positioning and a cover-letter approach. Do not create
 > document drafts or submit anything yet.
 
@@ -57,7 +57,14 @@ on the anonymous analysis and job description. It shows Jev's match score and
 confidence alongside the existing assessment and links the report from research
 notes. Missing setup or a failed call is shown as unavailable, never as a score.
 
-If the listing cannot be fetched, paste the advert text. A link-only import may
+For advert or email text, copy it to the clipboard instead of pasting it into
+chat. The assistant runs `tools/py CV/Scripts/jobflow.py capture --clipboard`,
+which keeps the original verbatim in a private inbox, adds the contacts and
+email-header names it finds to your redaction policy and gives the model only
+a redacted copy; the original is archived in the research note unchanged. If
+the redacted copy still shows someone's name, the assistant asks you to run
+`tools/py CV/Scripts/jobflow.py add-name` in your own terminal and type the
+name there. If the listing cannot be fetched, capture its text the same way. A link-only import may
 save a labelled summary rather than a complete original because access or
 reproduction rights are limited. `advert_captured` is filled only when the full
 original is actually saved. Keep later research separate from the original wording.

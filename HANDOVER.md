@@ -8,6 +8,32 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Local advert capture and workflow commands — 2026-11-23
+
+New `CV/Scripts/jobflow.py` (tests: `test_jobflow.py`) replaces hand-run tool
+sequences. `capture --clipboard|--file` keeps an advert or email verbatim in
+`JobSearch/Outputs/inbox/<id>/`, auto-adds emails, phones, LinkedIn profiles
+and email-header display names (plus a surname that only occurs as a whole
+word) to the policy with labels, and writes the safe copy; `add-name` adds a
+name typed in the user's terminal. `records <spec.json>` creates the linked
+notes from the canonical templates (no-op on rerun, refuses a duplicate advert
+URL, derives the recruiter file name locally from the restored name) and
+archives the original between `advert:start`/`advert:end` markers. `update`
+replaces or appends a note section and sets fields, restoring tokens.
+`bundle`/`restore` handle drafting, with a hash guard against overwriting
+user edits. `render` runs the CV fold, ODT, PDF and layout comparison with the
+unchanged baseline, and the letter hydration, ODT and one-page export with the
+single compact retry; it stops with a reason on dropped units, unconfirmed
+fallbacks, existing PDFs, layout differences or overflow.
+
+Validation: unit tests pass with `JobSearch/` absent. A local render smoke test
+on a throwaway application rendered real approved drafts (VP-CTO layout matched
+the baseline; a draft with dropped units and one with a changed page count
+stopped as intended) and an English letter at one page. Not yet measured: the
+call and cost saving in a real Kilo session. Open: names in free prose still
+need `add-name`; link-only imports still fetch the public page through the
+model.
+
 ## Stable redaction tokens — 2026-11-23
 
 `redact_md.py` now uses stable, readable tokens (`@@EMPLOYER_03@@`, `@@ID_07@@`)

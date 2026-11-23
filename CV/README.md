@@ -54,7 +54,7 @@ claims; the knowledge base informs drafting and is not inserted automatically.
 | `Knowledge` | *Moved* — the personal knowledge base lives in the private repository at `JobSearch/Knowledge/` (curated profile, career evidence, role preferences and source snapshots) |
 | `Templates` | Matching CV document templates and the cover-letter template/Markdown starter |
 | `Rendered` | Non-personal documentation only; personal recreations belong in `JobSearch/Outputs/Baselines/` |
-| `Scripts` | Extraction, rendering, alignment, layout and PDF comparison tools |
+| `Scripts` | Extraction, rendering, alignment, layout and PDF comparison tools; `jobflow.py` chains them into the workflow steps (capture, records, bundle, restore, render) |
 | `Validation` | Non-personal documentation only; personal validation belongs in `JobSearch/Outputs/Baselines/` |
 
 After initial extraction from a supplied source document, rendering needs only

@@ -309,11 +309,14 @@ original adverts, PDFs/ODTs, private Git diffs or tool outputs containing raw
 identifiers. First create checked, reversible redacted Markdown locally and
 read only that safe copy; local scripts must return generic status, not raw
 contacts or file paths. User-pasted identifiers have already crossed the model
-boundary and cannot be repaired by a repository script. If a task requires
+boundary and cannot be repaired by a repository script, so adverts and emails
+are captured from the clipboard with `CV/Scripts/jobflow.py capture`, never
+pasted into chat. If a task requires
 raw values not handled by local tools, flag the blocker rather than sending
 them to a remote model. A Git boundary is not a model-output filter.
-For remote document drafting, first use `CV/Scripts/redact_md.py` to prepare
-reversible tagged Markdown locally; read and send only the checked safe copy.
+For remote document drafting, first prepare reversible tagged Markdown locally
+(`CV/Scripts/jobflow.py bundle`, or `redact_md.py prepare` for a single file);
+read and send only the checked safe copy.
 Redact the candidate's name and contacts, past employers, other people's names
 and contacts, and other explicit identifiers in every document and context sent;
 the target employer named in an advert is public and may stay visible. The user accepts residual

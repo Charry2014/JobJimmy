@@ -37,6 +37,10 @@ local safety scanner; a pass is not proof of anonymity and does not authorise
 remote use. Never read private identity JSON, document binaries or private Git
 diffs into the model. A user message already containing identifiers cannot be
 redacted here; report that limitation rather than claiming an automatic boundary.
+Never ask the user to paste an advert or email into chat: ask them to copy it
+to the clipboard and run `tools/py CV/Scripts/jobflow.py capture --clipboard`.
+Routine steps (records, note sections, safe bundles, draft restore, rendering)
+are `jobflow.py` commands; use them instead of hand-written tool sequences.
 
 This project has no in-tree Python virtual environment, overriding the global
 "create a venv if it does not exist" rule. Never run `uv venv`, `uv sync`,
