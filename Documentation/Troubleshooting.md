@@ -8,6 +8,7 @@
 | Dashboard is empty | Open `JobSearch/` as the vault; check notes are under `Applications/` with `type: application`; closed statuses are hidden by default |
 | An activity is absent | Check `type: activity`, the exact `application` wikilink, its Activities folder, and unresolved `{{title}}` text in the application's query |
 | An application appears under the wrong recruiter | Fix the application `recruiter` link; a recruiter agency is not automatically the employer |
+| Kilo reports "File not found" for a path containing `[PERSON_NAME]` (or `[EMAIL]`, `[PHONE]`) | The OpenRouter sensitive-information guardrail redacted your account name inside the absolute workspace path, so the model asked for a path that does not exist. The files are there. `.kilo/rules/project.md` tells agents to use project-relative paths; if it still happens, ask the assistant to retry with the relative path, for example `PROCEDURES.md` |
 | The assistant cannot find the skill | Ask it to read `.kilo/skills/create-application/SKILL.md` explicitly; `.kilo/` does not require a specific runtime |
 | Fit analysis is provisional | Seed the knowledge base; missing evidence or baselines should not be invented |
 | “Generated artifacts must not be written into the public project” | Put personal output under `JobSearch/`; do not write documents to the project root or public `CV/` folders |
