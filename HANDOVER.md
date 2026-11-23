@@ -8,6 +8,24 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Headless LibreOffice fonts on macOS — 2026-11-23
+
+On a fresh Mac with LibreOffice 26.8, headless `soffice` resolved fonts only
+from LibreOffice's bundled set: every system and user font fell back, and the
+reference CV baseline grew from 3 to 5 pages. New `CV/Scripts/office.py`
+(with the `tools/soffice` wrapper) finds LibreOffice and sets `FONTCONFIG_FILE`
+to a generated configuration listing the macOS font folders, Calibri/Cambria
+substitutes and an absolute include of the private
+`JobSearch/Templates/fonts.conf`. `populate_cv.py --pdf` and
+`cover_letter.py export-pdf` use it; the docs and the tailor-cv skill now call
+`tools/soffice`. Fonts must still be installed in the version the baselines
+used. Relative fontconfig includes do not work with the bundled library.
+
+Validation: both unit suites pass with new `test_office.py`; a re-rendered
+baseline matched the stored baseline PDF (same pages, text per page and
+fonts, word positions within 2 pt); a synthetic letter exported to one page.
+Not done: `check_env.py` does not yet report missing template fonts.
+
 ## Combined rendering completion — 2026-10-09
 
 Closed an instruction gap between the independent CV and letter skills: a

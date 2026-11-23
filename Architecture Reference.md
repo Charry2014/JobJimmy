@@ -19,9 +19,20 @@ Contents: [[#Purpose]] · [[#How it works]] · [[#Interfaces to other projects]]
 
 <!-- Every project, service or tool this one calls or is called by: what crosses each boundary and in which direction. -->
 
+- **LibreOffice (`soffice`)**, called headless to export rendered ODTs to PDF.
+  ODT paths go in, PDFs come out. Every call goes through
+  `CV/Scripts/office.py` (directly or via the `tools/soffice` wrapper), which
+  sets `FONTCONFIG_FILE` on macOS so headless LibreOffice sees installed fonts
+  and the private substitutions in `JobSearch/Templates/fonts.conf`.
+
 ## Key components
 
 <!-- The main modules, processes or services: each one's responsibility and where it lives in the code. -->
+
+- **PDF export layer**: `CV/Scripts/office.py` finds LibreOffice and builds
+  the font environment; `tools/soffice` is its command-line form. It is used by
+  `populate_cv.py --pdf`, `cover_letter.py export-pdf` and the documented CV
+  export command.
 
 ## Internal interfaces
 

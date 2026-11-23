@@ -18,6 +18,7 @@
 | Missing tokens or bookmarks | A personal-master template was changed structurally; compare it with the supplied blank template |
 | A CV paragraph disappeared or old text returned | Review the alignment report's dropped source and baseline fallback entries before accepting a render |
 | A document has too many pages | Inspect it in Writer; review wording and layout. Do not silently shorten accepted text or shrink fonts indiscriminately |
+| PDF has extra pages or the wrong font on a new Mac | Export with `tools/soffice`, not plain `soffice`; install the template fonts in `~/Library/Fonts`; check the embedded fonts against the reference baseline PDF. See the fonts note in [Dependencies](Dependencies.md) |
 | `soffice` not found | Open the ODT in Writer and export manually, or configure the executable on PATH; see platform notes in the documents guide |
 | `.venv` missing or `test -d .venv` fails | Expected: this project has no venv. Run Python with `tools/py` or `uv run --no-project`; see [Getting started](Getting-Started.md) |
 | Deep privacy audit flags `.venv` | Remove the stray `.venv`; never create one here. Run Python with `tools/py`/`uv run --no-project`; ignored third-party files and interpreter symlinks are still scanned |

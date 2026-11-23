@@ -150,10 +150,12 @@ ordinary document reads.
    This pipeline does not use `align_md.py` or extracted `cv:pNNN` blocks.
    Never populate directly from the public blank `.ott`.
 7. **Export and check.** For extracted CVs, export the ODT to the *same* private
-   CV folder with `soffice --headless --convert-to pdf --outdir
+   CV folder with `tools/soffice --headless --convert-to pdf --outdir
    JobSearch/Applications/<application-slug>/CV
-   JobSearch/Applications/<application-slug>/CV/<slug>-cv.odt` (on macOS use
-   `/Applications/LibreOffice.app/Contents/MacOS/soffice` if not on PATH).
+   JobSearch/Applications/<application-slug>/CV/<slug>-cv.odt` from the root.
+   Never call `soffice` directly: on macOS headless LibreOffice then misses
+   installed fonts and the page breaks change. The PDF must embed the
+   template's fonts; a substitute font is a failed export, not a layout issue.
    Keep Markdown, ODT and PDF. Inspect page count, text, contact details and
    every page visually using only a permitted local route. If available, use
    `check_layout.py --config JobSearch/Templates/<baseline>-layout-pages.json`

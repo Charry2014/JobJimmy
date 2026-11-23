@@ -128,7 +128,7 @@ class IdentityTests(unittest.TestCase):
                 b'%PDF-1.4\n1 0 obj <</Type /Page>>\n2 0 obj <</Type /Page>>\n')
             return type('Result', (), {'returncode': 0})()
 
-        with patch.object(cl.shutil, 'which', return_value='/usr/bin/true'), patch.object(cl.subprocess, 'run', side_effect=convert):
+        with patch.object(cl, 'find_soffice', return_value='/usr/bin/true'), patch.object(cl.subprocess, 'run', side_effect=convert):
             with self.assertRaisesRegex(ValueError, '2 pages'):
                 cl.export_pdf(odt, final)
         self.assertFalse(final.exists())
@@ -143,6 +143,6 @@ class IdentityTests(unittest.TestCase):
                 b'%PDF-1.4\n1 0 obj <</Type /Page>>\n')
             return type('Result', (), {'returncode': 0})()
 
-        with patch.object(cl.shutil, 'which', return_value='/usr/bin/true'), patch.object(cl.subprocess, 'run', side_effect=convert):
+        with patch.object(cl, 'find_soffice', return_value='/usr/bin/true'), patch.object(cl.subprocess, 'run', side_effect=convert):
             self.assertEqual(cl.export_pdf(odt, final), 1)
         self.assertTrue(final.exists())
