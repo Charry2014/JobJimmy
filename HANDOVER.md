@@ -8,6 +8,18 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Writer model chosen by blind comparison — 2026-11-25
+
+`prose_compare.py` ran one cover letter on four models (effort high). The user
+read the drafts blind and preferred Gemini 4 Argon ($0.18), then Gemini 3.8
+Flash ($0.07), with Claude Opus 5.5 ($0.25) last: a fine text, but it presumed
+to know what is at the centre of the role. Gemini 4 Carbon ($0.41) was not
+placed; with 16,000 tokens it spent everything on thinking and returned
+nothing, so the default `PROSE_COMPARE_MAX_TOKENS` is now 40,000. The user found
+all four within a whisker of each other. `writer.md` now uses
+`openrouter/google/gemini-4-argon` for letters and CVs. Open: repeat on a CV.
+Table in `Documentation/Agent-Reference/Documents.md` (Comparing drafting models).
+
 ## Writer subagent and tailoring check — 2026-11-25
 
 Problem seen in a Haiku session: letter prose came out dry, and the CV "tailoring"

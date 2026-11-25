@@ -61,8 +61,8 @@ Contents: [[#Purpose]] · [[#How it works]] · [[#Interfaces to other projects]]
 - **Agents**: Kilo Code runs the session on a fixed, inexpensive model
   (`kilo.jsonc`, Claude Haiku 5.5), which follows the skills in
   `.kilo/skills/` and runs the `jobflow.py` steps. The **Writer**
-  (`.kilo/agents/writer.md`, `mode: subagent`, Claude Opus 5.5 through
-  OpenRouter) is a Kilo subagent whose objective is natural, evidence-backed
+  (`.kilo/agents/writer.md`, `mode: subagent`, Gemini 4 Argon through
+  OpenRouter, chosen by a blind comparison) is a Kilo subagent whose objective is natural, evidence-backed
   document text: it drafts one cover letter's prose or one CV tailoring per
   call from the safe bundle, writes the draft (and for a CV a tailoring change
   list, `<prefix>-cv-tailoring.md`) into the bundle's `out/` folder, and

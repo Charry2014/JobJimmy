@@ -4,7 +4,7 @@ description: Drafts cover-letter prose or CV tailoring from a checked safe
   Use for the drafting step of write-cover-letter and tailor-cv, one document
   per call.
 mode: subagent
-model: openrouter/anthropic/claude-opus-5.5
+model: openrouter/google/gemini-4-argon
 permission:
   read:
     "*": deny

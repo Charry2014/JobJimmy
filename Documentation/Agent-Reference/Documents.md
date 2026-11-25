@@ -182,7 +182,7 @@ file tools). List the models in `.env` and run it on a safe bundle:
 
 ```sh
 # .env
-PROSE_COMPARE_MODELS=anthropic/claude-opus-5.5, google/gemini-4-argon, google/gemini-4-carbon
+PROSE_COMPARE_MODELS=anthropic/claude-opus-5.5, google/gemini-4-argon, google/gemini-4-carbon, google/gemini-3.8-flash
 PROSE_COMPARE_EFFORT=high   # optional
 
 tools/py CV/Scripts/jobflow.py bundle <slug> --baseline Manager
@@ -197,8 +197,23 @@ blind (`A.md`, `B.md`, ...) to `JobSearch/Outputs/model-compare/<time>/` with
 `REVIEW.md`; read them and note a verdict before opening `key.json`, which
 names the models with their tokens, cost and time. The console prints figures
 only, so an agent can run it without the drafts entering its context. A letter
-run is about 30,000 input tokens per model (roughly $0.15 on Opus 5.5). To
-adopt the winner, change the `model` line in `.kilo/agents/writer.md`.
+run is about 30,000 input tokens per model. `PROSE_COMPARE_MAX_TOKENS`
+(default 40,000) covers thinking as well as the reply: a long-thinking model
+given 16,000 spent it all on thinking and returned nothing. To adopt the
+winner, change the `model` line in `.kilo/agents/writer.md`.
+
+First comparison (2026-11-25, one cover letter, effort high), ranked blind by
+the user. All four were close; the ranking decided the choice:
+
+| Rank | Model | Cost per letter | Time | User's note |
+| --- | --- | --- | --- | --- |
+| 1 | `google/gemini-4-argon` | $0.18 | 3 min | Preferred; now the writer's model for letters and CVs |
+| 2 | `google/gemini-3.8-flash` | $0.07 | 3.5 min | Cheapest; close behind |
+| unranked | `google/gemini-4-carbon` | $0.41 | 7.6 min | Not placed by the user; needed a 40,000-token budget, first try failed after $0.22 |
+| last | `anthropic/claude-opus-5.5` | $0.25 | 40 s | Fine text but presumptuous: claimed to know what is at the centre of the role, which the advert only suggests |
+
+One letter is a small sample; repeat the comparison on a CV before treating
+the choice as settled.
 
 ## CV tuning and document rendering
 

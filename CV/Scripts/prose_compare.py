@@ -21,7 +21,7 @@ already set in the shell wins):
     OPENROUTER_API_KEY=...
     PROSE_COMPARE_MODELS=anthropic/claude-opus-5.5, google/gemini-4-argon
     PROSE_COMPARE_EFFORT=high          # optional: low|medium|high|xhigh
-    PROSE_COMPARE_MAX_TOKENS=16000     # optional
+    PROSE_COMPARE_MAX_TOKENS=40000     # optional
 
 Every request asks OpenRouter for zero-data-retention endpoints with data
 collection denied; a model without such a route fails with an HTTP error
@@ -225,7 +225,7 @@ def ssl_context():
     return ssl.create_default_context(cafile=certifi.where()) if certifi else ssl.create_default_context()
 
 
-def send(model, messages, key, max_tokens=16000, effort=None, timeout=600):
+def send(model, messages, key, max_tokens=40000, effort=None, timeout=600):
     payload = {
         "model": model,
         "messages": messages,
@@ -312,7 +312,7 @@ def default_out_dir(now=None):
     return DEFAULT_OUT / (now or datetime.now()).strftime("%Y%m%d-%H%M%S")
 
 
-def run(models, messages, task, key, out_dir, max_tokens=16000, effort=None, workers=4,
+def run(models, messages, task, key, out_dir, max_tokens=40000, effort=None, workers=4,
         sender=send, seed=None, echo=print):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=False)
@@ -425,7 +425,7 @@ def main(argv=None):
         effort = args.effort or environ.get("PROSE_COMPARE_EFFORT") or None
         if effort and effort not in EFFORTS:
             raise ValueError(f"PROSE_COMPARE_EFFORT must be one of {', '.join(EFFORTS)}.")
-        max_tokens = args.max_tokens or int(environ.get("PROSE_COMPARE_MAX_TOKENS") or 16000)
+        max_tokens = args.max_tokens or int(environ.get("PROSE_COMPARE_MAX_TOKENS") or 40000)
 
         source = check_location(args.input)
         files = input_files(source, args.task, args.baseline)
