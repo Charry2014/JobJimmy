@@ -130,7 +130,14 @@ Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
 commands in this section are the manual equivalent and the detail behind it.
 
 Use `.kilo/skills/write-cover-letter/SKILL.md` for the ordered workflow and
-`CV/Templates/Cover-Letter.md` as the plain Markdown starter. No personal
+`CV/Templates/Cover-Letter.md` as the plain Markdown starter. The session
+agent bundles, then hands the prose to the `writer` subagent
+(`.kilo/agents/writer.md`, a stronger drafting model limited to the safe
+bundle), then restores and renders itself; letter and CV are drafted in
+separate calls. Before any drafting or wording review, the bundled
+`knowledge/Writing-guide.md` and `knowledge/Reasoning-profile.md` are read in
+full, not by section: they carry the candidate's voice, and a letter written
+without them reads dry and generic. No personal
 cover-letter ODT is in the public distribution; it exists only under
 `JobSearch/Templates/` in the attached private vault (gitignored, so ignore-aware
 tools report nothing there — locate it with `ls`/`find` or the exact path). This
@@ -247,6 +254,22 @@ substantial source detail to create a new role-specific narrative. Retaining blo
 IDs, headings and chronology alone does not establish fidelity to the template.
 A request to tailor or draft a CV does not authorise substantial or significant
 rewrites; those require an explicit user request for that broader scope.
+
+**An unchanged baseline is not a tailored CV.** Within that boundary, tailoring
+is an explicit step, done by the `writer` subagent after it has read
+`CV/Style-guide.md` and the bundled voice guides in full: list the advert's key
+requirements; map each to the baseline bullets and evidence that support it;
+then make the targeted edits the rules allow (reorder bullets within a section
+to foreground the relevant ones, adjust profile and expertise phrasing and
+keywords where the evidence supports them, add a short supported detail). The
+change list (requirement → change, or the reason for no change, or a gap)
+goes to the bundle's `out/<prefix>-cv-tailoring.md`, never into the CV, and is
+presented with the draft. `jobflow.py restore` compares the source CV draft
+with the bundled baseline and prints counts only (content blocks changed,
+bullets moved, baseline blocks removed); with fewer than three changed blocks
+plus moved bullets it warns that the draft is near-identical, and the draft
+goes back for tailoring unless the user explicitly keeps the baseline.
+`render --cv` repeats the comparison as a warning line.
 
 Apply required tense/voice corrections minimally, preserving the original meaning
 and sentence structure wherever possible. Translation must faithfully carry the

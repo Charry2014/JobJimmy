@@ -19,7 +19,12 @@ only when the user asks for a change to the JobJimmy engine itself (scripts,
 templates, skills or documentation). This project's `AGENTS.md`,
 `PROCEDURES.md` and the skills govern the work. Keep context small: read the
 sections you need rather than whole long files, and do not re-read a file you
-have already read in this session.
+have already read in this session. **Exception: the voice and style guides**
+(the bundled `knowledge/Writing-guide.md` and `knowledge/Reasoning-profile.md`,
+and `CV/Style-guide.md` for CVs) are read in full before any drafting or
+wording review; skipping them produces flat, generic documents. Drafting itself
+goes to the `writer` subagent (`.kilo/agents/writer.md`), one document per
+call, as the `tailor-cv` and `write-cover-letter` skills describe.
 
 **Use project-relative paths with every file tool** (`PROCEDURES.md`,
 `.kilo/skills/create-application/SKILL.md`, `JobSearch/Templates/...`), never

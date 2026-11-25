@@ -45,12 +45,31 @@ Contents: [[#Purpose]] · [[#How it works]] · [[#Interfaces to other projects]]
   original between `advert:start`/`advert:end` markers; `update` replaces a
   note section or front-matter field from a safe file. `bundle` writes checked
   safe copies of notes, knowledge articles, baselines and drafts to
-  `JobSearch/Outputs/safe/<slug>/`, and `restore` brings the model's drafts
-  back from its `out/` folder, refusing drafts the user changed since the
-  bundle. `render` chains `align_md.py`, `cv.py`, the PDF export and
+  `JobSearch/Outputs/safe/<slug>/` (always including the voice guides
+  `Writing-guide.md` and `Reasoning-profile.md`, and recording the baseline
+  names), and `restore` brings the model's drafts back from its `out/` folder,
+  refusing drafts the user changed since the bundle. For a source CV draft,
+  `restore` runs the **tailoring check**: it compares the safe draft with the
+  bundled safe baseline (front matter, block markers and the employer-header
+  split ignored) and prints counts only (content blocks changed, bullets
+  moved, baseline blocks removed), with a warning when changed blocks plus
+  moved bullets are fewer than three. `render --cv` repeats the check against
+  the private baseline as a warning line. `render` chains `align_md.py`, `cv.py`, the PDF export and
   `check_layout.py` (compared with the unchanged baseline's PDF in
   `JobSearch/Outputs/Baselines/`) for the CV, and hydration, rendering and the
   one-page export of `cover_letter.py` for the letter.
+- **Agents**: Kilo Code runs the session on a fixed, inexpensive model
+  (`kilo.jsonc`, Claude Haiku 5.5), which follows the skills in
+  `.kilo/skills/` and runs the `jobflow.py` steps. The **Writer**
+  (`.kilo/agents/writer.md`, `mode: subagent`, Claude Opus 5.5 through
+  OpenRouter) is a Kilo subagent whose objective is natural, evidence-backed
+  document text: it drafts one cover letter's prose or one CV tailoring per
+  call from the safe bundle, writes the draft (and for a CV a tailoring change
+  list, `<prefix>-cv-tailoring.md`) into the bundle's `out/` folder, and
+  reports counts and gaps. Its permissions allow reading only the safe bundle
+  and the public style guide and letter starter, writing only into `out/`, and
+  deny shell, web and further delegation. It never sees the token registry or
+  restored text; the session agent restores, checks and renders.
 - **PDF export layer**: `CV/Scripts/office.py` finds LibreOffice and builds
   the font environment; `tools/soffice` is its command-line form. It is used by
   `populate_cv.py --pdf`, `cover_letter.py export-pdf` and the documented CV
@@ -72,6 +91,8 @@ application, research (with the verbatim original), company and recruiter
 notes in `JobSearch/`.
 
 **Drafting.** Notes, knowledge articles, baseline and drafts → `jobflow.py
-bundle` → `JobSearch/Outputs/safe/<slug>/` (safe copies) → the model → its
-drafts in `out/` → `jobflow.py restore` → `JobSearch/Applications/<slug>/CV/`.
+bundle` → `JobSearch/Outputs/safe/<slug>/` (safe copies) → the Writer
+subagent → its drafts (and CV tailoring notes) in `out/` → `jobflow.py
+restore` (plus the tailoring counts for a CV) →
+`JobSearch/Applications/<slug>/CV/`. The tailoring notes stay in `out/`.
 Approved drafts → `jobflow.py render` → ODT and PDF beside them.

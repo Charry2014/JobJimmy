@@ -24,8 +24,9 @@ remote model. Run `tools/py CV/Scripts/jobflow.py bundle <slug>` and read only
 the checked safe copies it prints (advert, notes, company research, knowledge
 articles and the current drafts with the user's latest edits). Tokens such as
 `@@EMPLOYER_03@@` are stable across all safe copies: copy them exactly, combine
-them freely and never invent one. Write the prose to the bundle's `out/` folder
-under its `CV/` file name and run `tools/py CV/Scripts/jobflow.py restore
+them freely and never invent one. Delegate the writing to the `writer`
+subagent (step 2), which writes the prose to the bundle's `out/` folder under
+its `CV/` file name; then run `tools/py CV/Scripts/jobflow.py restore
 <slug>`; restore refuses a draft the user changed since the bundle (bundle
 again and revise their version). Follow
 `PRIVACY.md#remote-drafting-reversible-markdown-tags`; the user accepts residual
@@ -44,10 +45,26 @@ for syntax and failure modes.
    advert and explicit application instructions, record the code and evidence
    there, then proceed. Clarify only genuinely conflicting instructions.
    Consult only checked redacted copies of relevant researched company facts and evidence from
-   `JobSearch/Knowledge/Overview.md`, `Evidence-and-sources.md`,
-   `Writing-guide.md` and relevant experience. Unknown recipient details
-   remain generic; do not invent names, dates, achievements or contact details.
-2. **Save the draft as an editable Markdown file.** Every drafting or revision
+   `JobSearch/Knowledge/Overview.md`, `Evidence-and-sources.md` and relevant
+   experience. Read the bundled voice guides `knowledge/Writing-guide.md` and
+   `knowledge/Reasoning-profile.md` **in full**, not by section, before any
+   drafting or review of wording; `bundle` always includes them and reports
+   `MISSING` when one does not exist. Do not draft without them. Unknown
+   recipient details remain generic; do not invent names, dates, achievements
+   or contact details.
+2. **Write the prose through the `writer` subagent, one document per call.**
+   Do not write the letter prose yourself, and never draft the letter and the
+   CV in the same step. Call the `writer` subagent (`.kilo/agents/writer.md`, a
+   stronger drafting model that reads only the safe bundle) with: the bundle
+   folder as a project-relative path, `letter`, the exact output file name
+   (below), the drafting language and the user's revision notes. It reads the
+   voice guides in full and writes natural, warm, first-person prose that
+   connects the advert's central requirements to concrete evidence, following
+   the format rules below. Then run `restore` and read the restored draft only
+   through a new bundle. If the `writer` subagent is unavailable, say so and
+   write the prose yourself under the same rules, after reading the guides in
+   full.
+3. **Save the draft as an editable Markdown file.** Every drafting or revision
    request must restore the actual `.md` file into
    `JobSearch/Applications/<application-slug>/CV/` (`jobflow.py restore`) before presenting it for
    review; a chat-only draft is not complete. The user edits this file in
@@ -71,13 +88,13 @@ for syntax and failure modes.
     those placeholders before prose review. They remain until local identity
     insertion. Use one line each
    for date, subject, salutation and closing, and set a deliberate date.
-3. **Review prose first.** For German applications, work through English evidence
+4. **Review prose first.** For German applications, work through English evidence
    and wording review rounds with user feedback until agreed for translation.
    If both documents were requested, finish both English reviews first. Translate
    the agreed prose to `<slug>-cover-letter-prose-de.md` under the redaction
    workflow, keeping the eight English field headings and local identity
    placeholders. Review German against English and obtain German wording approval
-   or an explicit render request before step 4 (rendering). Subsequent commands use generic
+   or an explicit render request before step 5 (rendering). Subsequent commands use generic
    filenames: hydrate/render the approved German prose for `de`, retaining the
    English source. `translate.py` does not accept cover letters.
    At English review and again at final German review (or final review for other
@@ -91,7 +108,7 @@ for syntax and failure modes.
    recipient, language, signature plan and length with the user. Do not render
    for every revision. Update the existing draft in place rather than
    reinitialising it or keeping revision copies.
-4. **Render with checks.** Run
+5. **Render with checks.** Run
    `tools/py CV/Scripts/jobflow.py render <slug> --letter`. It reads
    `document_language` from the research note and uses only the validated pair
    for it (`letter-template-<lang>.odt` with `letter-anchors-<lang>.json`; the
@@ -112,7 +129,7 @@ for syntax and failure modes.
    the bottom-right linked LinkedIn icon; keep the Markdown and ODT. Never call
    `soffice` directly. If rendering or page counting cannot be verified,
    report it as blocked, not completed.
-5. **Record real documents.** For rendering requests, verify the current approved
+6. **Record real documents.** For rendering requests, verify the current approved
    letter's ODT and PDF both exist and passed the required checks. If rendering includes a CV,
    complete its rendering workflow too and account for all four outputs before
    reporting the combined task complete. Report any missing or blocked output

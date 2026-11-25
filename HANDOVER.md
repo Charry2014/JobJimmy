@@ -8,6 +8,37 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Writer subagent and tailoring check — 2026-11-25
+
+Problem seen in a Haiku session: letter prose came out dry, and the CV "tailoring"
+changed only the header format and two bullets by a few characters. The voice
+guides were bundled but never read, and nothing detected a no-op.
+
+- New Kilo subagent `.kilo/agents/writer.md` (`mode: subagent`,
+  `model: openrouter/anthropic/claude-opus-5.5`; syntax per
+  kilo.ai/docs/customize/custom-subagents and agent-permissions). It drafts one
+  document per call from the safe bundle; permissions allow reading only
+  `JobSearch/Outputs/safe/*`, `CV/Style-guide.md` and the letter starter,
+  writing only `JobSearch/Outputs/safe/*/out/*`, and deny bash, web, task and
+  skills. The session model in `kilo.jsonc` stays Haiku 5.5.
+- `tailor-cv` and `write-cover-letter` now delegate drafting to the writer,
+  require the voice guides (and `CV/Style-guide.md` for CVs) to be read in full,
+  and tailor-cv has an explicit requirements → evidence → targeted edits step
+  with a change list in `out/<prefix>-cv-tailoring.md`. `.kilo/rules/project.md`
+  exempts the guides from "read the sections you need".
+- `jobflow.py bundle` always adds `Writing-guide.md` and `Reasoning-profile.md`
+  (reports `MISSING` if absent) and records the baseline names in
+  `out/.bundle.json`. `restore` compares a source CV draft with the bundled
+  safe baseline and prints counts (blocks changed, bullets moved, blocks
+  removed), with `WARNING` below three changed blocks plus moved bullets;
+  `render --cv` repeats it as a warning line. Tests: `TailoringCheckTests`,
+  `RestoreTailoringTests` in `CV/Scripts/test_jobflow.py`.
+
+Validation: unit suites and the privacy screen pass with `JobSearch/` absent.
+Not yet verified: Kilo loading `writer.md` (no kilo CLI on the build machine;
+check `@writer` in the agent list), the glob-scoped `read`/`edit` permissions in
+a real session, and letter and CV quality from the writer on a real application.
+
 ## Local advert capture and workflow commands — 2026-11-23
 
 New `CV/Scripts/jobflow.py` (tests: `test_jobflow.py`) replaces hand-run tool

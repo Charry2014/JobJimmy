@@ -6,9 +6,11 @@
   // A fixed model instead of the global openrouter/auto: the auto router
   // switches models mid-session (for example on upstream rate limits), and every
   // switch re-sends the whole uncached context. Claude Haiku 5.5 is eligible
-  // under the account's ZDR guardrail and caches prompts cheaply. Switch to
-  // openrouter/anthropic/claude-sonnet-5.5 for a session that needs stronger
-  // drafting; see Documentation/Getting-Started.md.
+  // under the account's ZDR guardrail and caches prompts cheaply. It runs the
+  // workflow (records, bundles, restore, render); the prose itself is written
+  // by the `writer` subagent in .kilo/agents/writer.md, which sets its own
+  // stronger model (openrouter/anthropic/claude-opus-5.5) for that step only.
+  // See Documentation/Getting-Started.md.
   "model": "openrouter/anthropic/claude-haiku-5.5",
   // The global Serena (code navigation) and memory (knowledge graph) MCP
   // servers serve software projects. JobJimmy job-search work uses neither, and

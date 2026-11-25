@@ -21,13 +21,17 @@ contacts, names, restored text) never appear in the output.
             (and optionally set front-matter fields) from a safe Markdown file
             written by the model, restoring its tokens locally.
   bundle    Write checked safe copies of everything a drafting session needs:
-            the advert, research and application notes, knowledge articles,
-            baselines and the current CV and letter drafts.
+            the advert, research and application notes, knowledge articles
+            (always including the voice guides), baselines and the current CV
+            and letter drafts.
   restore   Restore the model's drafts from the bundle's out/ folder into the
             application's CV/ folder, refusing a draft the user changed since
-            the bundle was made.
+            the bundle was made. A source CV draft is compared with the
+            bundled baseline: counts only, with a warning when the draft is
+            near-identical (an unchanged baseline is not a tailored CV).
   render    Fold, render and export the CV and/or the letter with every
-            mechanical check; stop with a reason on anything unexpected.
+            mechanical check; stop with a reason on anything unexpected. The
+            CV render repeats the tailoring comparison as a warning.
 
 Never pass the policy, token registry, inbox originals or restored documents
 to a remote model.
@@ -574,6 +578,85 @@ def update(vault, slug, which, section=None, content=None, fields=None, level=2,
 # --- bundle and restore ----------------------------------------------------
 
 DRAFT = re.compile(r".+-(?:cv-draft|cover-letter-prose)(?:-[a-z]{2})?\.md")
+# The English source CV draft; a translation differs from the baseline in every block.
+SOURCE_CV = re.compile(r".+-cv-draft(?:-en)?\.md")
+# Knowledge articles that set the candidate's voice; every bundle carries them.
+VOICE_GUIDES = ("Writing-guide", "Reasoning-profile")
+COMMENT = re.compile(r"<!--.*?-->", re.S)
+# Fewer changed blocks plus moved bullets than this is not a tailored CV.
+MIN_TAILORING_EDITS = 3
+
+
+# --- tailoring check ---------------------------------------------------------
+
+def cv_blocks(text):
+    """Content blocks of a CV as (kind, section, normalised text).
+
+    Front matter, block markers and comments are dropped, and headings only
+    name the section, so the baseline's tabbed employer heading and the
+    draft's `### Employer` / `Role | Dates` split compare as equal.
+    """
+    import align_md
+    if text.startswith("---\n") and "\n---\n" in text[4:]:
+        text = text[text.index("\n---\n", 4) + 5:]
+    section, blocks = "", []
+    for kind, value in align_md.parse_source(COMMENT.sub("", text)):
+        if kind.startswith("h"):
+            section = align_md.norm(value)
+            continue
+        for item in value if kind == "bullets" else [value]:
+            normalised = align_md.norm(item)
+            if normalised:
+                blocks.append(("bullet" if kind == "bullets" else "para", section, normalised))
+    return blocks
+
+
+def tailoring_counts(baseline_text, draft_text):
+    """Count how far a CV draft moved from its baseline; counts only, never text."""
+    import difflib
+    from collections import Counter
+    base, draft = cv_blocks(baseline_text), cv_blocks(draft_text)
+    unused = Counter(text for _, _, text in base)
+    changed = 0
+    for _, _, text in draft:
+        if unused[text]:
+            unused[text] -= 1
+        else:
+            changed += 1
+    sections = {}
+    for index, blocks in enumerate((base, draft)):
+        for kind, section, text in blocks:
+            if kind == "bullet":
+                sections.setdefault(section, ([], []))[index].append(text)
+    moved = 0
+    for base_bullets, draft_bullets in sections.values():
+        shared_base = [text for text in base_bullets if text in draft_bullets]
+        shared_draft = [text for text in draft_bullets if text in base_bullets]
+        matcher = difflib.SequenceMatcher(None, shared_base, shared_draft, autojunk=False)
+        moved += len(shared_draft) - sum(block.size for block in matcher.get_matching_blocks())
+    return {"blocks": len(draft), "changed": changed, "removed": sum(unused.values()), "moved": moved}
+
+
+def tailoring_report(counts, baseline):
+    """One status line and whether the draft is near-identical to its baseline."""
+    line = (f"{counts['changed']} of {counts['blocks']} content blocks changed, {counts['moved']} bullet(s) "
+            f"moved, {counts['removed']} baseline block(s) removed, compared with baseline {baseline}")
+    near = counts["changed"] + counts["moved"] < MIN_TAILORING_EDITS
+    if near:
+        line += ("; NEAR-IDENTICAL to the baseline: an unchanged baseline is not a tailored CV. Do the "
+                 "tailoring step (requirements, evidence, targeted edits) or get the user's explicit "
+                 "agreement to keep the baseline")
+    return line, near
+
+
+def best_tailoring(baselines, draft_text):
+    """Compare a draft with each (name, text) baseline and keep the closest one."""
+    best = None
+    for name, text in baselines:
+        counts = tailoring_counts(text, draft_text)
+        if best is None or counts["changed"] + counts["removed"] < best[1]["changed"] + best[1]["removed"]:
+            best = (name, counts)
+    return best
 
 
 def bundle(vault, slug, knowledge=None, baselines=()):
@@ -601,6 +684,9 @@ def bundle(vault, slug, knowledge=None, baselines=()):
         sources.append(("company.md", note_path(vault, slug, "company").read_text(encoding="utf-8")))
     except (ValueError, OSError):
         pass
+    if knowledge is not None:
+        knowledge = list(knowledge) + [name for name in VOICE_GUIDES if name not in knowledge
+                                       and (vault.knowledge / f"{name}.md").is_file()]
     articles = (sorted(vault.knowledge.glob("*.md")) if knowledge is None
                 else [vault.knowledge / f"{name}.md" for name in knowledge])
     for article in articles:
@@ -635,7 +721,12 @@ def bundle(vault, slug, knowledge=None, baselines=()):
             continue
         write_private(out / name, safe)
         results.append((name, "PASS", f"{replaced} replaced"))
-    write_private(out / "out" / ".bundle.json", json.dumps({"drafts": manifest}, indent=2) + "\n")
+    missing = [name for name in VOICE_GUIDES if not (out / "knowledge" / f"{name}.md").is_file()]
+    if missing:
+        results.append(("voice guides", "MISSING", ", ".join(f"knowledge/{name}.md" for name in missing)
+                        + " not in the bundle; drafting without them loses the candidate's voice"))
+    write_private(out / "out" / ".bundle.json",
+                  json.dumps({"drafts": manifest, "baselines": list(baselines)}, indent=2) + "\n")
     return out, results
 
 
@@ -645,7 +736,10 @@ def restore_drafts(vault, slug):
     manifest_path = out / ".bundle.json"
     if not manifest_path.is_file():
         raise ValueError("No bundle for this application; run bundle first.")
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))["drafts"]
+    state = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest, baselines = state["drafts"], state.get("baselines", [])
+    safe_baselines = [(name, (vault.safe / slug / "baseline" / f"{name}.md").read_text(encoding="utf-8"))
+                      for name in baselines if (vault.safe / slug / "baseline" / f"{name}.md").is_file()]
     registry = rm.load_registry(vault.registry)
     cv_dir = vault.app_dir(slug) / "CV"
     results = []
@@ -657,8 +751,9 @@ def restore_drafts(vault, slug):
         if target.exists() and manifest.get(response.name) != digest(target):
             results.append((response.name, "REFUSED", "the draft changed since the bundle; run bundle and revise again"))
             continue
+        safe_text = response.read_text(encoding="utf-8")
         try:
-            text = rm.restore(response.read_text(encoding="utf-8"), registry)
+            text = rm.restore(safe_text, registry)
         except ValueError as error:
             results.append((response.name, "REFUSED", str(error)))
             continue
@@ -666,7 +761,12 @@ def restore_drafts(vault, slug):
         manifest[response.name] = digest(target)
         response.unlink()
         results.append((response.name, "RESTORED", vault.rel(target)))
-    write_private(manifest_path, json.dumps({"drafts": manifest}, indent=2) + "\n")
+        if SOURCE_CV.fullmatch(response.name) and safe_baselines:
+            # Both sides are safe copies with the same stable tokens.
+            baseline, counts = best_tailoring(safe_baselines, safe_text)
+            line, near = tailoring_report(counts, baseline)
+            results.append((f"{response.name} tailoring", "WARNING" if near else "CHECK", line))
+    write_private(manifest_path, json.dumps({"drafts": manifest, "baselines": baselines}, indent=2) + "\n")
     return results
 
 
@@ -726,6 +826,11 @@ def render_cv(vault, slug, baseline, language, accept_fallbacks=False, replace=F
     lines = []
     if pdf.exists() and not replace:
         raise StepFailure(lines, "a final CV PDF exists; rerun with --replace once the user approves replacing it")
+    baseline_md = vault.private / "Templates" / f"{baseline}.md"
+    if SOURCE_CV.fullmatch(draft.name) and baseline_md.is_file():
+        line, near = tailoring_report(tailoring_counts(baseline_md.read_text(encoding="utf-8"),
+                                                       draft.read_text(encoding="utf-8")), baseline)
+        lines.append(("tailoring: WARNING " if near else "tailoring: ") + line)
     code, _ = run_script("align_md.py", draft, odt_template, blocks, "--report", report)
     if code:
         raise StepFailure(lines, "fold failed (align_md.py); check the draft's structure")
