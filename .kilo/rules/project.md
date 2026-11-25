@@ -24,7 +24,9 @@ have already read in this session. **Exception: the voice and style guides**
 and `CV/Style-guide.md` for CVs) are read in full before any drafting or
 wording review; skipping them produces flat, generic documents. Drafting itself
 goes to the `writer` subagent (`.kilo/agents/writer.md`), one document per
-call, as the `tailor-cv` and `write-cover-letter` skills describe.
+call, as the `tailor-cv` and `write-cover-letter` skills describe. The `writer`
+subagent itself is exempt from reading `AGENTS.md`, `PRIVACY.md` and the skills:
+its own brief and permissions confine it to the safe bundle.
 
 **Use project-relative paths with every file tool** (`PROCEDURES.md`,
 `.kilo/skills/create-application/SKILL.md`, `JobSearch/Templates/...`), never

@@ -33,6 +33,16 @@ guides were bundled but never read, and nothing detected a no-op.
   removed), with `WARNING` below three changed blocks plus moved bullets;
   `render --cv` repeats it as a warning line. Tests: `TailoringCheckTests`,
   `RestoreTailoringTests` in `CV/Scripts/test_jobflow.py`.
+- Tailoring rule changed at the user's request (2026-11-25), replacing
+  "preserve the vast majority" in `CV/Style-guide.md`, `CV/README.md`,
+  `Documentation/Agent-Reference/Documents.md`, the tailor-cv skill and the
+  writer brief: the baseline is good, reviewed default text; changes target
+  the job's specific requirements (reword, reorder, foreground, replace a less
+  relevant point with a more relevant supported one, short additions); each is
+  weighed against what it displaces, including page space; unclear trade-offs
+  go to the user as open decisions; the change list records requirement →
+  change → what was displaced. Hard boundaries unchanged. The private
+  knowledge notes still carry the old wording and need the user's update.
 
 Validation: unit suites and the privacy screen pass with `JobSearch/` absent.
 Not yet verified: Kilo loading `writer.md` (no kilo CLI on the build machine;

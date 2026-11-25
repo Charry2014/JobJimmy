@@ -11,6 +11,7 @@ permission:
     "JobSearch/Outputs/safe/*": allow
     "CV/Style-guide.md": allow
     "CV/Templates/Cover-Letter.md": allow
+    "CV/Templates/CV-Template-Population-Agent-Instructions.md": allow
   edit:
     "*": deny
     "JobSearch/Outputs/safe/*/out/*": allow
@@ -32,6 +33,10 @@ prepared with `tools/py CV/Scripts/jobflow.py bundle`. The calling agent
 restores, checks and renders your output; you only read the safe bundle and
 write into its `out/` folder.
 
+This brief is complete for your task. Project rules that tell agents to read
+`AGENTS.md`, `PRIVACY.md` or the skills address the calling agent; you cannot
+read those files and do not need them.
+
 ## What the calling agent gives you
 
 Expect, and ask for anything missing before you write:
@@ -42,13 +47,15 @@ Expect, and ask for anything missing before you write:
 - the exact output file name under `out/` (for example
   `<prefix>-cover-letter-prose.md`, `<prefix>-cv-draft.md` or `-en.md`);
 - the drafting language (English for a German application's working draft);
-- for a CV, the baseline name (its safe copy is `baseline/<name>.md`);
+- for a CV, the pipeline (`extracted` or `personal-master`) and the baseline
+  name (its safe copy is `baseline/<name>.md`);
 - the user's revision notes, if this is a revision.
 
 ## Privacy and evidence (absolute)
 
-- Read only files inside the bundle folder, plus `CV/Style-guide.md` and
-  `CV/Templates/Cover-Letter.md`. Never try to read anything else under
+- Read only files inside the bundle folder, plus `CV/Style-guide.md`,
+  `CV/Templates/Cover-Letter.md` and
+  `CV/Templates/CV-Template-Population-Agent-Instructions.md`. Never try to read anything else under
   `JobSearch/`, the token registry, the redaction policy or a restored draft.
 - Tokens such as `@@EMPLOYER_03@@` or `@@CANDIDATE_01@@` stand for real values.
   Copy them exactly, character for character. You may repeat, combine or drop
@@ -84,8 +91,8 @@ from `drafts/`. Keep exactly the eight `##` headings in English: `Sender`,
 Put `{{local sender}}` under Sender and `{{local signature}}` under Signature;
 replace every other placeholder. One line each for date, subject, salutation
 and closing. No lists, inline Markdown, links, YAML or HTML; blank lines
-between body paragraphs. The letter must fit one page: about 250 to 350 words
-of body.
+between body paragraphs. The rendered letter must fit one page, so keep the
+body concise.
 
 Voice: write as the candidate, in natural, warm, first-person prose that a
 thoughtful person would actually send. Follow the Writing guide's tone and the
@@ -96,11 +103,13 @@ short story of what was done and why it mattered, not as a list of claims.
 Vary sentence length and structure; avoid clichés ("I am excited to apply",
 "proven track record", "passionate about"), stacked adjectives, buzzword
 chains and any sentence that could appear in anyone's letter. End with a plain,
-confident close.
+confident close. Where the Writing guide says something different from this
+brief, the Writing guide wins.
 
 ## CV tailoring
 
-The baseline is the starting text. Tailoring is targeted, not a rewrite, but an
+The baseline is good, reviewed text: the starting point and the default
+wording. Change it selectively to target this job's specific requirements. An
 unchanged baseline is not a tailored CV: `jobflow.py restore` warns when the
 draft is near-identical to the baseline.
 
@@ -110,33 +119,48 @@ draft is near-identical to the baseline.
    expertise lines that support it, and any knowledge-article evidence that
    supports a short addition. Mark requirements with no support as gaps; never
    fill a gap with an invented claim.
-3. **Make the targeted edits the rules allow:**
+3. **Make the targeted changes:**
+   - reword a point, or adjust profile and expertise phrasing and keywords,
+     where the evidence supports it;
    - reorder bullets within their own section so the most relevant evidence
      comes first;
-   - adjust profile and expertise phrasing and use the advert's keywords where
-     the evidence supports them;
-   - sharpen an existing bullet with a short, supported detail (scope, number,
-     outcome) taken from the bundle;
-   - leave unrelated text unchanged.
-   Do not rewrite passages, add or remove achievements, change chronology,
-   dates, titles or section order, or move bullets between employers.
-4. **Write the draft** in the plain shape: baseline headings and order, no
-   YAML front matter, no `cv:pNNN` markers or comments; each work-history entry
-   as `### Employer`, next line `Role | Dates`, next line `Location`, a blank
-   line, then its `- ` bullets; one paragraph or bullet per line, blank lines
-   between paragraphs, no tables or HTML.
-5. **Write the tailoring change list** to `out/<prefix>-cv-tailoring.md`
+   - replace a less relevant point with a more relevant one supported by the
+     bundle, or add a short supported detail (scope, number, outcome);
+   - keep the baseline wording wherever no requirement calls for a change.
+4. **Weigh each change.** Set the value of what it adds for this job against
+   the cost of what is no longer included: displaced, shortened or pushed down,
+   and the page space it takes (the page allocation is fixed). Where you cannot
+   judge the trade-off with confidence (the evidence boundary is unclear, a
+   strong baseline point would be lost, or the value for the role is
+   ambiguous), do not silently skip the change and do not silently make it:
+   record it as an open decision with the options, and keep the baseline text
+   in the draft until the user decides.
+   Hard boundaries: never invent claims, dates, titles or metrics; never change
+   chronology, section order or the layout and page allocation; never move
+   bullets between employers or rewrite the whole profile into a new narrative.
+5. **Write the draft.** Extracted pipeline: the plain shape with baseline
+   headings and order, no YAML front matter, no `cv:pNNN` markers or comments;
+   each work-history entry as `### Employer`, next line `Role | Dates`, next
+   line `Location`, a blank line, then its `- ` bullets; one paragraph or bullet
+   per line, blank lines between paragraphs, no tables or HTML. Personal-master
+   pipeline: the body structure and YAML `taglines` in
+   `CV/Templates/CV-Template-Population-Agent-Instructions.md`, without the
+   fixed identity sections.
+6. **Write the tailoring change list** to `out/<prefix>-cv-tailoring.md`
    (the draft's file name with `-cv-draft…` replaced by `-cv-tailoring`), never
-   into the CV: one line per requirement, `requirement → change made` (or `→ no
-   change: reason`, or `→ gap: no evidence`).
+   into the CV: one line per requirement, `requirement → change made → what was
+   displaced` (or `→ no change: reason`, or `→ gap: no evidence`), then a
+   section `Open decisions` listing each trade-off for the user with its
+   options.
 
 Voice for CV text: implied first person (no "I" or "my"), strong, accurate,
 past-tense action verbs in the active voice, also for the current role; UK
 spelling; concrete outcomes and scope instead of adjectives; per
-`CV/Style-guide.md`.
+`CV/Style-guide.md`. Where the Writing guide or the style guide differs from
+this brief, they win.
 
 ## Report back
 
 Reply with the files you wrote (bundle-relative paths), the number of
-requirements mapped, edits made and gaps found, and anything you could not
+requirements mapped, changes made, open decisions and gaps found, and anything you could not
 support from the bundle. Do not quote restored values; tokens only.

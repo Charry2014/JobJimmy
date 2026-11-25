@@ -643,9 +643,10 @@ def tailoring_report(counts, baseline):
             f"moved, {counts['removed']} baseline block(s) removed, compared with baseline {baseline}")
     near = counts["changed"] + counts["moved"] < MIN_TAILORING_EDITS
     if near:
-        line += ("; NEAR-IDENTICAL to the baseline: an unchanged baseline is not a tailored CV. Do the "
-                 "tailoring step (requirements, evidence, targeted edits) or get the user's explicit "
-                 "agreement to keep the baseline")
+        line += ("; NEAR-IDENTICAL to the baseline: an unchanged baseline is not a tailored CV. Change "
+                 "it selectively to target the job's requirements, weighing each change against what it "
+                 "displaces, put unclear trade-offs to the user, or get the user's explicit agreement "
+                 "to keep the baseline")
     return line, near
 
 
@@ -824,13 +825,13 @@ def render_cv(vault, slug, baseline, language, accept_fallbacks=False, replace=F
     odt, pdf = cv_dir / f"{prefix}-cv{suffix}.odt", cv_dir / f"{prefix}-cv{suffix}.pdf"
     preview = cv_dir / f"{prefix}-cv{suffix}-preview.pdf"
     lines = []
-    if pdf.exists() and not replace:
-        raise StepFailure(lines, "a final CV PDF exists; rerun with --replace once the user approves replacing it")
     baseline_md = vault.private / "Templates" / f"{baseline}.md"
     if SOURCE_CV.fullmatch(draft.name) and baseline_md.is_file():
         line, near = tailoring_report(tailoring_counts(baseline_md.read_text(encoding="utf-8"),
                                                        draft.read_text(encoding="utf-8")), baseline)
         lines.append(("tailoring: WARNING " if near else "tailoring: ") + line)
+    if pdf.exists() and not replace:
+        raise StepFailure(lines, "a final CV PDF exists; rerun with --replace once the user approves replacing it")
     code, _ = run_script("align_md.py", draft, odt_template, blocks, "--report", report)
     if code:
         raise StepFailure(lines, "fold failed (align_md.py); check the draft's structure")

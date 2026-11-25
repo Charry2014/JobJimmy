@@ -78,19 +78,32 @@ on that risk. Never return the registry or restored text to a hosted model.
    letter in the same step. Call the `writer` subagent (`.kilo/agents/writer.md`,
    a stronger drafting model that reads only the safe bundle) with: the bundle
    folder as a project-relative path, `cv`, the exact output file name, the
-   drafting language, the baseline name and the user's revision notes. The
+   drafting language, the pipeline (`extracted` or `personal-master`), the
+   baseline name and the user's revision notes (including the user's choices
+   on earlier open decisions). The
    writer reads the voice guides and `CV/Style-guide.md` in full, then does the
    tailoring step before writing:
    - lists the advert's key requirements;
    - maps each to the baseline bullets and evidence that support it;
-   - makes the targeted edits the rules below allow: reorders bullets within a
-     section to foreground the relevant ones, adjusts profile and expertise
-     phrasing and keywords where evidence supports them, and adds short
-     supported detail;
-   - writes the draft to `out/` and the change list (requirement → change) to
+   - changes the baseline selectively to target those requirements: rewords a
+     point, reorders bullets within their section, foregrounds relevant
+     evidence, replaces a less relevant point with a more relevant supported
+     one, or adds a short supported detail. The baseline is good, reviewed
+     text and stays the default wording elsewhere;
+   - weighs each change: the value it adds for this job against the cost of
+     what is no longer included (displaced, shortened or pushed down),
+     including page space, because the page allocation is fixed;
+   - writes the draft to `out/` and the change list (requirement → change →
+     what was displaced) plus the **open decisions** to
      `out/<prefix>-cv-tailoring.md`, never into the CV.
-   The minimal-edit boundary below still holds (no rewrites, no invented
-   claims), but **an unchanged baseline is not a tailored CV**. Run `restore`:
+   Where a trade-off cannot be judged with confidence (unclear evidence
+   boundary, a strong baseline point would be lost, ambiguous value for the
+   role), the writer lists it as an open decision with the options instead of
+   silently skipping or making the change. Present every open decision to the
+   user and apply their choice in the next writer call. Hard boundaries: no
+   invented claims, dates, titles or metrics; no layout or page-allocation
+   redesign; no rewriting the whole profile into a new narrative. **An
+   unchanged baseline is not a tailored CV**. Run `restore`:
    it prints a `tailoring` line with counts (blocks changed, bullets moved) and
    a `WARNING` when the draft is near-identical to the baseline. A warned draft
    is not ready to present: send it back to the writer with the advert's
@@ -122,11 +135,9 @@ on that risk. Never return the registry or restored text to a hosted model.
     when those two lines are consecutive. Keep the location in the draft for
     review; omit it only if deliberately relying on the *unchanged* baseline
     location, and verify that fallback. Never remove it just to make a
-     duplicate disappear. Only tweak wording of existing points and reorder
-    bullets within their
-   existing section where a requirement warrants it and evidence supports it.
-   Preserve baseline content, chronology, scope and layout; do not add/remove
-   achievements, rewrite passages or redesign the ODT. Keep one paragraph or bullet per line,
+     duplicate disappear. Change only what a job requirement warrants and the
+    evidence supports, as step 3 describes; keep chronology, section order,
+    scope and layout, and never redesign the ODT. Keep one paragraph or bullet per line,
    blank lines between paragraphs, and no tables/HTML. For the personal-master
    pipeline, use the exact body structure and YAML `taglines` in
    `CV/Templates/CV-Template-Population-Agent-Instructions.md` instead; do not
