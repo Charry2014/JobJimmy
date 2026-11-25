@@ -172,6 +172,34 @@ application or change its status. Revise working drafts in place, preserving
 user edits as described above. Preserve the user-supplied original; personal rendering templates and anchors
 belong under `JobSearch/Templates/`.
 
+### Comparing drafting models
+
+`CV/Scripts/prose_compare.py` runs the writer's exact request on several
+models at once, so the drafting model can be chosen by reading the results.
+Each model gets the writer brief as its system message and the calling
+agent's task message, with the bundle files included inline (the run has no
+file tools). List the models in `.env` and run it on a safe bundle:
+
+```sh
+# .env
+PROSE_COMPARE_MODELS=anthropic/claude-opus-5.5, google/gemini-4-argon, google/gemini-4-carbon
+PROSE_COMPARE_EFFORT=high   # optional
+
+tools/py CV/Scripts/jobflow.py bundle <slug> --baseline Manager
+tools/py CV/Scripts/prose_compare.py JobSearch/Outputs/safe/<slug> --task letter
+tools/py CV/Scripts/prose_compare.py JobSearch/Outputs/safe/<slug> --task cv --baseline Manager
+```
+
+It accepts only a safe bundle or a safe file, scans the input with the private
+policy before sending, and requires zero-data-retention routes. `--dry-run`
+checks and writes the request without sending it. The drafts are written
+blind (`A.md`, `B.md`, ...) to `JobSearch/Outputs/model-compare/<time>/` with
+`REVIEW.md`; read them and note a verdict before opening `key.json`, which
+names the models with their tokens, cost and time. The console prints figures
+only, so an agent can run it without the drafts entering its context. A letter
+run is about 30,000 input tokens per model (roughly $0.15 on Opus 5.5). To
+adopt the winner, change the `model` line in `.kilo/agents/writer.md`.
+
 ## CV tuning and document rendering
 
 Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,

@@ -44,6 +44,17 @@ guides were bundled but never read, and nothing detected a no-op.
   change → what was displaced. Hard boundaries unchanged. The private
   knowledge notes still carry the old wording and need the user's update.
 
+- Model comparison harness `CV/Scripts/prose_compare.py`: sends the writer's
+  exact request (brief as system message, the skill's task message, bundle
+  files inline in the writer's reading order) to every model in
+  `PROSE_COMPARE_MODELS` from `.env`, in parallel via OpenRouter with
+  `provider.zdr` and `data_collection: deny`. Refuses raw private files, scans
+  the input with the private policy before sending, writes blind drafts plus
+  `REVIEW.md`, `key.json` and `request.json` to
+  `JobSearch/Outputs/model-compare/<time>/`, and prints figures only. Tests:
+  `CV/Scripts/test_prose_compare.py`. Dry runs on a real bundle passed the scan
+  (letter about 32k input tokens, CV about 39k); no live call made yet.
+
 Validation: unit suites and the privacy screen pass with `JobSearch/` absent.
 Not yet verified: Kilo loading `writer.md` (no kilo CLI on the build machine;
 check `@writer` in the agent list), the glob-scoped `read`/`edit` permissions in
