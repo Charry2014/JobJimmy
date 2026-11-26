@@ -8,6 +8,18 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Aligner keeps header contacts in their own blocks — 2026-11-25
+
+`align_md.py`: a multi-line template block (such as a multi-line tagline)
+absorbed every adjacent source paragraph, so contact lines written after a
+`<br>` tagline were folded into the tagline and their own blocks fell back to
+the baseline; the header rendered the contacts twice and the CV grew a page.
+The run now stops at a paragraph that another prose block matches at least as
+well as any line of the multi-line block. Two regression tests. On the private
+drafts (counts only), three that had four header fallbacks now have none, and
+no draft got worse. Validation: both unit suites pass; privacy screen clean
+with private identifiers.
+
 ## Local advert capture and workflow commands — 2026-11-23
 
 New `CV/Scripts/jobflow.py` (tests: `test_jobflow.py`) replaces hand-run tool
