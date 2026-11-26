@@ -16,8 +16,23 @@ The baseline is good, reviewed text: it is the starting point and the default
 wording. Tailoring changes it **selectively, to target the specific requirements
 of the job**: reword a point, reorder bullets within their section, foreground
 relevant evidence, replace a less relevant point with a more relevant supported
-one, or add a short supported detail. Text that no requirement touches keeps the
-baseline wording.
+one, or add a short supported detail.
+
+**Tailoring is mandatory for every application, never optional.** Every CV
+draft, at least:
+
+- **rewrites the taglines and the profile for this role**: re-angled toward
+  the advert's key requirements and terms, from the same evidence and at about
+  the same length. A one- or two-word tweak is not a rewrite;
+- **reorders and rewords the bullets in every work-history entry** so the
+  evidence for the advert's requirements leads, using the advert's terms where
+  they describe the evidence truthfully. Bullets that no requirement touches
+  keep the baseline wording.
+
+`jobflow.py restore` and `render --cv` flag a draft with fewer than three
+changes or with taglines and profile unchanged or only lightly edited. A
+flagged draft is not presented as a draft: tailor it, or get the user's
+explicit agreement to keep the baseline text.
 
 Weigh every change: the value of the information it adds for this job against
 the cost of the information no longer included, whether displaced, shortened or
@@ -32,8 +47,8 @@ outside the CV: requirement → change → what was displaced, plus the open
 decisions put to the user.
 
 Hard boundaries stay: no invented claims, dates, titles or metrics; no redesign
-of the layout or page allocation; no rewriting the whole profile into a new
-narrative; no change to chronology or section order. Keeping headings and block
+of the layout or page allocation; the rewritten taglines and profile re-angle
+the same evidence, with no new claims and no new career narrative; no change to chronology or section order. Keeping headings and block
 markers is necessary but not sufficient.
 
 Make required tense/voice corrections with the smallest possible wording change.

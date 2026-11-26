@@ -102,10 +102,18 @@ on that risk. Never return the registry or restored text to a hosted model.
    silently skipping or making the change. Present every open decision to the
    user and apply their choice in the next writer call. Hard boundaries: no
    invented claims, dates, titles or metrics; no layout or page-allocation
-   redesign; no rewriting the whole profile into a new narrative. **An
-   unchanged baseline is not a tailored CV**. Run `restore`:
-   it prints a `tailoring` line with counts (blocks changed, bullets moved) and
-   a `WARNING` when the draft is near-identical to the baseline. A warned draft
+   redesign; the rewritten taglines and profile re-angle the same evidence,
+   with no new claims and no new career narrative.
+   **Tailoring is mandatory for every application, never optional, and an
+   unchanged baseline is not a tailored CV.** Every draft at least rewrites
+   the taglines and profile for this role (same evidence, about the same
+   length; a one- or two-word tweak is not a rewrite) and reorders and
+   rewords the bullets of every work-history entry so the evidence for the
+   advert's requirements leads. Run `restore`:
+   it prints a `tailoring` line with counts (blocks changed, bullets moved,
+   opening paragraphs rewritten) and a `WARNING` when the draft is
+   near-identical to the baseline or its taglines and profile were not
+   rewritten. A warned draft
    is not ready to present: send it back to the writer with the advert's
    uncovered requirements, or ask the user whether the baseline should stay
    unchanged. `restore` reports the tailoring notes file as `SKIPPED`; that is

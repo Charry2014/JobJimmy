@@ -292,6 +292,14 @@ exist; placeholder attachment links are not evidence that files have been saved.
 
 ## Task routing and authority
 
+Tailoring is mandatory: every CV and cover letter is tailored to the specific
+advert, never sent as the baseline or a reused letter. A CV draft rewrites the
+taglines and profile for the role and reorders and rewords the bullets of every
+work-history entry toward the advert's requirements, within the evidence; a
+letter connects this advert's central requirements to specific evidence. The
+rules are in `CV/Style-guide.md` and the `tailor-cv` and `write-cover-letter`
+skills; only the user's explicit agreement keeps baseline text.
+
 Jev checkpoints: after an initial or explicitly requested fit/gap assessment,
 and when each final CV/cover-letter Markdown is ready, follow
 `Documentation/Jev-Checks.md`. Send checked anonymous inputs only, evaluate the

@@ -60,7 +60,12 @@ for syntax and failure modes.
    (below), the drafting language and the user's revision notes. It reads the
    voice guides in full and writes natural, warm, first-person prose that
    connects the advert's central requirements to concrete evidence, following
-   the format rules below. Then run `restore` and read the restored draft only
+   the format rules below. **Every letter is written for this application,
+   never reused:** it opens with why this role at this employer, and connects
+   two or three of the advert's central requirements to specific evidence. A
+   letter that would fit another application unchanged, or that lacks the
+   starter's eight `##` field headings, is not a draft: send it back before
+   presenting it. Then run `restore` and read the restored draft only
    through a new bundle. If the `writer` subagent is unavailable, say so and
    write the prose yourself under the same rules, after reading the guides in
    full.

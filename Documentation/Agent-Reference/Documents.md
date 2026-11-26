@@ -290,7 +290,23 @@ reference is good, reviewed text: the starting point and the default wording.
 Changes target the specific requirements of the job: reword a point, reorder
 bullets within their section, foreground relevant evidence, replace a less
 relevant point with a more relevant supported one, or add a short supported
-detail. Text that no requirement touches keeps the baseline wording.
+detail.
+
+**Tailoring is mandatory for every application, never optional.** Every CV
+draft, at least:
+
+- **rewrites the taglines and the profile for this role**: re-angled toward
+  the advert's key requirements and terms, from the same evidence and at about
+  the same length. A one- or two-word tweak is not a rewrite;
+- **reorders and rewords the bullets in every work-history entry** so the
+  evidence for the advert's requirements leads, using the advert's terms where
+  they describe the evidence truthfully. Bullets that no requirement touches
+  keep the baseline wording.
+
+`jobflow.py restore` and `render --cv` flag a draft with fewer than three
+changes or with taglines and profile unchanged or only lightly edited. A
+flagged draft is not presented as a draft: tailor it, or get the user's
+explicit agreement to keep the baseline text.
 
 Each change is weighed: the value of the information it adds for this job
 against the cost of the information no longer included (displaced, shortened or
@@ -301,8 +317,8 @@ ambiguous), the agent stops and asks the user to decide, presenting the options;
 it neither silently skips the change nor silently makes it.
 
 Hard boundaries: no invented claims, dates, titles or metrics; no redesign of
-the layout or page allocation; no rewriting the whole profile into a new
-narrative; chronology and section order stay. Retaining block IDs, headings and
+the layout or page allocation; the rewritten taglines and profile re-angle
+the same evidence, with no new claims and no new career narrative; chronology and section order stay. Retaining block IDs, headings and
 chronology alone does not establish fidelity to the template. A broader rewrite
 requires an explicit user request for that scope.
 
@@ -316,9 +332,12 @@ no change, or a gap) and the open decisions for the user go to the bundle's
 `out/<prefix>-cv-tailoring.md`, never into the CV, and are presented with the
 draft; the user decides each open decision before the draft is final. `jobflow.py restore` compares the source CV draft
 with the bundled baseline and prints counts only (content blocks changed,
-bullets moved, baseline blocks removed); with fewer than three changed blocks
-plus moved bullets it warns that the draft is near-identical, and the draft
-goes back for targeted changes unless the user explicitly keeps the baseline.
+bullets moved, baseline blocks removed, profile paragraphs rewritten); with
+fewer than three changed blocks plus moved bullets it warns that the draft is
+near-identical, and with no profile paragraph rewritten (each stays at 80 % or
+more word overlap with the baseline) it warns that the draft is not tailored.
+A warned draft goes back for tailoring unless the user explicitly keeps the
+baseline.
 `render --cv` repeats the comparison as a warning line.
 
 Apply required tense/voice corrections minimally, preserving the original meaning

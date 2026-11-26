@@ -28,7 +28,8 @@ contacts, names, restored text) never appear in the output.
             application's CV/ folder, refusing a draft the user changed since
             the bundle was made. A source CV draft is compared with the
             bundled baseline: counts only, with a warning when the draft is
-            near-identical (an unchanged baseline is not a tailored CV).
+            near-identical or its profile was not rewritten (an unchanged
+            baseline is not a tailored CV).
   render    Fold, render and export the CV and/or the letter with every
             mechanical check; stop with a reason on anything unexpected. The
             CV render repeats the tailoring comparison as a warning.
@@ -585,29 +586,43 @@ VOICE_GUIDES = ("Writing-guide", "Reasoning-profile")
 COMMENT = re.compile(r"<!--.*?-->", re.S)
 # Fewer changed blocks plus moved bullets than this is not a tailored CV.
 MIN_TAILORING_EDITS = 3
+# A profile paragraph counts as rewritten for the role only when its word
+# overlap with the closest baseline paragraph is below this ratio; a one- or
+# two-word tweak stays above it.
+PROFILE_REWRITE = 0.8
+# Opening paragraphs shorter than this are taglines or contact lines, too short
+# for a stable overlap ratio; the check measures the profile prose.
+PROFILE_MIN_WORDS = 10
 
 
 # --- tailoring check ---------------------------------------------------------
 
 def cv_blocks(text):
-    """Content blocks of a CV as (kind, section, normalised text).
+    """Content blocks of a CV as (kind, section, normalised text, opening).
 
     Front matter, block markers and comments are dropped, and headings only
     name the section, so the baseline's tabbed employer heading and the
-    draft's `### Employer` / `Role | Dates` split compare as equal.
+    draft's `### Employer` / `Role | Dates` split compare as equal. `opening`
+    marks the paragraphs before the first work-history entry (`###`): the
+    taglines, profile and contact lines. A `<br>` paragraph is split into its
+    lines.
     """
     import align_md
     if text.startswith("---\n") and "\n---\n" in text[4:]:
         text = text[text.index("\n---\n", 4) + 5:]
-    section, blocks = "", []
+    section, blocks, opening = "", [], True
     for kind, value in align_md.parse_source(COMMENT.sub("", text)):
         if kind.startswith("h"):
             section = align_md.norm(value)
+            opening = opening and kind != "h3"
             continue
-        for item in value if kind == "bullets" else [value]:
+        # A multi-line paragraph compares line by line, so a <br> tagline and
+        # the same lines written as separate paragraphs count as equal.
+        for item in value if kind == "bullets" else re.split(r"<br\s*/?>", value, flags=re.I):
             normalised = align_md.norm(item)
             if normalised:
-                blocks.append(("bullet" if kind == "bullets" else "para", section, normalised))
+                blocks.append(("bullet" if kind == "bullets" else "para", section, normalised,
+                               opening and kind == "para"))
     return blocks
 
 
@@ -616,16 +631,22 @@ def tailoring_counts(baseline_text, draft_text):
     import difflib
     from collections import Counter
     base, draft = cv_blocks(baseline_text), cv_blocks(draft_text)
-    unused = Counter(text for _, _, text in base)
-    changed = 0
-    for _, _, text in draft:
+    unused = Counter(text for _, _, text, _ in base)
+    opening_base = [text.split() for *_, text, opening in base
+                    if opening and len(text.split()) >= PROFILE_MIN_WORDS]
+    changed = profile_rewritten = 0
+    for _, _, text, opening in draft:
         if unused[text]:
             unused[text] -= 1
-        else:
-            changed += 1
+            continue
+        changed += 1
+        if opening and len(text.split()) >= PROFILE_MIN_WORDS:
+            closest = max((difflib.SequenceMatcher(None, text.split(), words, autojunk=False).ratio()
+                           for words in opening_base), default=0.0)
+            profile_rewritten += closest < PROFILE_REWRITE
     sections = {}
     for index, blocks in enumerate((base, draft)):
-        for kind, section, text in blocks:
+        for kind, section, text, _ in blocks:
             if kind == "bullet":
                 sections.setdefault(section, ([], []))[index].append(text)
     moved = 0
@@ -634,20 +655,30 @@ def tailoring_counts(baseline_text, draft_text):
         shared_draft = [text for text in draft_bullets if text in base_bullets]
         matcher = difflib.SequenceMatcher(None, shared_base, shared_draft, autojunk=False)
         moved += len(shared_draft) - sum(block.size for block in matcher.get_matching_blocks())
-    return {"blocks": len(draft), "changed": changed, "removed": sum(unused.values()), "moved": moved}
+    return {"blocks": len(draft), "changed": changed, "removed": sum(unused.values()), "moved": moved,
+            "profile": len(opening_base), "profile_rewritten": profile_rewritten}
 
 
 def tailoring_report(counts, baseline):
     """One status line and whether the draft is near-identical to its baseline."""
     line = (f"{counts['changed']} of {counts['blocks']} content blocks changed, {counts['moved']} bullet(s) "
-            f"moved, {counts['removed']} baseline block(s) removed, compared with baseline {baseline}")
-    near = counts["changed"] + counts["moved"] < MIN_TAILORING_EDITS
-    if near:
-        line += ("; NEAR-IDENTICAL to the baseline: an unchanged baseline is not a tailored CV. Change "
-                 "it selectively to target the job's requirements, weighing each change against what it "
+            f"moved, {counts['removed']} baseline block(s) removed, "
+            f"{counts.get('profile_rewritten', 0)} of {counts.get('profile', 0)} profile paragraph(s) "
+            f"rewritten, compared with baseline {baseline}")
+    few = counts["changed"] + counts["moved"] < MIN_TAILORING_EDITS
+    # The profile is rewritten for every job; contact lines never change.
+    stale_profile = counts.get("profile", 0) > 0 and counts.get("profile_rewritten", 0) == 0
+    if few:
+        line += ("; NEAR-IDENTICAL to the baseline: an unchanged baseline is not a tailored CV. Tailor "
+                 "it to the job's requirements: rewrite the taglines and profile for the role, reorder "
+                 "and reword the bullets toward the advert, weigh each change against what it "
                  "displaces, put unclear trade-offs to the user, or get the user's explicit agreement "
                  "to keep the baseline")
-    return line, near
+    elif stale_profile:
+        line += ("; NOT TAILORED: profile unchanged or only lightly edited. Rewrite the taglines and "
+                 "profile for this role from the same evidence, or get the user's explicit agreement to "
+                 "keep them")
+    return line, few or stale_profile
 
 
 def best_tailoring(baselines, draft_text):

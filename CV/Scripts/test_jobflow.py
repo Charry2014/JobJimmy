@@ -301,7 +301,7 @@ cv: synthetic
 ## Profile
 
 <!-- cv:p003 -->
-Engineering leader who builds calm, reliable platform teams.
+Engineering leader who builds calm, reliable platform teams for regulated products.
 
 <!-- cv:p004 -->
 ## Work experience
@@ -324,7 +324,7 @@ UNCHANGED_DRAFT = """# Candidate Person
 
 ## Profile
 
-Engineering leader who builds calm, reliable platform teams.
+Engineering leader who builds calm, reliable platform teams for regulated products.
 
 ## Work experience
 
@@ -342,7 +342,8 @@ Sample City
 class TailoringCheckTests(unittest.TestCase):
     def test_header_split_alone_is_not_a_change(self):
         counts = jf.tailoring_counts(BASELINE_CV, UNCHANGED_DRAFT)
-        self.assertEqual(counts, {"blocks": 6, "changed": 0, "removed": 0, "moved": 0})
+        self.assertEqual(counts, {"blocks": 6, "changed": 0, "removed": 0, "moved": 0,
+                                  "profile": 1, "profile_rewritten": 0})
         line, near = jf.tailoring_report(counts, "Synthetic")
         self.assertTrue(near)
         self.assertIn("NEAR-IDENTICAL", line)
@@ -358,8 +359,8 @@ class TailoringCheckTests(unittest.TestCase):
         lines = UNCHANGED_DRAFT.splitlines()
         bullets = [i for i, line in enumerate(lines) if line.startswith("- ")]
         lines[bullets[0]], lines[bullets[3]] = lines[bullets[3]], lines[bullets[0]]
-        draft = "\n".join(lines).replace("calm, reliable platform teams",
-                                         "reliable platform teams for robotics products")
+        draft = "\n".join(lines).replace("builds calm, reliable platform teams for regulated products",
+                                         "ships robotics software with reliable, product-minded teams")
         draft = draft.replace("adopted company-wide", "adopted across engineering and operations")
         counts = jf.tailoring_counts(BASELINE_CV, draft)
         self.assertEqual(counts["changed"], 2)
@@ -367,6 +368,37 @@ class TailoringCheckTests(unittest.TestCase):
         line, near = jf.tailoring_report(counts, "Synthetic")
         self.assertFalse(near)
         self.assertNotIn("robotics", line)  # counts only, never text
+
+    def test_bullet_edits_with_unchanged_profile_are_not_tailored(self):
+        lines = UNCHANGED_DRAFT.splitlines()
+        bullets = [i for i, line in enumerate(lines) if line.startswith("- ")]
+        lines[bullets[0]], lines[bullets[3]] = lines[bullets[3]], lines[bullets[0]]
+        draft = "\n".join(lines).replace("adopted company-wide", "adopted across engineering and operations")
+        draft = draft.replace("with trunk-based delivery", "with trunk-based delivery and release automation")
+        counts = jf.tailoring_counts(BASELINE_CV, draft)
+        self.assertEqual((counts["changed"], counts["profile_rewritten"]), (2, 0))
+        line, near = jf.tailoring_report(counts, "Synthetic")
+        self.assertTrue(near)
+        self.assertIn("profile unchanged", line)
+
+    def test_light_profile_tweak_is_not_a_rewrite(self):
+        draft = UNCHANGED_DRAFT.replace("calm, reliable platform teams", "calm, dependable platform teams")
+        lines = draft.splitlines()
+        bullets = [i for i, line in enumerate(lines) if line.startswith("- ")]
+        lines[bullets[0]], lines[bullets[3]] = lines[bullets[3]], lines[bullets[0]]
+        counts = jf.tailoring_counts(BASELINE_CV, "\n".join(lines))
+        self.assertEqual((counts["changed"], counts["profile_rewritten"]), (1, 0))
+        self.assertTrue(jf.tailoring_report(counts, "Synthetic")[1])
+
+    def test_tagline_split_into_paragraphs_is_not_a_change(self):
+        # The baseline keeps a multi-line tagline as one <br> paragraph; a draft
+        # may write its lines as separate paragraphs without changing the text.
+        baseline = BASELINE_CV.replace("<!-- cv:p002 -->",
+                                       "Platform leadership<br>Reliable delivery\n\n<!-- cv:p002 -->")
+        draft = UNCHANGED_DRAFT.replace("# Candidate Person\n",
+                                        "# Candidate Person\n\nPlatform leadership\n\nReliable delivery\n", 1)
+        counts = jf.tailoring_counts(baseline, draft)
+        self.assertEqual((counts["changed"], counts["profile_rewritten"]), (0, 0))
 
     def test_omitted_location_is_removed_not_tailoring(self):
         counts = jf.tailoring_counts(BASELINE_CV, UNCHANGED_DRAFT.replace("Sample City\n", ""))
@@ -410,7 +442,8 @@ class RestoreTailoringTests(Base):
     def test_restore_reports_tailored_draft_and_skips_notes_and_translations(self):
         out, _ = jf.bundle(self.vault, self.slug, baselines=["Synthetic"])
         safe = (out / "baseline/Synthetic.md").read_text()
-        tailored = (safe.replace("calm, reliable", "reliable, product-minded")
+        tailored = (safe.replace("who builds calm, reliable platform teams",
+                                 "who ships reliable robotics software with product-minded teams")
                         .replace("adopted company-wide", "adopted by every product team")
                         .replace("by a fifth", "by a fifth while doubling capacity"))
         (out / "out/robotics-cv-draft.md").write_text(tailored)

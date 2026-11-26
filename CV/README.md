@@ -106,9 +106,12 @@ to target the job's specific requirements (rewording, reordering within a
 section, foregrounding, replacing a less relevant point with a more relevant
 supported one, short supported additions). Each change is weighed against what
 it displaces, including page space; when that trade-off is unclear, the user
-decides. An unchanged reference is not a tailored CV. Never invent claims,
-dates, titles or metrics, redesign the layout or page allocation, or rewrite
-the whole profile into a new narrative.
+decides. **Tailoring is mandatory for every application:** each draft rewrites
+the taglines and profile for the role (same evidence, about the same length)
+and reorders and rewords the bullets of every work-history entry toward the
+advert's requirements; an unchanged or lightly edited reference is not a
+tailored CV, and `jobflow.py restore` flags it. Never invent claims, dates,
+titles or metrics or redesign the layout or page allocation.
 
 Follow the tailoring rules in [[CV/Style-guide]]. Apply required voice/tense
 corrections minimally. Keep the tailored source Markdown before translation,

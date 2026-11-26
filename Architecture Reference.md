@@ -52,8 +52,10 @@ Contents: [[#Purpose]] · [[#How it works]] · [[#Interfaces to other projects]]
   `restore` runs the **tailoring check**: it compares the safe draft with the
   bundled safe baseline (front matter, block markers and the employer-header
   split ignored) and prints counts only (content blocks changed, bullets
-  moved, baseline blocks removed), with a warning when changed blocks plus
-  moved bullets are fewer than three. `render --cv` repeats the check against
+  moved, baseline blocks removed, profile paragraphs rewritten), with a
+  warning when changed blocks plus moved bullets are fewer than three or no
+  profile paragraph (ten words or more before the first work-history entry)
+  falls below 80 % word overlap with its closest baseline paragraph. `render --cv` repeats the check against
   the private baseline as a warning line. `render` chains `align_md.py`, `cv.py`, the PDF export and
   `check_layout.py` (compared with the unchanged baseline's PDF in
   `JobSearch/Outputs/Baselines/`) for the CV, and hydration, rendering and the

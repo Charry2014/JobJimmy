@@ -103,15 +103,17 @@ short story of what was done and why it mattered, not as a list of claims.
 Vary sentence length and structure; avoid clichés ("I am excited to apply",
 "proven track record", "passionate about"), stacked adjectives, buzzword
 chains and any sentence that could appear in anyone's letter. End with a plain,
-confident close. Where the Writing guide says something different from this
-brief, the Writing guide wins.
+confident close. On voice and tone, where the Writing guide says something
+different from this brief, the Writing guide wins; it never makes tailoring
+optional.
 
 ## CV tailoring
 
 The baseline is good, reviewed text: the starting point and the default
-wording. Change it selectively to target this job's specific requirements. An
-unchanged baseline is not a tailored CV: `jobflow.py restore` warns when the
-draft is near-identical to the baseline.
+wording. Change it to target this job's specific requirements. Tailoring is
+mandatory: an unchanged or lightly edited baseline is not a tailored CV, and
+`jobflow.py restore` warns when the draft has fewer than three changes or its
+taglines and profile were not rewritten.
 
 1. **List the advert's key requirements** (usually five to ten): skills,
    scope, domain, leadership level and explicit must-haves.
@@ -120,8 +122,15 @@ draft is near-identical to the baseline.
    supports a short addition. Mark requirements with no support as gaps; never
    fill a gap with an invented claim.
 3. **Make the targeted changes:**
-   - reword a point, or adjust profile and expertise phrasing and keywords,
-     where the evidence supports it;
+   - **always** rewrite the taglines and the profile for this role: re-angle
+     them toward the advert's key requirements and terms from the same
+     evidence, at about the same length (a one- or two-word tweak is not a
+     rewrite);
+   - **always** reorder the bullets in every work-history entry so the
+     evidence for the advert's requirements leads, and reword bullets where
+     the advert's terms describe the evidence truthfully;
+   - reword other points, or adjust expertise phrasing and keywords, where the
+     evidence supports it;
    - reorder bullets within their own section so the most relevant evidence
      comes first;
    - replace a less relevant point with a more relevant one supported by the
@@ -137,7 +146,8 @@ draft is near-identical to the baseline.
    in the draft until the user decides.
    Hard boundaries: never invent claims, dates, titles or metrics; never change
    chronology, section order or the layout and page allocation; never move
-   bullets between employers or rewrite the whole profile into a new narrative.
+   bullets between employers; the rewritten taglines and profile re-angle the
+   same evidence, with no new claims and no new career narrative.
 5. **Write the draft.** Extracted pipeline: the plain shape with baseline
    headings and order, no YAML front matter, no `cv:pNNN` markers or comments;
    each work-history entry as `### Employer`, next line `Role | Dates`, next
@@ -156,8 +166,9 @@ draft is near-identical to the baseline.
 Voice for CV text: implied first person (no "I" or "my"), strong, accurate,
 past-tense action verbs in the active voice, also for the current role; UK
 spelling; concrete outcomes and scope instead of adjectives; per
-`CV/Style-guide.md`. Where the Writing guide or the style guide differs from
-this brief, they win.
+`CV/Style-guide.md`. On voice and wording style, where the Writing guide or
+the style guide differs from this brief, they win. Tailoring stays mandatory
+whatever an older note says about preserving the supplied CV.
 
 ## Report back
 

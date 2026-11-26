@@ -8,6 +8,26 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Tailoring made mandatory — 2026-11-25
+
+User decision: every CV and cover letter is tailored to its advert; tailoring
+is not optional. A CV draft rewrites the taglines and profile for the role
+(same evidence, about the same length, no new claims or career narrative) and
+reorders and rewords the bullets of every work-history entry toward the
+advert's requirements. Rules in `AGENTS.md` (task routing), `CV/Style-guide.md`,
+`CV/README.md`, both `Documents.md` files, both skills and `writer.md`; the
+writer's "Writing guide wins" precedence is limited to voice and tone. The
+`jobflow.py` tailoring check also counts profile paragraphs (ten words or more
+before the first `###`) rewritten below 80 % word overlap with the closest
+baseline paragraph, and warns when none is; `<br>` taglines compare line by
+line. On the existing private drafts, counts only: the five lightly edited ones
+warn, the four tailored ones pass. The check still only warns; it does not stop
+a render. The private Writing guide and CV-positioning notes still carry the
+old "preserve the supplied CV" wording and need the user's edit.
+
+Validation: both unit suites pass; privacy screen clean with private
+identifiers.
+
 ## Writer model chosen by blind comparison — 2026-11-25
 
 `prose_compare.py` ran one cover letter on four models (effort high). The user
