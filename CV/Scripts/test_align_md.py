@@ -141,6 +141,79 @@ class EndToEnd(unittest.TestCase):
             positions = [markdown.index(f'<!-- cv:{bid} -->') for bid in order]
             self.assertEqual(positions, sorted(positions))
 
+    def test_multi_line_block_keeps_its_neighbours_own_blocks(self):
+        # A header whose tagline block holds several lines, followed by one
+        # block per contact line. The draft keeps the tagline as one paragraph
+        # with <br> and each contact line as its own paragraph: the contacts
+        # must stay in their own blocks, not be absorbed into the tagline.
+        blocks = [
+            block('p000', '# ', 'JANE DOE'),
+            block('p001', '', 'Engineering Leadership\nPlatforms | Systems\nAI Products'),
+            block('p002', '', 'jane@example.com'),
+            block('p003', '', '+00 000 0000000'),
+            block('p004', '', 'Exampletown, Country'),
+            block('p005', '', 'Nationality A & B'),
+            block('p006', '## ', 'PROFILE'),
+            block('p007', '', 'Profile baseline.'),
+        ]
+        source = (
+            '# Jane Doe\n\n'
+            'Engineering Leadership<br>Platforms | Systems<br>AI Products\n\n'
+            'jane@example.com\n\n'
+            '+00 000 0000000\n\n'
+            'Exampletown, Country\n\n'
+            'Nationality A & B\n\n'
+            '## Profile\n'
+            'Draft profile paragraph.\n')
+        with tempfile.TemporaryDirectory() as tmp:
+            template = Path(tmp) / 'synthetic.odt'
+            mapping = synthetic_template(template, blocks)
+            sunits = align_md.parse_source(source)
+            _, tunits = align_md.load_template(template)
+            pairs, dropped, fallback = align_md.align(tunits, sunits)
+            markdown, report = align_md.build_markdown(mapping, tunits, sunits, pairs, dropped, fallback)
+            output = Path(tmp) / 'out.md'
+            output.write_text(markdown, encoding='utf-8')
+            values = cv.read_markdown(output, mapping)
+            self.assertEqual(values['p001'], 'Engineering Leadership\nPlatforms | Systems\nAI Products')
+            self.assertEqual(values['p002'], 'jane@example.com')
+            self.assertEqual(values['p003'], '+00 000 0000000')
+            self.assertEqual(values['p004'], 'Exampletown, Country')
+            self.assertEqual(values['p005'], 'Nationality A & B')
+            self.assertEqual(report['fallback_blocks'], [])
+
+    def test_multi_line_block_absorbs_unpaired_split_lines(self):
+        # The draft splits the tagline into separate paragraphs; the lines that
+        # no other block claims fold back into the multi-line block.
+        blocks = [
+            block('p000', '# ', 'JANE DOE'),
+            block('p001', '', 'Engineering Leadership\nPlatforms | Systems\nAI Products'),
+            block('p002', '', 'jane@example.com'),
+            block('p003', '## ', 'PROFILE'),
+            block('p004', '', 'Profile baseline.'),
+        ]
+        source = (
+            '# Jane Doe\n\n'
+            'Engineering Leadership\n\n'
+            'Platforms | Systems\n\n'
+            'AI Products\n\n'
+            'jane@example.com\n\n'
+            '## Profile\n'
+            'Draft profile paragraph.\n')
+        with tempfile.TemporaryDirectory() as tmp:
+            template = Path(tmp) / 'synthetic.odt'
+            mapping = synthetic_template(template, blocks)
+            sunits = align_md.parse_source(source)
+            _, tunits = align_md.load_template(template)
+            pairs, dropped, fallback = align_md.align(tunits, sunits)
+            markdown, report = align_md.build_markdown(mapping, tunits, sunits, pairs, dropped, fallback)
+            output = Path(tmp) / 'out.md'
+            output.write_text(markdown, encoding='utf-8')
+            values = cv.read_markdown(output, mapping)
+            self.assertEqual(values['p001'], 'Engineering Leadership\nPlatforms | Systems\nAI Products')
+            self.assertEqual(values['p002'], 'jane@example.com')
+            self.assertEqual(report['fallback_blocks'], [])
+
 
 if __name__ == '__main__':
     unittest.main()

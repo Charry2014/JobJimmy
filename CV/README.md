@@ -332,7 +332,11 @@ matching maps the source text onto the template's blocks:
   points during ordinary tailoring.
 - Headings match headings (`#`/`##`/`###`), so section order and hierarchy are
   preserved. A multi-line template block (for example the positioning statement)
-  absorbs the whole run of consecutive source paragraphs.
+  absorbs the run of consecutive source paragraphs around its match, so its
+  lines may be written as one `<br>` paragraph or as separate paragraphs. The
+  run stops at a paragraph that another block claims (it matches that block's
+  baseline at least as well as any line of the multi-line block), so contact
+  lines after a multi-line tagline keep their own blocks.
 - Template blocks with no source match keep the reference baseline. This is why
   contact details, nationality and other reference lines can be omitted from the
   plain draft and still appear in the render; every fallback is listed in the
