@@ -238,17 +238,33 @@ def line(value):
 
 
 def build_markdown(mapping, tunits, sunits, pairs, dropped, fallback):
-    # A template block whose baseline holds several lines absorbs the whole run of
-    # consecutive source paragraphs, even if the aligner paired some of them with
-    # neighbouring short blocks. Those neighbours revert to the baseline.
+    # A template block whose baseline holds several lines absorbs the run of
+    # consecutive source paragraphs around its pair, so a draft may write those
+    # lines as separate paragraphs. The run stops at a paragraph that another
+    # block claims: one paired with a block whose baseline it matches at least as
+    # well as any line of the multi-line block (for example a contact line that
+    # follows a multi-line tagline). Paired neighbours that are absorbed revert
+    # to the baseline.
+    paired = {pj: pi for pi, pj in pairs}
+
+    def claimed(k, pi):
+        other = paired.get(k)
+        if other is None or other == pi or tunits[other]['kind'] != 'prose':
+            return False
+        lines = [x for x in tunits[pi]['text'].split('\n') if x.strip()]
+        own = max((similar(sunits[k][1], x) for x in lines), default=0.0)
+        return similar(sunits[k][1], tunits[other]['text']) >= own
+
     absorbed, multi = set(), {}
     for pi, pj in pairs:
         if tunits[pi]['kind'] == 'prose' and tunits[pi]['multi']:
             start = pj
-            while start > 0 and sunits[start - 1][0] == 'para':
+            while (start > 0 and sunits[start - 1][0] == 'para'
+                   and not claimed(start - 1, pi)):
                 start -= 1
             end = pj
-            while end + 1 < len(sunits) and sunits[end + 1][0] == 'para':
+            while (end + 1 < len(sunits) and sunits[end + 1][0] == 'para'
+                   and not claimed(end + 1, pi)):
                 end += 1
             group = [sunits[k][1] for k in range(start, end + 1)]
             for k in range(start, end + 1):
