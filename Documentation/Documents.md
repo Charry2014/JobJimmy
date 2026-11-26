@@ -181,16 +181,19 @@ existing workflow. See the [agent sequence](Agent-Reference/Documents.md#english
 ## Tailor for an application
 
 > Use my chosen baseline and this application's advert to prepare a plain
-> Markdown CV draft. Preserve the baseline's wording except where a specific
-> requirement warrants a supported change. List each targeted change and its
-> evidence. Decide the final language from the advert and application instructions.
+> Markdown CV draft tailored to the advert: rewrite the taglines and profile
+> for this role and reorder and reword the bullets toward its requirements,
+> using only supported evidence. List each change and its evidence. Decide the final language from the advert and application instructions.
 > For German output, work through English review rounds with me first and wait
 > until we agree the English text is ready before translating. Do not render yet.
 
 For agents, follow `.kilo/skills/tailor-cv/SKILL.md` step by step. Store the
 draft in the application's `CV/` folder. Review factual claims, tone,
-language and chronology before approving it. A request to tailor does not mean
-rewriting every bullet or changing identity/permanent sections.
+language and chronology before approving it. Tailoring is mandatory for every
+application: the agent rewrites the taglines and profile for the role and
+reorders and rewords the bullets toward the advert, and `jobflow.py restore`
+flags a draft that is the baseline with only light edits. It does not invent
+claims or change identity/permanent sections.
 
 For approach A, render the accepted body draft with `populate_cv.py` as above.
 For approach B, map a plain draft back onto the chosen extracted template with

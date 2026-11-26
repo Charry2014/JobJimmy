@@ -12,20 +12,50 @@ before editing, using its matching document template. The supplied CV is the
 starting text, not just a formatting shell. Do not substitute another
 application's draft or combine baselines into a new CV.
 
-Preserve the vast majority of the wording, sentence structure, emphasis and detail.
-Tailor only specific points that relate to concrete job requirements: adjust a
-phrase, foreground a relevant existing achievement or add a short supported detail.
-Leave unrelated text unchanged. Do not rewrite the profile, systematically reword
-bullets, replace sections or substantially shorten the source to create a new
-narrative. Keeping headings and block markers is necessary but not sufficient.
-A normal draft/tailoring request does not authorise substantial or significant
-rewrites; only an explicit user request for broader rewriting changes that scope.
+The baseline is good, reviewed text: it is the starting point and the default
+wording. Tailoring changes it **selectively, to target the specific requirements
+of the job**: reword a point, reorder bullets within their section, foreground
+relevant evidence, replace a less relevant point with a more relevant supported
+one, or add a short supported detail.
+
+**Tailoring is mandatory for every application, never optional.** Every CV
+draft, at least:
+
+- **rewrites the taglines and the profile for this role**: re-angled toward
+  the advert's key requirements and terms, from the same evidence and at about
+  the same length. A one- or two-word tweak is not a rewrite;
+- **reorders and rewords the bullets in every work-history entry** so the
+  evidence for the advert's requirements leads, using the advert's terms where
+  they describe the evidence truthfully. Bullets that no requirement touches
+  keep the baseline wording.
+
+`jobflow.py restore` and `render --cv` flag a draft with fewer than three
+changes or with taglines and profile unchanged or only lightly edited. A
+flagged draft is not presented as a draft: tailor it, or get the user's
+explicit agreement to keep the baseline text.
+
+Weigh every change: the value of the information it adds for this job against
+the cost of the information no longer included, whether displaced, shortened or
+pushed down, including page space, because the page allocation is fixed. Where
+the trade-off cannot be judged with confidence (the evidence boundary is unclear,
+a strong baseline point would be lost, or the value for the role is ambiguous),
+stop and ask the user to decide, presenting the options. Do not silently skip
+the change and do not silently make it.
+
+**An unchanged baseline is not a tailored CV.** Record a tailoring change list
+outside the CV: requirement → change → what was displaced, plus the open
+decisions put to the user.
+
+Hard boundaries stay: no invented claims, dates, titles or metrics; no redesign
+of the layout or page allocation; the rewritten taglines and profile re-angle
+the same evidence, with no new claims and no new career narrative; no change to chronology or section order. Keeping headings and block
+markers is necessary but not sufficient.
 
 Make required tense/voice corrections with the smallest possible wording change.
-For another language, retain the lightly tailored source Markdown and translate
+For another language, retain the tailored source Markdown and translate
 faithfully; translation does not justify changing emphasis, deleting detail or
 rewriting content. Compare each changed source block against the selected baseline
-before returning the draft and record the specific tailoring changes in the
+before returning the draft and record the tailoring change list in the
 activity note. Revert edits that have no job-specific, factual or required
 language/style reason.
 

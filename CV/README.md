@@ -100,16 +100,21 @@ Never write a CV from scratch: always start from the closest reference. For the
 two-phase path, base the plain draft on that reference; for the direct path, copy
 it into `JobSearch/Applications/<application-slug>/CV/<application>.md`. Choose exactly one
 reference and use its text as well as its matching formatting template. Do not
-start from another application's draft or blend references. Preserve the vast
-majority of the original wording and detail, making small changes only to
-specific points supported by the job description. Leave unrelated text alone.
-Do not rewrite the profile, systematically reword bullets, add/remove substantive
-content, change layout or replace sections. Ordinary tailoring permits small
-wording edits and reordering existing bullets within their sections.
-A request for a tailored draft does not authorise substantial rewriting.
+start from another application's draft or blend references. The reference is
+good, reviewed text and the default wording; tailoring changes it selectively
+to target the job's specific requirements (rewording, reordering within a
+section, foregrounding, replacing a less relevant point with a more relevant
+supported one, short supported additions). Each change is weighed against what
+it displaces, including page space; when that trade-off is unclear, the user
+decides. **Tailoring is mandatory for every application:** each draft rewrites
+the taglines and profile for the role (same evidence, about the same length)
+and reorders and rewords the bullets of every work-history entry toward the
+advert's requirements; an unchanged or lightly edited reference is not a
+tailored CV, and `jobflow.py restore` flags it. Never invent claims, dates,
+titles or metrics or redesign the layout or page allocation.
 
-Follow the minimal-edit rules in [[CV/Style-guide]]. Apply required voice/tense
-corrections minimally. Keep the lightly tailored source Markdown before translation,
+Follow the tailoring rules in [[CV/Style-guide]]. Apply required voice/tense
+corrections minimally. Keep the tailored source Markdown before translation,
 and translate it faithfully without reframing or substantial shortening. Review
 every changed block against the chosen reference and record the baseline and
 specific tailoring changes in the activity note. Preserved block IDs alone do
@@ -453,7 +458,7 @@ headings and text in Reading view. Keep the comments and block order intact.
   changes: tighten or rephrase text, reorder relevant bullets within their section,
   and add an occasional bullet inside an existing bullet block when an important
   requirement needs explicit coverage. Stay close to the original template in
-  structure, chronology, scope, overall voice and most original wording; the minimal-edit rules above apply even when all block markers are retained.
+  structure, chronology, scope, overall voice and the baseline wording wherever no requirement calls for a change; the tailoring rules above apply even when all block markers are retained.
   The renderer rejects missing, duplicated, reordered or mismatched block markers
   instead of losing text.
 - To change other document structures or underlying typography, edit a working

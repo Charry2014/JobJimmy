@@ -8,6 +8,90 @@ in `JobSearch/HANDOVER.md`; never name real applications or people here. Applica
 truth for each opportunity: this handover is a snapshot, not permission to
 submit anything or an instruction to redo completed work.
 
+## Tailoring made mandatory — 2026-11-25
+
+User decision: every CV and cover letter is tailored to its advert; tailoring
+is not optional. A CV draft rewrites the taglines and profile for the role
+(same evidence, about the same length, no new claims or career narrative) and
+reorders and rewords the bullets of every work-history entry toward the
+advert's requirements. Rules in `AGENTS.md` (task routing), `CV/Style-guide.md`,
+`CV/README.md`, both `Documents.md` files, both skills and `writer.md`; the
+writer's "Writing guide wins" precedence is limited to voice and tone. The
+`jobflow.py` tailoring check also counts profile paragraphs (ten words or more
+before the first `###`) rewritten below 80 % word overlap with the closest
+baseline paragraph, and warns when none is; `<br>` taglines compare line by
+line. On the existing private drafts, counts only: the five lightly edited ones
+warn, the four tailored ones pass. The check still only warns; it does not stop
+a render. The private Writing guide and CV-positioning notes still carry the
+old "preserve the supplied CV" wording and need the user's edit.
+
+Validation: both unit suites pass; privacy screen clean with private
+identifiers.
+
+## Writer model chosen by blind comparison — 2026-11-25
+
+`prose_compare.py` ran one cover letter on four models (effort high). The user
+read the drafts blind and preferred Gemini 4 Argon ($0.18), then Gemini 3.8
+Flash ($0.07), with Claude Opus 5.5 ($0.25) last: a fine text, but it presumed
+to know what is at the centre of the role. Gemini 4 Carbon ($0.41) was not
+placed; with 16,000 tokens it spent everything on thinking and returned
+nothing, so the default `PROSE_COMPARE_MAX_TOKENS` is now 40,000. The user found
+all four within a whisker of each other. `writer.md` now uses
+`openrouter/google/gemini-4-argon` for letters and CVs. Open: repeat on a CV.
+Table in `Documentation/Agent-Reference/Documents.md` (Comparing drafting models).
+
+## Writer subagent and tailoring check — 2026-11-25
+
+Problem seen in a Haiku session: letter prose came out dry, and the CV "tailoring"
+changed only the header format and two bullets by a few characters. The voice
+guides were bundled but never read, and nothing detected a no-op.
+
+- New Kilo subagent `.kilo/agents/writer.md` (`mode: subagent`,
+  `model: openrouter/anthropic/claude-opus-5.5`; syntax per
+  kilo.ai/docs/customize/custom-subagents and agent-permissions). It drafts one
+  document per call from the safe bundle; permissions allow reading only
+  `JobSearch/Outputs/safe/*`, `CV/Style-guide.md` and the letter starter,
+  writing only `JobSearch/Outputs/safe/*/out/*`, and deny bash, web, task and
+  skills. The session model in `kilo.jsonc` stays Haiku 5.5.
+- `tailor-cv` and `write-cover-letter` now delegate drafting to the writer,
+  require the voice guides (and `CV/Style-guide.md` for CVs) to be read in full,
+  and tailor-cv has an explicit requirements → evidence → targeted edits step
+  with a change list in `out/<prefix>-cv-tailoring.md`. `.kilo/rules/project.md`
+  exempts the guides from "read the sections you need".
+- `jobflow.py bundle` always adds `Writing-guide.md` and `Reasoning-profile.md`
+  (reports `MISSING` if absent) and records the baseline names in
+  `out/.bundle.json`. `restore` compares a source CV draft with the bundled
+  safe baseline and prints counts (blocks changed, bullets moved, blocks
+  removed), with `WARNING` below three changed blocks plus moved bullets;
+  `render --cv` repeats it as a warning line. Tests: `TailoringCheckTests`,
+  `RestoreTailoringTests` in `CV/Scripts/test_jobflow.py`.
+- Tailoring rule changed at the user's request (2026-11-25), replacing
+  "preserve the vast majority" in `CV/Style-guide.md`, `CV/README.md`,
+  `Documentation/Agent-Reference/Documents.md`, the tailor-cv skill and the
+  writer brief: the baseline is good, reviewed default text; changes target
+  the job's specific requirements (reword, reorder, foreground, replace a less
+  relevant point with a more relevant supported one, short additions); each is
+  weighed against what it displaces, including page space; unclear trade-offs
+  go to the user as open decisions; the change list records requirement →
+  change → what was displaced. Hard boundaries unchanged. The private
+  knowledge notes still carry the old wording and need the user's update.
+
+- Model comparison harness `CV/Scripts/prose_compare.py`: sends the writer's
+  exact request (brief as system message, the skill's task message, bundle
+  files inline in the writer's reading order) to every model in
+  `PROSE_COMPARE_MODELS` from `.env`, in parallel via OpenRouter with
+  `provider.zdr` and `data_collection: deny`. Refuses raw private files, scans
+  the input with the private policy before sending, writes blind drafts plus
+  `REVIEW.md`, `key.json` and `request.json` to
+  `JobSearch/Outputs/model-compare/<time>/`, and prints figures only. Tests:
+  `CV/Scripts/test_prose_compare.py`. Dry runs on a real bundle passed the scan
+  (letter about 32k input tokens, CV about 39k); no live call made yet.
+
+Validation: unit suites and the privacy screen pass with `JobSearch/` absent.
+Not yet verified: Kilo loading `writer.md` (no kilo CLI on the build machine;
+check `@writer` in the agent list), the glob-scoped `read`/`edit` permissions in
+a real session, and letter and CV quality from the writer on a real application.
+
 ## Aligner keeps header contacts in their own blocks — 2026-11-25
 
 `align_md.py`: a multi-line template block (such as a multi-line tagline)

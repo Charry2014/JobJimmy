@@ -45,6 +45,8 @@ class Base(unittest.TestCase):
                 "candidate@example.org", "Former Employer AG"]}))
         (private / "Knowledge" / "Overview.md").write_text(
             "# Overview\n\nCandidate Person led platform work at Former Employer AG.\n")
+        for guide in ("Writing-guide", "Reasoning-profile"):
+            (private / "Knowledge" / f"{guide}.md").write_text(f"# {guide}\n\nWrite plainly.\n")
         self.vault = jf.Vault(self.root)
 
     def tearDown(self):
@@ -287,6 +289,169 @@ class NoteEditingTests(unittest.TestCase):
     def test_headings_inside_code_fences_ignored(self):
         text = "---\na: 1\n---\n## One\n\n```\n## Two\n```\n\n## Three\n\nx\n"
         self.assertIn("## Two", jf.section_text(text, "One"))
+
+
+BASELINE_CV = """---
+cv: synthetic
+---
+<!-- cv:p001 -->
+# Candidate Person
+
+<!-- cv:p002 -->
+## Profile
+
+<!-- cv:p003 -->
+Engineering leader who builds calm, reliable platform teams for regulated products.
+
+<!-- cv:p004 -->
+## Work experience
+
+<!-- cv:p005 -->
+### Former Employer AG\tHead of Platform\tJanuary 2020 – March 2024
+
+<!-- cv:p006 -->
+Sample City
+
+<!-- cv:p007 -->
+- Led a platform group of twenty engineers across three teams.
+- Cut release lead time from weeks to days with trunk-based delivery.
+- Introduced an incident review practice adopted company-wide.
+- Owned the cloud budget and reduced spend by a fifth.
+"""
+
+# The same content in the plain draft shape: only the employer header is split.
+UNCHANGED_DRAFT = """# Candidate Person
+
+## Profile
+
+Engineering leader who builds calm, reliable platform teams for regulated products.
+
+## Work experience
+
+### Former Employer AG
+Head of Platform | January 2020 – March 2024
+Sample City
+
+- Led a platform group of twenty engineers across three teams.
+- Cut release lead time from weeks to days with trunk-based delivery.
+- Introduced an incident review practice adopted company-wide.
+- Owned the cloud budget and reduced spend by a fifth.
+"""
+
+
+class TailoringCheckTests(unittest.TestCase):
+    def test_header_split_alone_is_not_a_change(self):
+        counts = jf.tailoring_counts(BASELINE_CV, UNCHANGED_DRAFT)
+        self.assertEqual(counts, {"blocks": 6, "changed": 0, "removed": 0, "moved": 0,
+                                  "profile": 1, "profile_rewritten": 0})
+        line, near = jf.tailoring_report(counts, "Synthetic")
+        self.assertTrue(near)
+        self.assertIn("NEAR-IDENTICAL", line)
+
+    def test_small_rewording_of_two_bullets_is_still_near_identical(self):
+        draft = UNCHANGED_DRAFT.replace("twenty engineers", "twenty-two engineers").replace(
+            "by a fifth", "by a fifth.")
+        counts = jf.tailoring_counts(BASELINE_CV, draft)
+        self.assertEqual(counts["changed"], 1)
+        self.assertTrue(jf.tailoring_report(counts, "Synthetic")[1])
+
+    def test_reordered_and_reworded_blocks_count_as_tailoring(self):
+        lines = UNCHANGED_DRAFT.splitlines()
+        bullets = [i for i, line in enumerate(lines) if line.startswith("- ")]
+        lines[bullets[0]], lines[bullets[3]] = lines[bullets[3]], lines[bullets[0]]
+        draft = "\n".join(lines).replace("builds calm, reliable platform teams for regulated products",
+                                         "ships robotics software with reliable, product-minded teams")
+        draft = draft.replace("adopted company-wide", "adopted across engineering and operations")
+        counts = jf.tailoring_counts(BASELINE_CV, draft)
+        self.assertEqual(counts["changed"], 2)
+        self.assertGreaterEqual(counts["moved"], 1)
+        line, near = jf.tailoring_report(counts, "Synthetic")
+        self.assertFalse(near)
+        self.assertNotIn("robotics", line)  # counts only, never text
+
+    def test_bullet_edits_with_unchanged_profile_are_not_tailored(self):
+        lines = UNCHANGED_DRAFT.splitlines()
+        bullets = [i for i, line in enumerate(lines) if line.startswith("- ")]
+        lines[bullets[0]], lines[bullets[3]] = lines[bullets[3]], lines[bullets[0]]
+        draft = "\n".join(lines).replace("adopted company-wide", "adopted across engineering and operations")
+        draft = draft.replace("with trunk-based delivery", "with trunk-based delivery and release automation")
+        counts = jf.tailoring_counts(BASELINE_CV, draft)
+        self.assertEqual((counts["changed"], counts["profile_rewritten"]), (2, 0))
+        line, near = jf.tailoring_report(counts, "Synthetic")
+        self.assertTrue(near)
+        self.assertIn("profile unchanged", line)
+
+    def test_light_profile_tweak_is_not_a_rewrite(self):
+        draft = UNCHANGED_DRAFT.replace("calm, reliable platform teams", "calm, dependable platform teams")
+        lines = draft.splitlines()
+        bullets = [i for i, line in enumerate(lines) if line.startswith("- ")]
+        lines[bullets[0]], lines[bullets[3]] = lines[bullets[3]], lines[bullets[0]]
+        counts = jf.tailoring_counts(BASELINE_CV, "\n".join(lines))
+        self.assertEqual((counts["changed"], counts["profile_rewritten"]), (1, 0))
+        self.assertTrue(jf.tailoring_report(counts, "Synthetic")[1])
+
+    def test_tagline_split_into_paragraphs_is_not_a_change(self):
+        # The baseline keeps a multi-line tagline as one <br> paragraph; a draft
+        # may write its lines as separate paragraphs without changing the text.
+        baseline = BASELINE_CV.replace("<!-- cv:p002 -->",
+                                       "Platform leadership<br>Reliable delivery\n\n<!-- cv:p002 -->")
+        draft = UNCHANGED_DRAFT.replace("# Candidate Person\n",
+                                        "# Candidate Person\n\nPlatform leadership\n\nReliable delivery\n", 1)
+        counts = jf.tailoring_counts(baseline, draft)
+        self.assertEqual((counts["changed"], counts["profile_rewritten"]), (0, 0))
+
+    def test_omitted_location_is_removed_not_tailoring(self):
+        counts = jf.tailoring_counts(BASELINE_CV, UNCHANGED_DRAFT.replace("Sample City\n", ""))
+        self.assertEqual((counts["changed"], counts["removed"]), (0, 1))
+
+
+class RestoreTailoringTests(Base):
+    def setUp(self):
+        super().setUp()
+        self.captured()
+        jf.records(self.vault, self.spec())
+        self.slug = "2026-11-example-robotics-platform"
+        (self.vault.private / "Templates" / "Synthetic.md").write_text(BASELINE_CV)
+
+    def test_bundle_keeps_voice_guides_and_records_baselines(self):
+        out, results = jf.bundle(self.vault, self.slug, knowledge=["Overview"], baselines=["Synthetic"])
+        self.assertTrue(all(state == "PASS" for _, state, _ in results), results)
+        self.assertTrue((out / "knowledge/Writing-guide.md").is_file())
+        self.assertTrue((out / "knowledge/Reasoning-profile.md").is_file())
+        self.assertEqual(json.loads((out / "out/.bundle.json").read_text())["baselines"], ["Synthetic"])
+
+    def test_bundle_reports_missing_voice_guide(self):
+        (self.vault.knowledge / "Writing-guide.md").unlink()
+        _, results = jf.bundle(self.vault, self.slug)
+        self.assertIn(("voice guides", "MISSING"), [(name, state) for name, state, _ in results])
+
+    def test_restore_warns_on_unchanged_baseline(self):
+        out, _ = jf.bundle(self.vault, self.slug, baselines=["Synthetic"])
+        safe_draft = (out / "baseline/Synthetic.md").read_text()
+        (out / "out/robotics-cv-draft.md").write_text(safe_draft)
+        results = {name: (state, detail) for name, state, detail in jf.restore_drafts(self.vault, self.slug)}
+        self.assertEqual(results["robotics-cv-draft.md"][0], "RESTORED")
+        state, detail = results["robotics-cv-draft.md tailoring"]
+        self.assertEqual(state, "WARNING")
+        self.assertIn("0 of 6 content blocks changed", detail)
+        self.assertNotIn("Candidate", detail)
+        self.assertNotIn("Former Employer", detail)
+        # The baseline names survive the restore for the next revision round.
+        self.assertEqual(json.loads((out / "out/.bundle.json").read_text())["baselines"], ["Synthetic"])
+
+    def test_restore_reports_tailored_draft_and_skips_notes_and_translations(self):
+        out, _ = jf.bundle(self.vault, self.slug, baselines=["Synthetic"])
+        safe = (out / "baseline/Synthetic.md").read_text()
+        tailored = (safe.replace("who builds calm, reliable platform teams",
+                                 "who ships reliable robotics software with product-minded teams")
+                        .replace("adopted company-wide", "adopted by every product team")
+                        .replace("by a fifth", "by a fifth while doubling capacity"))
+        (out / "out/robotics-cv-draft.md").write_text(tailored)
+        (out / "out/robotics-cv-draft-de.md").write_text(safe)
+        (out / "out/robotics-cv-tailoring.md").write_text("- Requirement: change\n")
+        results = {name: state for name, state, _ in jf.restore_drafts(self.vault, self.slug)}
+        self.assertEqual(results, {"robotics-cv-draft.md": "RESTORED", "robotics-cv-draft.md tailoring": "CHECK",
+                                   "robotics-cv-draft-de.md": "RESTORED", "robotics-cv-tailoring.md": "SKIPPED"})
 
 
 if __name__ == "__main__":

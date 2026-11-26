@@ -130,7 +130,14 @@ Agents run these steps with `CV/Scripts/jobflow.py` (`bundle`, `restore`,
 commands in this section are the manual equivalent and the detail behind it.
 
 Use `.kilo/skills/write-cover-letter/SKILL.md` for the ordered workflow and
-`CV/Templates/Cover-Letter.md` as the plain Markdown starter. No personal
+`CV/Templates/Cover-Letter.md` as the plain Markdown starter. The session
+agent bundles, then hands the prose to the `writer` subagent
+(`.kilo/agents/writer.md`, a stronger drafting model limited to the safe
+bundle), then restores and renders itself; letter and CV are drafted in
+separate calls. Before any drafting or wording review, the bundled
+`knowledge/Writing-guide.md` and `knowledge/Reasoning-profile.md` are read in
+full, not by section: they carry the candidate's voice, and a letter written
+without them reads dry and generic. No personal
 cover-letter ODT is in the public distribution; it exists only under
 `JobSearch/Templates/` in the attached private vault (gitignored, so ignore-aware
 tools report nothing there — locate it with `ls`/`find` or the exact path). This
@@ -164,6 +171,49 @@ apply the CV-specific page rules to letters. Rendering does not submit the
 application or change its status. Revise working drafts in place, preserving
 user edits as described above. Preserve the user-supplied original; personal rendering templates and anchors
 belong under `JobSearch/Templates/`.
+
+### Comparing drafting models
+
+`CV/Scripts/prose_compare.py` runs the writer's exact request on several
+models at once, so the drafting model can be chosen by reading the results.
+Each model gets the writer brief as its system message and the calling
+agent's task message, with the bundle files included inline (the run has no
+file tools). List the models in `.env` and run it on a safe bundle:
+
+```sh
+# .env
+PROSE_COMPARE_MODELS=anthropic/claude-opus-5.5, google/gemini-4-argon, google/gemini-4-carbon, google/gemini-3.8-flash
+PROSE_COMPARE_EFFORT=high   # optional
+
+tools/py CV/Scripts/jobflow.py bundle <slug> --baseline Manager
+tools/py CV/Scripts/prose_compare.py JobSearch/Outputs/safe/<slug> --task letter
+tools/py CV/Scripts/prose_compare.py JobSearch/Outputs/safe/<slug> --task cv --baseline Manager
+```
+
+It accepts only a safe bundle or a safe file, scans the input with the private
+policy before sending, and requires zero-data-retention routes. `--dry-run`
+checks and writes the request without sending it. The drafts are written
+blind (`A.md`, `B.md`, ...) to `JobSearch/Outputs/model-compare/<time>/` with
+`REVIEW.md`; read them and note a verdict before opening `key.json`, which
+names the models with their tokens, cost and time. The console prints figures
+only, so an agent can run it without the drafts entering its context. A letter
+run is about 30,000 input tokens per model. `PROSE_COMPARE_MAX_TOKENS`
+(default 40,000) covers thinking as well as the reply: a long-thinking model
+given 16,000 spent it all on thinking and returned nothing. To adopt the
+winner, change the `model` line in `.kilo/agents/writer.md`.
+
+First comparison (2026-11-25, one cover letter, effort high), ranked blind by
+the user. All four were close; the ranking decided the choice:
+
+| Rank | Model | Cost per letter | Time | User's note |
+| --- | --- | --- | --- | --- |
+| 1 | `google/gemini-4-argon` | $0.18 | 3 min | Preferred; now the writer's model for letters and CVs |
+| 2 | `google/gemini-3.8-flash` | $0.07 | 3.5 min | Cheapest; close behind |
+| unranked | `google/gemini-4-carbon` | $0.41 | 7.6 min | Not placed by the user; needed a 40,000-token budget, first try failed after $0.22 |
+| last | `anthropic/claude-opus-5.5` | $0.25 | 40 s | Fine text but presumptuous: claimed to know what is at the centre of the role, which the advert only suggests |
+
+One letter is a small sample; repeat the comparison on a CV before treating
+the choice as settled.
 
 ## CV tuning and document rendering
 
@@ -228,34 +278,76 @@ For an extracted-reference CV, choose exactly one user-provided baseline:
 the reference and its matching document template under `JobSearch/Templates/`.
 For personal-master population, use the body contract and private master instead;
 no extracted pair or block alignment is required. Select the workflow before drafting.
-If tailoring an existing body draft, preserve its wording with the same minimal-edit rule.
+If tailoring an existing body draft, treat its wording as the default under the same tailoring rules.
 Base the draft on that reference, or copy it to
 `JobSearch/Applications/<application-slug>/CV/<application>.md` for the direct block-editing
 path. The reference is the starting text, not merely a layout or list of facts from
 which to write a new CV. Do not start from another application's tailored CV or
 blend the baselines into a new version.
 
-**Tailoring means small wording edits and reordering existing bullets within
-their sections.** Preserve the vast
-majority of the selected reference's wording, sentence structure, emphasis and
-detail. Change only the points where a concrete job requirement warrants a change:
-adjust a phrase or foreground an existing achievement by ordering its bullet.
-Leave unrelated paragraphs and bullets unchanged. Do not add or remove
-substantive content or change the layout.
-Do not rewrite the profile, reword every bullet, replace whole sections, or remove
-substantial source detail to create a new role-specific narrative. Retaining block
-IDs, headings and chronology alone does not establish fidelity to the template.
-A request to tailor or draft a CV does not authorise substantial or significant
-rewrites; those require an explicit user request for that broader scope.
+**The baseline is the default; tailoring changes it selectively.** The selected
+reference is good, reviewed text: the starting point and the default wording.
+Changes target the specific requirements of the job: reword a point, reorder
+bullets within their section, foreground relevant evidence, replace a less
+relevant point with a more relevant supported one, or add a short supported
+detail.
+
+**Tailoring is mandatory for every application, never optional.** Every CV
+draft, at least:
+
+- **rewrites the taglines and the profile for this role**: re-angled toward
+  the advert's key requirements and terms, from the same evidence and at about
+  the same length. A one- or two-word tweak is not a rewrite;
+- **reorders and rewords the bullets in every work-history entry** so the
+  evidence for the advert's requirements leads, using the advert's terms where
+  they describe the evidence truthfully. Bullets that no requirement touches
+  keep the baseline wording.
+
+`jobflow.py restore` and `render --cv` flag a draft with fewer than three
+changes or with taglines and profile unchanged or only lightly edited. A
+flagged draft is not presented as a draft: tailor it, or get the user's
+explicit agreement to keep the baseline text.
+
+Each change is weighed: the value of the information it adds for this job
+against the cost of the information no longer included (displaced, shortened or
+pushed down), including page space, because the page allocation is fixed. Where
+the trade-off cannot be judged with confidence (the evidence boundary is
+unclear, a strong baseline point would be lost, or the value for the role is
+ambiguous), the agent stops and asks the user to decide, presenting the options;
+it neither silently skips the change nor silently makes it.
+
+Hard boundaries: no invented claims, dates, titles or metrics; no redesign of
+the layout or page allocation; the rewritten taglines and profile re-angle
+the same evidence, with no new claims and no new career narrative; chronology and section order stay. Retaining block IDs, headings and
+chronology alone does not establish fidelity to the template. A broader rewrite
+requires an explicit user request for that scope.
+
+**An unchanged baseline is not a tailored CV.** Tailoring
+is an explicit step, done by the `writer` subagent after it has read
+`CV/Style-guide.md` and the bundled voice guides in full: list the advert's key
+requirements; map each to the baseline bullets and evidence that support it;
+then make the targeted changes above, weighing each against what it displaces.
+The change list (requirement → change → what was displaced, or the reason for
+no change, or a gap) and the open decisions for the user go to the bundle's
+`out/<prefix>-cv-tailoring.md`, never into the CV, and are presented with the
+draft; the user decides each open decision before the draft is final. `jobflow.py restore` compares the source CV draft
+with the bundled baseline and prints counts only (content blocks changed,
+bullets moved, baseline blocks removed, profile paragraphs rewritten); with
+fewer than three changed blocks plus moved bullets it warns that the draft is
+near-identical, and with no profile paragraph rewritten (each stays at 80 % or
+more word overlap with the baseline) it warns that the draft is not tailored.
+A warned draft goes back for tailoring unless the user explicitly keeps the
+baseline.
+`render --cv` repeats the comparison as a warning line.
 
 Apply required tense/voice corrections minimally, preserving the original meaning
 and sentence structure wherever possible. Translation must faithfully carry the
-lightly tailored source into the target language; it is not permission to condense,
+tailored source into the target language; it is not permission to condense,
 reframe or rewrite the CV. Keep the tailored source Markdown for comparison before
 translation. Before returning a draft, compare it with the chosen reference,
 review every changed block and revert changes without a specific tailoring,
-factual-correction or required language/style reason. Record the baseline and a
-short list of targeted changes in the activity note.
+factual-correction or required language/style reason. Record the baseline and the
+tailoring change list in the activity note.
 First determine the language of the job description and application instructions from
 the advert, not from the employer's location or a language listed as a requirement.
 If the advert's main prose and instructions are in a foreign language, the final
@@ -287,13 +379,14 @@ compact filename slug for every application CV artifact: `YYYY-MM-company-positi
 with meaningful abbreviations and a target base length of about 30 characters.
 Append a short artifact suffix such as `-draft`, `-blocks`, `-de`, `-proposed`,
 `-review` or `-layout`; retain `<Your Name> - CV.pdf` as the final submission PDF
-naming convention. Within the minimal-edit rule above, reorder a relevant
-existing bullet within its section. Preserve the reference's content, structure,
+naming convention. Within the tailoring rules above, reorder a relevant
+existing bullet within its section. Preserve the reference's structure,
 chronology, scope and voice.
 Preserve the `cv:pNNN` comment markers, order, heading/list prefixes, and existing
 section structure. Edit prose inside the blocks; `<br>` represents explicit line breaks.
 The renderer can accommodate varying bullet counts, but ordinary tailoring
-must retain the user's chosen content and overall bullet count.
+keeps the overall bullet count: a more relevant point replaces a less relevant
+one rather than being added, unless the user decides otherwise.
 The renderer does not interpret arbitrary Markdown formatting and rejects prose
 outside blocks rather than silently omitting it. Read the CV guide for limits on
 inline formatting and changes to paragraph/bullet structure. Never invent facts

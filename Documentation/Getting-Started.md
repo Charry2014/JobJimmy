@@ -284,9 +284,22 @@ The project `kilo.jsonc` keeps sessions cheap and predictable:
 - **A fixed model** (`openrouter/anthropic/claude-haiku-5.5`) instead of a
   router such as `openrouter/auto`. A router can switch models mid-session,
   for example when a model is rate-limited, and each switch re-sends the whole
-  conversation without the prompt cache. Change the `model` line to use a
-  stronger model, such as `openrouter/anthropic/claude-sonnet-5.5`, for
-  drafting sessions. The model must be allowed by your OpenRouter guardrails.
+  conversation without the prompt cache. Haiku runs the workflow: records,
+  safe bundles, restore, render and checks.
+- **A stronger model for the prose only.** The `writer` subagent
+  (`.kilo/agents/writer.md`) sets its own model,
+  `openrouter/anthropic/claude-opus-5.5`, and the `tailor-cv` and
+  `write-cover-letter` skills hand it the drafting step, one document per call.
+  It reads only the checked safe bundle and writes only into the bundle's
+  `out/` folder. Haiku's own letters came out dry and its CV drafts barely
+  differed from the baseline; paying for the stronger model on one step costs
+  far less than running the whole session on it. To use another model, change
+  the `model` line in `writer.md`; Gemini 4 Argon or Carbon
+  (`openrouter/google/gemini-4-argon`, about half the price) are alternatives.
+  Every model you set must be allowed by your OpenRouter guardrails (zero data
+  retention). Your Kilo version must support project agents in `.kilo/agents/`
+  ([custom subagents](https://kilo.ai/docs/customize/custom-subagents)); check
+  that `@writer` appears in the chat's agent list.
 - **Skills limited to JobJimmy's four.** Global skills are hidden in this
   project, so their descriptions are not re-sent with every call.
 - **No Serena or knowledge-graph MCP tools.** Disable any other global MCP
